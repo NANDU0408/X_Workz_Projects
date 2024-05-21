@@ -37,4 +37,7 @@ public class AuthorityAccessDetailsDTO implements Serializable {
     private long idProofNo ;
     @Column(name = "emergency_contact")
     private long emergencyContact ;
+
+//    public AuthorityAccessDetailsDTO(int i, String name, int age, String gender, Date dob, String address, long phoneNo, String idProof, long idProofNo, long emergencyContact) {
+//    }
 }
