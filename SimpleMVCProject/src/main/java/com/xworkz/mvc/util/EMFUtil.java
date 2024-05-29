@@ -1,5 +1,6 @@
 package com.xworkz.mvc.util;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -13,5 +14,9 @@ public class EMFUtil {
 
     static{
         entityManagerFactory= Persistence.createEntityManagerFactory("lodging_hotel_pu");
+    }
+
+    public static EntityManager getEntityManager(){
+        return entityManagerFactory.createEntityManager();
     }
 }
