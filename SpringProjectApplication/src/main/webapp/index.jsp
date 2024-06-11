@@ -104,7 +104,7 @@
                         </div>
                         <div class="mb-3 card-body">
                             <h5 class="card-title">Version Control System:</h5>
-                            <p class="card-text">Github: <a href="https://github.com/Sahil-123/Xworkz-Comman-Module/tree/main/Common-Modules" target="_blank"> Common Modules</a></p>
+                            <p class="card-text">Github: <a href="https://github.com/NANDU0408/X_Workz_Projects/tree/master/SpringProjectApplication" target="_blank"> Git Modules</a></p>
                         </div>
                         <div class="mb-3 card-body">
                         <h5 class="card-title">Description:</h5>
