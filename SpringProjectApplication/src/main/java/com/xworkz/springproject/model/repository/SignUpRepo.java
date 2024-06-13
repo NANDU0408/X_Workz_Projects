@@ -13,4 +13,8 @@ public interface SignUpRepo {
     boolean checkEmailExists(String email);
 
     boolean checkPhoneNumberExists(String phoneNumber);
+
+    Optional<SignUpDTO> findByEmailAddress(String emailAddress);
+
+    boolean updatePassword(SignUpDTO signUpDTO);
 }

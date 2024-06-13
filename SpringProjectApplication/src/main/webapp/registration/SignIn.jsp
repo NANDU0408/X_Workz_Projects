@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,7 +56,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto" style="margin-right: 120px;">
+            <ul class="navbar-nav ms-auto" style="margin-right: 10px;">
                 <li class="nav-item">
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
@@ -82,6 +83,9 @@
                 </div>
                 <div class="card-body">
                     <form action="login" method="POST">
+                     <c:if test="${not empty errorMessage}">
+                         <div class="alert alert-danger">${errorMessage}</div>
+                     </c:if>
                         <span style="color : red;">
                             <c:forEach items="${errors}" var="objectError">
                                 ${objectError.defaultMessage}</br>
@@ -89,7 +93,7 @@
                         </span>
 
                         <div class="mb-3">
-                            <label for="emailAddress" class="form-label">User Name</label>
+                            <label for="emailAddress" class="form-label">Email ID</label>
                             <input type="text" class="form-control" id="emailAddress" name="emailAddress" value="${dto.emailAddress}" onblur="emailAddressValidation()">
                             <span id="emailAddressError" class="error-message"></span>
                         </div>

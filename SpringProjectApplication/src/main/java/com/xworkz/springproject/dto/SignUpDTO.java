@@ -2,6 +2,7 @@ package com.xworkz.springproject.dto;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -64,4 +65,10 @@ public class SignUpDTO {
 
     @Column(name = "updatedDate")
     private LocalDateTime updatedDate;
+
+    @Column(name = "count")
+    private int count;
+
+    @Column(name = "updatedPassword")
+    private String updatedPassword;
 }

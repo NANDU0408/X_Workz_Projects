@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,11 +102,11 @@
         <div class="col-md-6">
             <h2 class="text-center mb-4 mt-4">Sign-Up Form</h2>
             <form action="signUp" method="POST">
-            <c:if test="${not empty successMessage}">
-                <div class="alert alert-info">${successMessage}</div>
+            <c:if test="${successMessage.length() > 0}">
+                <div class="alert alert-danger">${successMessage}</div>
             </c:if>
-            <c:if test="${not empty failureMessage}">
-                <div class="alert alert-info">${failureMessage}</div>
+            <c:if test="${failureMessage.length() > 0}">
+                <div class="alert alert-danger">${failureMessage}</div>
             </c:if>
                 <span style="color : red;">
                     <c:forEach items="${errors}" var="objectError">
@@ -156,6 +158,6 @@
         }
     </script>
 </div>
-
+<script src="/SpringProjectApplication/images/javaScript/SignUp.js"></script>
 </body>
 </html>

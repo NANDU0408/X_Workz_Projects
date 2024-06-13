@@ -4,10 +4,8 @@ import com.xworkz.springproject.dto.SignUpDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
+import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -22,8 +20,8 @@ public class SignUpRepoImpl implements SignUpRepo {
     private static final int PASSWORD_LENGTH = 16;
 
     @Override
+    @Transactional
     public Optional<SignUpDTO> save(SignUpDTO signUpDTO) {
-        System.out.println("Running save in SignUpRepoImpl");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
@@ -38,10 +36,11 @@ public class SignUpRepoImpl implements SignUpRepo {
             entityManager.getTransaction().rollback();
             e.printStackTrace();
             System.out.println("Exception while saving data: " + e);
+            return Optional.empty();
         } finally {
             entityManager.close();
         }
-        return Optional.ofNullable(signUpDTO);
+        return Optional.of(signUpDTO);
     }
 
     @Override
@@ -68,6 +67,51 @@ public class SignUpRepoImpl implements SignUpRepo {
         } finally {
             entityManager.close();
         }
+    }
+
+    @Override
+    public Optional<SignUpDTO> findByEmailAddress(String emailAddress) {
+        System.out.println("find by email "+emailAddress);
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            Query query = entityManager.createQuery("SELECT s FROM SignUpDTO s WHERE s.emailAddress = :emailAddress");
+            query.setParameter("emailAddress", emailAddress);
+            SignUpDTO signUpDTO = (SignUpDTO) query.getSingleResult();
+            System.out.println(signUpDTO);
+//            entityManager.detach(signUpDTO);
+            return Optional.ofNullable(signUpDTO);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public boolean updatePassword(SignUpDTO signUpDTO) {
+        System.out.println("Repo update by password "+signUpDTO);
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            SignUpDTO signUpDTO1 = entityManager.find(SignUpDTO.class,signUpDTO.getId());
+            signUpDTO1.setUpdatedPassword(signUpDTO.getPassword());
+            signUpDTO1.setUpdatedBy(signUpDTO.getFirstName()+" "+signUpDTO.getLastName());
+            signUpDTO1.setUpdatedDate(LocalDateTime.now());
+            signUpDTO1.setCount(signUpDTO.getCount()+1);
+
+
+            entityManager.getTransaction().commit();
+            return true;
+        } catch (PersistenceException e) {
+            entityManager.getTransaction().rollback();
+            e.printStackTrace();
+            System.out.println("Exception while saving data: " + e);
+
+        } finally {
+            entityManager.close();
+        }
+
+        return false;
     }
 
     private String generateRandomPassword() {
