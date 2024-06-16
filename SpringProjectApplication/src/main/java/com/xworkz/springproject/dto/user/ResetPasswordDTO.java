@@ -1,13 +1,11 @@
-package com.xworkz.springproject.dto;
+package com.xworkz.springproject.dto.user;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Getter
 @Setter

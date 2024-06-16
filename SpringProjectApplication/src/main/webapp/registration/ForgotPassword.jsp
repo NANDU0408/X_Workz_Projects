@@ -88,79 +88,32 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <h2 class="text-center mb-4 mt-4">Reset Password Form</h2>
+            <h2 class="text-center mb-4 mt-4">Forgot Password</h2>
             <c:if test="${successMessage.length()>0}">
-                                <div class="alert alert-info">${successMessage}</div>
-                            </c:if>
-                            <c:if test="${failureMessage.length()>0}">
-                                <div class="alert alert-info">${failureMessage}</div>
-                            </c:if>
-            <form action="resetPassword" method="POST">
+                <div class="alert alert-info">${successMessage}</div>
+            </c:if>
+            <c:if test="${failureMessage.length()>0}">
+                <div class="alert alert-info">${failureMessage}</div>
+            </c:if>
+            <form action="forgotPassword" method="POST">
                 <span style="color : red;">
                     <c:forEach items="${errors}" var="objectError">
                         ${objectError.defaultMessage}</br>
                     </c:forEach>
                 </span>
-
                 <div class="mb-3">
                     <label for="emailAddress" class="form-label">Email</label>
-                    <input type="emailAddress" class="form-control" id="emailAddress" name="emailAddress" value="${dto.emailAddress}" onblur="emailAddressValidation()">
+                    <input type="email" class="form-control" id="emailAddress" name="emailAddress" value="${dto.emailAddress}" onblur="emailAddressValidation()">
                     <span id="emailAddressError" class="error-message"></span>
                 </div>
-
-                <div class="mb-3">
-                    <label for="password" class="form-label">Current Password</label>
-                    <input type="password" class="form-control" id="password" name="password">
-                </div>
-
-                <div class="mb-3">
-                    <label for="newPassword" class="form-label">New Password</label>
-                    <input type="password" class="form-control" id="newPassword" name="newPassword">
-                </div>
-
-                <div class="mb-3">
-                    <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
-                    <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword">
-                </div>
-
-                <div class="mb-1 d-flex justify-content-center">
-                    <input type="submit" id="submitButton" class="btn btn-primary" value="Reset Password" name="submit"/>
-                    <button type="button" class="btn btn-secondary ms-2" onclick="refreshPage()">Refresh</button>
+                <div class="d-flex justify-content-center">
+                    <input type="submit" id="submitButton" class="btn btn-primary me-2" value="Submit" name="submit"/>
+                    <button type="button" class="btn btn-secondary" onclick="refreshPage()">Refresh</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="messageModalLabel">Message</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p id="modalMessage"></p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    $(document).ready(function() {
-        // Execute refreshPage function on page load
-        refreshPage();
-
-        // Define refreshPage function
-        function refreshPage() {
-            // Show the modal
-            $('#messageModal').modal('show');
-            // Set the message in the modal
-            $('#modalMessage').text('Thank You For Login.' +
-                'Now Please Reset Your password');
-        }
-    });
-</script>
 
 </body>
 </html>

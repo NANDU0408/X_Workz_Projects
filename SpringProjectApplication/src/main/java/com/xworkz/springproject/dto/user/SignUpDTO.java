@@ -1,8 +1,7 @@
-package com.xworkz.springproject.dto;
+package com.xworkz.springproject.dto.user;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -71,4 +70,18 @@ public class SignUpDTO {
 
     @Column(name = "updatedPassword")
     private String updatedPassword;
+
+    @Column(name = "failed_attempts_count")
+    private int failedAttemptsCount;
+
+    @Column(name = "failed_attempt_dateTime")
+    private LocalDateTime failedAttemptDateTime;
+
+    @Transient
+    @Column(name = "account_locked")
+    private boolean accountLocked;
+
+    @Transient
+    @Column(name = "role")
+    private String role;
 }

@@ -1,8 +1,9 @@
 package com.xworkz.springproject.controller;
 
-import com.xworkz.springproject.dto.ResetPasswordDTO;
-import com.xworkz.springproject.dto.SignInDTO;
-import com.xworkz.springproject.dto.SignUpDTO;
+import com.xworkz.springproject.dto.user.ForgetPasswordDTO;
+import com.xworkz.springproject.dto.user.ResetPasswordDTO;
+import com.xworkz.springproject.dto.user.SignInDTO;
+import com.xworkz.springproject.dto.user.SignUpDTO;
 import com.xworkz.springproject.model.service.SignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,8 +42,7 @@ public class SignUpController {
 
         Optional<SignUpDTO> savedDto = signUpService.save(signUpDTO);
         if (savedDto.isPresent()) {
-            model.addAttribute("successMessage", "Sign-Up successful! Your password is: " + savedDto.get().getPassword());
-
+            model.addAttribute("successMessage", "Sign-Up successful! Your password is sent to your email address: " + savedDto.get().getEmailAddress());
             signUpService.sendEmail(savedDto.get());
         } else {
             model.addAttribute("failureMessage", "Sign-Up failed. Please try again.");
@@ -50,21 +50,43 @@ public class SignUpController {
         return "registration/SignUp.jsp";
     }
 
+
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute("loginForm") SignInDTO signInDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "registration/SignIn.jsp";
         }
 
-        Optional<SignUpDTO> signUpDTOOptional = signUpService.validateSignIn(signInDTO.getEmailAddress(), signInDTO.getPassword());
+        Optional<SignUpDTO> signUpDTOOptional = signUpService.findByEmailAddress(signInDTO.getEmailAddress());
         if (signUpDTOOptional.isPresent()) {
-            if (signUpDTOOptional.get().getCount() == 0) {
+            SignUpDTO signUpDTO = signUpDTOOptional.get();
+            if (signUpDTO.getCount() == 0) {
                 return "registration/ResetPassword.jsp"; // Redirect to reset password page
-            } else if (signUpDTOOptional.get().getCount() > 1) {
-                return "registration/Home.jsp"; // Redirect to home page if count is more than 1
+            } else {
+                Optional<SignUpDTO> validatedUser = signUpService.validateSignIn(signInDTO.getEmailAddress(), signInDTO.getPassword());
+                if (validatedUser.isPresent()) {
+                    if (validatedUser.get().isAccountLocked()) {
+                        model.addAttribute("errorMessage", "Your account is locked. Please reset your password.");
+//                        signUpDTO.setCount(0);
+                        return "registration/SignIn.jsp";
+                    } else {
+                        return "registration/Home.jsp"; // Redirect to home page if login is successful
+                    }
+                } else {
+                    signUpService.handleFailedLoginAttempt(signUpDTO); // Update failed login attempts
+                    if (signUpDTO.getFailedAttemptsCount() >= 3) {
+                        signUpService.lockAccount(signUpDTO); // Lock account if failed attempts reach 3
+                        model.addAttribute("errorMessage", "Your account is locked. Please reset your password.");
+                        signUpDTO.setCount(0);
+                        signUpDTO.setUpdatedPassword(null);
+                        return "registration/SignIn.jsp";
+                    } else {
+                        model.addAttribute("errorMessage", "Invalid email or password");
+                        model.addAttribute("attemptMessage", "Number of failed attempts: " + signUpDTO.getFailedAttemptsCount());
+                        return "registration/SignIn.jsp";
+                    }
+                }
             }
-            model.addAttribute("message", "Login successful");
-            return "registration/ResetPassword.jsp";
         } else {
             model.addAttribute("errorMessage", "Invalid email or password");
             return "registration/SignIn.jsp";
@@ -73,36 +95,40 @@ public class SignUpController {
 
     @PostMapping("/resetPassword")
     public String resetPassword(@ModelAttribute("resetPasswordForm") ResetPasswordDTO resetPasswordDTO, Model model) {
-        // Validate the new password
-//        if (resetPasswordDTO.getNewPassword().length() != 16) {
-//            model.addAttribute("errorMessage", "Password must be exactly 16 characters long.");
-//            return "registration/ResetPassword.jsp"; // Assuming you have a view for the reset password form
-//        }
-
-        if(!resetPasswordDTO.getNewPassword().equals(resetPasswordDTO.getConfirmNewPassword())){
-            model.addAttribute("errorMessage", "New Password and Confirm Password not matched");
+        if (!resetPasswordDTO.getNewPassword().equals(resetPasswordDTO.getConfirmNewPassword())) {
+            model.addAttribute("errorMessage", "New Password and Confirm Password do not match.");
             return "registration/ResetPassword.jsp";
         }
 
-        // Update the password in the database
         Optional<SignUpDTO> signUpDTOOptional = signUpService.findByEmailAddress(resetPasswordDTO.getEmailAddress());
-
-        System.out.println(signUpDTOOptional.get());
         if (signUpDTOOptional.isPresent()) {
-            System.out.println("controller update by password "+signUpDTOOptional.get());
-
             SignUpDTO signUpDTO = signUpDTOOptional.get();
             signUpDTO.setPassword(resetPasswordDTO.getNewPassword());
             signUpService.updatePassword(signUpDTO); // Use updatePassword method to save the updated password
 
-            // Redirect to login page with a success message
             model.addAttribute("successMessage", "Password reset successful. Please log in with your new password.");
+            model.addAttribute("reset", true);
             return "registration/SignIn.jsp";
         } else {
-            // If user not found, redirect to a failure page or handle appropriately
             model.addAttribute("errorMessage", "User not found. Please try again.");
             return "registration/ResetPassword.jsp";
         }
     }
 
+    @PostMapping("/forgotPassword")
+    public String forgotPassword(@Valid @ModelAttribute("dto") ForgetPasswordDTO forgetPasswordDTO, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "registration/ForgotPassword.jsp";
+        }
+
+        boolean isPasswordSent = signUpService.processForgetPassword(forgetPasswordDTO.getEmailAddress());
+        if (isPasswordSent) {
+            model.addAttribute("successMessage", "A new password has been successfully sent to your email address. Now please kindly go to SignIn page and login");
+        } else {
+            model.addAttribute("failureMessage", "The email address does not exist.");
+        }
+
+        return "registration/ForgotPassword.jsp";
+    }
 }

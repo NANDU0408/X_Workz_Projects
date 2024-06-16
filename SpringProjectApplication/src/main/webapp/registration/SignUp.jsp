@@ -18,6 +18,9 @@
     <link href="/SpringProjectApplication/images/css/bootstrap.css" rel="stylesheet">
     <base href="http://localhost:8080/SpringProjectApplication/">
 
+     <!-- Font Awesome -->
+        <script src="https://kit.fontawesome.com/de5723d334.js" crossorigin="anonymous"></script>
+
     <style>
         .error-message {
             color: red;
@@ -83,15 +86,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        SignIn/SignUp
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="registration/SignIn.jsp">SignIn</a>
-                        <a class="dropdown-item" href="registration/SignUp.jsp">SignUp</a>
-                    </div>
-                </li>
+                <li class="nav-item">
+                                    <a class="nav-link" href="registration/SignIn.jsp?role=user" style="text-align: center;">
+                                        <span style="display: block;"><i class="fa-solid fa-user"></i></span>
+                                        <span class="d-block"></span>
+                                    </a>
+                                </li>
             </ul>
         </div>
     </div>

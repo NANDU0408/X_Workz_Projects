@@ -1,7 +1,9 @@
 package com.xworkz.springproject.model.service;
 
-import com.xworkz.springproject.dto.SignUpDTO;
+import com.xworkz.springproject.dto.admin.AdminDTO;
+import com.xworkz.springproject.dto.user.SignUpDTO;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SignUpService {
@@ -24,5 +26,19 @@ public interface SignUpService {
     void updateCount(SignUpDTO signUpDTO);
 
     void updatePassword(SignUpDTO signUpDTO);
+
+    Optional<AdminDTO> validateAdminSignIn(String emailAddress, String password);
+
+//    void updateFailedLoginAttempts(SignUpDTO signUpDTO);
+
+    public void handleFailedLoginAttempt(SignUpDTO signUpDTO);
+
+    public boolean processForgetPassword(String emailAddress);
+
+    List<SignUpDTO> getAllSignUpDetails();
+
+
+    void lockAccount(SignUpDTO signUpDTO);
+
 
 }

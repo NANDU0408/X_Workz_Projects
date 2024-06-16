@@ -1,29 +1,20 @@
-package com.xworkz.springproject.dto;
+package com.xworkz.springproject.dto.user;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
+import javax.persistence.Id;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Entity
-@Table(name ="signUp_form")
-public class SignInDTO {
-
+public class ForgetPasswordDTO {
 
     @Id
     @Email(message = "Email should be valid")
     @NotEmpty(message = "Email is required")
     private String emailAddress;
-
-    @NotEmpty(message = "Password is required")
-    private String password;
-
-    @Column(name = "updatedPassword")
-    private String updatedPassword;
 }

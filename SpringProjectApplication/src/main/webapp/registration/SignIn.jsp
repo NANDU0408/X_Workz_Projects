@@ -1,21 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>X-Workz</title>
+    <title>User Login - X-Workz</title>
     <link rel="icon" href="/SpringProjectApplication/images/imageFiles/xworkz_logo.jpeg">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha384-Q5Pl1rC/oStfi2M1kCzKJwECcpOd+kdmPLWjszkcft5Sa+h7sc6LBN7sLk2kPvh5" crossorigin="anonymous"></script>
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <link href="/SpringProjectApplication/images/css/bootstrap.css" rel="stylesheet">
     <base href="http://localhost:8080/SpringProjectApplication/">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/ieIJ6gIFhvjaCln2gq5oWeFf3vSUcIB+q5VR7j" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/de5723d334.js" crossorigin="anonymous"></script>
 
     <style>
         .error-message {
@@ -24,31 +24,34 @@
         body {
             padding-top: 60px;
         }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha384-Q5Pl1rC/oStfi2M1kCzKJwECcpOd+kdmPLWjszkcft5Sa+h7sc6LBN7sLk2kPvh5" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function() {
-            $('.dropdown-toggle').on('click', function(e) {
-                var $el = $(this).next('.dropdown-menu');
-                $('.dropdown-menu').not($el).hide();
-                $el.toggle();
-                e.stopPropagation();
-            });
+        .captcha-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #captchaPreview {
+            font-size: 1.5rem;
+            letter-spacing: 0.1rem;
+            margin-bottom: 10px;
+            filter: blur(2px);
+        }
 
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('.dropdown-toggle').length) {
-                    $('.dropdown-menu').hide();
-                }
-            });
-        });
-    </script>
+        .captcha-btn {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+
+        .custom-card-header {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand" style="margin-right: 200px;">
+        <a class="navbar-brand" href="index.jsp" style="margin-right: 200px;">
             <img src="/SpringProjectApplication/images/imageFiles/xworkz_logo.jpeg" alt="Logo" style="width: 50px;">
             X-Workz
         </a>
@@ -60,15 +63,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">
-                        SignIn/SignUp
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="registration/SignIn.jsp">SignIn</a>
-                        <a class="dropdown-item" href="registration/SignUp.jsp">SignUp</a>
-                    </div>
-                </li>
             </ul>
         </div>
     </div>
@@ -76,70 +70,180 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header text-center">
-                    <h2 class="mb-0">Login Form</h2>
+        <c:choose>
+            <c:when test="${param.role == 'admin'}">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header text-center custom-card-header">
+                            <h2 class="mb-0">Admin Login</h2>
+                        </div>
+                        <div class="card-body">
+                            <form action="admin" method="POST">
+                                <c:if test="${not empty errorMsg}">
+                                    <div class="alert alert-danger">${errorMsg}</div>
+                                </c:if>
+                                <div class="mb-3">
+                                    <label for="adminEmail" class="form-label">Email ID</label>
+                                    <input type="text" class="form-control" id="adminEmail" name="emailAddress" value="${adminLoginForm.emailAddress}" onblur="adminEmailValidation()">
+                                    <span id="adminEmailError" class="error-message"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="adminPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="adminPassword" name="password" value="${adminLoginForm.password}" onblur="adminPasswordValidation()">
+                                    <span id="adminPasswordError" class="error-message"></span>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <input type="submit" id="adminSubmitButton" class="btn btn-primary" value="Login" name="submit"/>
+                                    <button type="button" class="btn btn-secondary ms-2" onclick="refreshPage()">Refresh</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form action="login" method="POST">
-                     <c:if test="${not empty errorMessage}">
-                         <div class="alert alert-danger">${errorMessage}</div>
-                     </c:if>
-                        <span style="color : red;">
-                            <c:forEach items="${errors}" var="objectError">
-                                ${objectError.defaultMessage}</br>
-                            </c:forEach>
-                        </span>
-
-                        <div class="mb-3">
-                            <label for="emailAddress" class="form-label">Email ID</label>
-                            <input type="text" class="form-control" id="emailAddress" name="emailAddress" value="${dto.emailAddress}" onblur="emailAddressValidation()">
-                            <span id="emailAddressError" class="error-message"></span>
+            </c:when>
+            <c:otherwise>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header text-center custom-card-header">
+                            <h2 class="mb-0">User Login</h2>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" value="${dto.password}" onblur="passwordValidation()">
-                            <span id="passwordError" class="error-message"></span>
+                        <div class="card-body">
+                            <form id="userLoginForm" action="login" method="POST" onsubmit="return validateCaptcha()">
+                                <c:if test="${not empty errorMessage}">
+                                    <div class="alert alert-danger">${errorMessage}</div>
+                                </c:if>
+                                <c:if test="${not empty attemptMessage}">
+                                    <div class="alert alert-danger">${attemptMessage}</div>
+                                </c:if>
+                                <c:if test="${not empty successMessage}">
+                                    <div class="alert alert-success">${successMessage}</div>
+                                </c:if>
+                                <c:if test="${signUpDTO.accountBlocked}">
+                                    <script>
+                                        document.getElementById("submitButton").disabled = true;
+                                    </script>
+                                </c:if>
+                                <c:if test="${not empty errorMessage}">
+                                    <div class="alert alert-danger">${errorMessage}</div>
+                                </c:if>
+                                <span class="text-danger">
+                                    <c:forEach items="${errors}" var="objectError">
+                                        ${objectError.defaultMessage}<br/>
+                                    </c:forEach>
+                                </span>
+                                <div class="mb-3">
+                                    <label for="emailAddress" class="form-label">Email ID</label>
+                                    <input type="text" class="form-control" id="emailAddress" name="emailAddress" value="${dto.emailAddress}" onblur="emailAddressValidation()">
+                                    <span id="emailAddressError" class="error-message"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" value="${dto.password}" onblur="passwordValidation()">
+                                    <span id="passwordError" class="error-message"></span>
+                                </div>
+                               <div class="mb-3 captcha-container">
+                                   <label for="captcha-input" class="form-label">Enter Captcha</label>
+                                   <div id="captchaPreview" class="mb-2 bg-white p-2 text-center border"></div>
+                                   <div class="d-flex">
+                                       <input type="text" name="captcha" id="captcha" placeholder="Enter captcha text" class="form-control me-2">
+                                       <button type="button" class="btn btn-secondary captcha-btn" onclick="generateCaptcha()">
+                                           <i class="fas fa-sync-alt"></i>
+                                           &#8635;
+                                       </button>
+                                   </div>
+                                   <span id="captchaError" class="text-danger"></span>
+                               </div>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-primary me-2">Submit</button>
+                                    <button type="button" class="btn btn-secondary" onclick="refreshPage()">Refresh</button>
+                                </div>
+                                 <div class="d-flex justify-content-center mt-2">
+                                    <a href="registration/ForgotPassword.jsp" class="btn btn-link">Forgot Password?</a>
+                                 </div>
+                            </form>
                         </div>
-
-                        <div class="d-flex justify-content-center">
-                            <input type="submit" id="submitButton" class="btn btn-primary" value="Login" name="submit"/>
-                            <button type="button" class="btn btn-secondary ms-2" onclick="refreshPage()">Refresh</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </c:otherwise>
+        </c:choose>
     </div>
-
-    <script>
-        function refreshPage() {
-            window.location.reload();
-        }
-
-        function userNameValidation() {
-            const userName = document.getElementById('userName').value;
-            const userNameError = document.getElementById('userNameError');
-            if (userName === '') {
-                userNameError.textContent = 'User Name is required';
-            } else {
-                userNameError.textContent = '';
-            }
-        }
-
-        function passwordValidation() {
-            const password = document.getElementById('password').value;
-            const passwordError = document.getElementById('passwordError');
-            if (password === '') {
-                passwordError.textContent = 'Password is required';
-            } else {
-                passwordError.textContent = '';
-            }
-        }
-    </script>
 </div>
 
+<script>
+    function refreshPage() {
+        window.location.reload();
+    }
+
+    function emailAddressValidation() {
+        const emailAddress = document.getElementById('emailAddress').value;
+        const emailAddressError = document.getElementById('emailAddressError');
+        if (emailAddress === '') {
+            emailAddressError.textContent = 'Email ID is required';
+        } else {
+            emailAddressError.textContent = '';
+        }
+    }
+
+    function passwordValidation() {
+        const password = document.getElementById('password').value;
+        const passwordError = document.getElementById('passwordError');
+        if (password === '') {
+            passwordError.textContent = 'Password is required';
+        } else {
+            passwordError.textContent = '';
+        }
+    }
+
+    function adminEmailValidation() {
+        const emailAddress = document.getElementById('adminEmail').value;
+        const emailAddressError = document.getElementById('adminEmailError');
+        if (emailAddress === '') {
+            emailAddressError.textContent = 'Email ID is required';
+        } else {
+            emailAddressError.textContent = '';
+        }
+    }
+
+    function adminPasswordValidation() {
+        const password = document.getElementById('adminPassword').value;
+        const passwordError = document.getElementById('adminPasswordError');
+        if (password === '') {
+            passwordError.textContent = 'Password is required';
+        } else {
+            passwordError.textContent = '';
+        }
+    }
+
+    // This function generates a new captcha
+    function generateCaptcha() {
+        const captchaPreview = document.getElementById('captchaPreview');
+        const captchaText = Math.random().toString(36).substring(2, 7);
+        captchaPreview.textContent = captchaText;
+        captchaPreview.dataset.captchaText = captchaText;
+    }
+
+    // This function validates the captcha input
+    function validateCaptcha() {
+        const captchaInput = document.getElementById('captcha').value;
+        const captchaPreview = document.getElementById('captchaPreview').dataset.captchaText;
+        const captchaError = document.getElementById('captchaError');
+        if (captchaInput === '') {
+            captchaError.textContent = 'Captcha is required';
+            return false;
+        } else if (captchaInput !== captchaPreview) {
+            captchaError.textContent = 'Captcha is incorrect';
+            return false;
+        } else {
+            captchaError.textContent = '';
+            return true;
+        }
+    }
+
+    // Initial captcha generation
+    window.onload = function() {
+        generateCaptcha();
+    };
+</script>
+<script src="/SpringProjectApplication/images/javaScript/recaptcha.js"></script>
 </body>
 </html>

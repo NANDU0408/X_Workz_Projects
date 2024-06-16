@@ -1,6 +1,7 @@
 package com.xworkz.springproject.model.repository;
 
-import com.xworkz.springproject.dto.SignUpDTO;
+import com.xworkz.springproject.dto.admin.AdminDTO;
+import com.xworkz.springproject.dto.user.SignUpDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -42,6 +44,33 @@ public class SignUpRepoImpl implements SignUpRepo {
         }
         return Optional.of(signUpDTO);
     }
+
+
+    @Override
+    @Transactional
+    public Optional<SignUpDTO> merge(SignUpDTO signUpDTO) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            signUpDTO.setPassword(generateRandomPassword());
+            signUpDTO.setCreatedBy(signUpDTO.getFirstName() + " " + signUpDTO.getLastName());
+            signUpDTO.setCreatedDate(LocalDateTime.now());
+            signUpDTO.setUpdatedBy(signUpDTO.getFirstName() + " " + signUpDTO.getLastName());
+            signUpDTO.setUpdatedDate(LocalDateTime.now());
+            entityManager.merge(signUpDTO);
+            entityManager.getTransaction().commit();
+        } catch (PersistenceException e) {
+            entityManager.getTransaction().rollback();
+//            e.printStackTrace();
+            System.out.println("Exception while saving data: " + e.getMessage());
+            System.out.println(e.getCause());
+            return Optional.empty();
+        } finally {
+            entityManager.close();
+        }
+        return Optional.of(signUpDTO);
+    }
+
 
     @Override
     public boolean checkEmailExists(String emailAddress) {
@@ -88,6 +117,20 @@ public class SignUpRepoImpl implements SignUpRepo {
     }
 
     @Override
+    public Optional<AdminDTO> findByAdminEmailAddress(String emailAddress) {
+        System.out.println("find by email "+emailAddress);
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            Query query = entityManager.createQuery("SELECT a FROM AdminDTO a WHERE a.emailAddress = :emailAddress");
+            query.setParameter("emailAddress", emailAddress);
+            AdminDTO adminDTO = (AdminDTO) query.getSingleResult();
+            return Optional.ofNullable(adminDTO);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public boolean updatePassword(SignUpDTO signUpDTO) {
         System.out.println("Repo update by password "+signUpDTO);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -114,7 +157,14 @@ public class SignUpRepoImpl implements SignUpRepo {
         return false;
     }
 
-    private String generateRandomPassword() {
+    @Override
+    public List<SignUpDTO> findAll() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Query query = entityManager.createQuery("SELECT s FROM SignUpDTO s");
+        return query.getResultList();
+    }
+
+    public String generateRandomPassword() {
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
         for (int i = 0; i < PASSWORD_LENGTH; i++) {

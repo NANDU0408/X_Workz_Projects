@@ -13,6 +13,9 @@
     <link href="/SpringProjectApplication/images/css/bootstrap.css" rel="stylesheet">
     <base href="http://localhost:8080/SpringProjectApplication/">
 
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/de5723d334.js" crossorigin="anonymous"></script>
+
     <style>
         body {
             padding-top: 60px;
@@ -58,28 +61,34 @@
 </head>
 <body>
 
+
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#" style="margin-right: 200px;">
+        <a class="navbar-brand" href="index.jsp" style="margin-right: auto;">
             <img src="/SpringProjectApplication/images/imageFiles/xworkz_logo.jpeg" alt="Logo" style="width: 50px;">
             X-Workz
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto" style="margin-right: 10px;">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                        SignIn/SignUp
+               <li class="nav-item dropdown">
+                   <a class="nav-link dropdown-toggle" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                       <span style="display: inline-block; margin-right: 5px;"><i class="fa-solid fa-user"></i></span>
+                       <span class="d-inline-block">User</span>
+                   </a>
+                   <div class="dropdown-menu">
+                       <a class="dropdown-item" href="registration/SignIn.jsp">SignIn</a>
+                       <a class="dropdown-item" href="registration/SignUp.jsp">SignUp</a>
+                   </div>
+               </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="registration/SignIn.jsp?role=admin" style="text-align: center;">
+                        <span style="display: block;"><i class="fas fa-crown"></i></span>
+                        <span class="d-block">Admin</span>
                     </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="registration/SignIn.jsp">SignIn</a>
-                        <a class="dropdown-item" href="registration/SignUp.jsp">SignUp</a>
-                    </div>
                 </li>
             </ul>
         </div>
@@ -96,7 +105,7 @@
                     <div class="card-text" style="font-family: Georgia, 'Times New Roman', Times, serif;">
                         <div class="mb-3 card-body">
                              <h5 class="card-title">Tech Stack:</h5>
-                             <p class="card-text">Java, JSP, Servlet, JPA, Spring</p>
+                             <p class="card-text">Java, JSP, Servlet, JPA, Spring, Maven Architecture, </p>
                         </div>
                         <div class="mb-3 card-body">
                             <h5 class="card-title">Start Date: </h5>

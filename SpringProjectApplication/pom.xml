@@ -112,6 +112,23 @@
       <version>1.4.7</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/net.tanesha.recaptcha4j/recaptcha4j -->
+    <dependency>
+      <groupId>net.tanesha.recaptcha4j</groupId>
+      <artifactId>recaptcha4j</artifactId>
+      <version>0.0.7</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-recaptchaenterprise -->
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-recaptchaenterprise</artifactId>
+      <version>3.42.0</version>
+    </dependency>
+
+
+
+
 
   </dependencies>
   <build>
