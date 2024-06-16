@@ -68,7 +68,7 @@ public class SignUpServiceImpl implements SignUpService {
                     (signUpDTO.getUpdatedPassword() != null && signUpDTO.getUpdatedPassword().equals(password))) {
                 signUpDTO.setFailedAttemptsCount(0); // Reset failed attempts on successful login
                 signUpDTO.setFailedAttemptDateTime(null); // Reset failed attempt datetime
-                signUpRepo.save(signUpDTO); // Save the updated SignUpDTO object
+                signUpRepo.merge(signUpDTO); // Save the updated SignUpDTO object
                 return Optional.of(signUpDTO);
             } else {
                 handleFailedLoginAttempt(signUpDTO); // Update failed login attempts

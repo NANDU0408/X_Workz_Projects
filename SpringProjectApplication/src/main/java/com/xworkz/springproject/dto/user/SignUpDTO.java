@@ -78,10 +78,8 @@ public class SignUpDTO {
     private LocalDateTime failedAttemptDateTime;
 
     @Transient
-    @Column(name = "account_locked")
     private boolean accountLocked;
 
     @Transient
-    @Column(name = "role")
     private String role;
 }
