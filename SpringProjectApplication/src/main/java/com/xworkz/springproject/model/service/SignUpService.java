@@ -1,6 +1,7 @@
 package com.xworkz.springproject.model.service;
 
 import com.xworkz.springproject.dto.admin.AdminDTO;
+import com.xworkz.springproject.dto.user.ImageDownloadDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 
 import java.util.List;
@@ -40,5 +41,13 @@ public interface SignUpService {
 
     void lockAccount(SignUpDTO signUpDTO);
 
+    public SignUpDTO updateUserDetails(String emailAddress, SignUpDTO signUpDTO);
 
+    public void saveImageDetails(ImageDownloadDTO imageDownloadDTO);
+
+    public Optional<List<ImageDownloadDTO>> passImageDetails(SignUpDTO signUpDTO);
+
+    List<ImageDownloadDTO> findByUserIdAndStatus(int id, String active);
+
+    ;
 }

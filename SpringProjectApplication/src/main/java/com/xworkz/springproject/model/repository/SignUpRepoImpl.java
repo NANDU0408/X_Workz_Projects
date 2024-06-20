@@ -1,6 +1,7 @@
 package com.xworkz.springproject.model.repository;
 
 import com.xworkz.springproject.dto.admin.AdminDTO;
+import com.xworkz.springproject.dto.user.ImageDownloadDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -162,6 +164,129 @@ public class SignUpRepoImpl implements SignUpRepo {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Query query = entityManager.createQuery("SELECT s FROM SignUpDTO s");
         return query.getResultList();
+    }
+
+    @Override
+    @Transactional
+    public SignUpDTO updateProfile(SignUpDTO signUpDTO) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        System.out.println("Running updateProfile in repo user");
+        try {
+            entityManager.getTransaction().begin();
+
+            // Find the existing entity by email address
+//            SignUpDTO existingDTO = findByEmailAddress(signUpDTO.getEmailAddress())
+//                    .orElseThrow(() -> new EntityNotFoundException("User with email address " + signUpDTO.getEmailAddress() + " not found"));
+
+            // Update the fields you want to modify
+//            existingDTO.setFirstName(signUpDTO.getFirstName());
+//            existingDTO.setLastName(signUpDTO.getLastName());
+//            existingDTO.setMobileNumber(signUpDTO.getMobileNumber());
+
+            // Merge the updated entity
+            SignUpDTO updatedDTO = entityManager.merge(signUpDTO);
+
+            entityManager.getTransaction().commit();
+            System.out.println(updatedDTO);
+            return updatedDTO;
+        } catch (PersistenceException e) {
+            entityManager.getTransaction().rollback();
+            e.printStackTrace();
+            System.out.println("Exception while updating data: " + e);
+            return null;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void saveImageDetails(ImageDownloadDTO imageDownloadDTO) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        System.out.println("Running saveImageDetails in SignRepo"+imageDownloadDTO);
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(imageDownloadDTO);
+            entityManager.getTransaction().commit();
+        } catch (PersistenceException e) {
+            entityManager.getTransaction().rollback();
+            e.printStackTrace();
+            System.out.println("Exception while saving image details: " + e);
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Transactional
+    public Optional<ImageDownloadDTO> save(ImageDownloadDTO imageDownloadDTO) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(imageDownloadDTO);
+            entityManager.getTransaction().commit();
+            return Optional.of(imageDownloadDTO);
+        } catch (PersistenceException e) {
+            entityManager.getTransaction().rollback();
+            e.printStackTrace();
+            System.out.println("Exception while saving image data: " + e);
+            return Optional.empty();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Transactional
+    public Optional<ImageDownloadDTO> mergeImage(ImageDownloadDTO imageDownloadDTO) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+
+            // Merge the entity
+            ImageDownloadDTO mergedEntity = entityManager.merge(imageDownloadDTO);
+
+            entityManager.getTransaction().commit();
+            return Optional.of(mergedEntity);
+        } catch (PersistenceException e) {
+            entityManager.getTransaction().rollback();
+            e.printStackTrace();
+            System.out.println("Exception while saving image data: " + e);
+            return Optional.empty();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public Optional<List<ImageDownloadDTO>> findImage(int userId) {
+        System.out.println("find by userData" +userId);
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            Query query = entityManager.createQuery("SELECT a FROM ImageDownloadDTO a WHERE a.userId = :userId  AND a.status = 'ACTIVE'");
+            query.setParameter("userId", userId);
+            List<ImageDownloadDTO> imageDownloadDTOList = (List<ImageDownloadDTO>) query.getResultList();
+            System.out.println(imageDownloadDTOList);
+            return Optional.ofNullable(imageDownloadDTOList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public List<ImageDownloadDTO> findByUserIdAndStatus(int userId, String status) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        System.out.println("Running findByUserIdAndStatus in repo");
+        try {
+            Query query = entityManager.createQuery("SELECT i FROM ImageDownloadDTO i WHERE i.userId = :userId AND i.status = :status");
+            query.setParameter("userId", userId);
+            query.setParameter("status", status);
+            return query.getResultList();
+        } finally {
+            entityManager.close();
+        }
     }
 
     public String generateRandomPassword() {

@@ -1,7 +1,7 @@
 package com.xworkz.springproject.model.service;
 
 import com.xworkz.springproject.dto.admin.AdminDTO;
-import com.xworkz.springproject.dto.user.SignInDTO;
+import com.xworkz.springproject.dto.user.ImageDownloadDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 import com.xworkz.springproject.model.repository.SignUpRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +108,8 @@ public class SignUpServiceImpl implements SignUpService {
         signUpRepo.merge(signUpDTO);
     }
 
+
+
     @Override
     public Optional<AdminDTO> validateAdminSignIn(String emailAddress, String password) {
         Optional<AdminDTO> adminDTOOptional = signUpRepo.findByAdminEmailAddress(emailAddress);
@@ -167,4 +169,42 @@ public class SignUpServiceImpl implements SignUpService {
     public List<SignUpDTO> getAllSignUpDetails() {
         return signUpRepo.findAll();
     }
+
+    @Override
+    @Transactional
+    public SignUpDTO updateUserDetails(String emailAddress, SignUpDTO signUpDTO) {
+        System.out.println("service updateUserDetails process is initiated.");
+
+        Optional<SignUpDTO> optionalUser = signUpRepo.findByEmailAddress(emailAddress);
+        if (optionalUser.isPresent()) {
+            SignUpDTO existingUser = optionalUser.get();
+            existingUser.setFirstName(signUpDTO.getFirstName());
+            existingUser.setLastName(signUpDTO.getLastName());
+            existingUser.setMobileNumber(signUpDTO.getMobileNumber());
+            existingUser.setProfilePicturePath(signUpDTO.getProfilePicturePath());
+
+            return signUpRepo.merge(existingUser).get();
+        } else {
+            return null;
+        }
+    }
+
+
+    @Override
+    public void saveImageDetails(ImageDownloadDTO imageDownloadDTO) {
+        System.out.println("Running saveImageDetails in signInService"+imageDownloadDTO);
+        signUpRepo.mergeImage(imageDownloadDTO);
+    }
+
+    public Optional<List<ImageDownloadDTO>> passImageDetails(SignUpDTO signUpDTO){
+        System.out.println("Running passImageDetails in signInService" +signUpDTO);
+        return signUpRepo.findImage(signUpDTO.getId());
+    }
+
+    @Override
+    public List<ImageDownloadDTO> findByUserIdAndStatus(int userId, String status) {
+        System.out.println("Running findByUserIdAndStatus in service");
+        return signUpRepo.findByUserIdAndStatus(userId, status);
+    }
+
 }

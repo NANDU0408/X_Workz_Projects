@@ -82,4 +82,10 @@ public class SignUpDTO {
 
     @Transient
     private String role;
+
+    @Transient
+    private String profilePicture;
+
+    @Column(name = "profilePicturePath")
+    private String profilePicturePath;
 }

@@ -1,23 +1,23 @@
 package com.xworkz.springproject.controller;
 
-import com.xworkz.springproject.dto.user.ForgetPasswordDTO;
-import com.xworkz.springproject.dto.user.ResetPasswordDTO;
-import com.xworkz.springproject.dto.user.SignInDTO;
-import com.xworkz.springproject.dto.user.SignUpDTO;
+import com.xworkz.springproject.dto.user.*;
 import com.xworkz.springproject.model.service.SignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
+@SessionAttributes({"userData","userImageData"})
 public class SignUpController {
 
     @Autowired
@@ -52,7 +52,7 @@ public class SignUpController {
 
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("loginForm") SignInDTO signInDTO, BindingResult bindingResult, Model model) {
+    public String login(@Valid @ModelAttribute("loginForm") SignInDTO signInDTO, BindingResult bindingResult, Model model, HttpSession session) {
         if (bindingResult.hasErrors()) {
             return "registration/SignIn.jsp";
         }
@@ -70,6 +70,16 @@ public class SignUpController {
 //                        signUpDTO.setCount(0);
                         return "registration/SignIn.jsp";
                     } else {
+                        String imageUrl="/images/"+validatedUser.get().getProfilePicture();
+                        session.setAttribute("profileImage",imageUrl);
+                        model.addAttribute("user", validatedUser.get());
+                        model.addAttribute("userData",validatedUser.get());
+
+                        Optional<List<ImageDownloadDTO>> imageDownloadDTO = signUpService.passImageDetails(validatedUser.get());
+                        if (imageDownloadDTO.isPresent()){
+                            System.out.println("Image has been found and ready to set" +imageDownloadDTO);
+                            model.addAttribute("userImageData",imageDownloadDTO.get().get(0));
+                        }
                         return "registration/Home.jsp"; // Redirect to home page if login is successful
                     }
                 } else {
@@ -130,5 +140,31 @@ public class SignUpController {
         }
 
         return "registration/ForgotPassword.jsp";
+    }
+
+    @GetMapping("/profile")
+    public String profile(Model model) {
+        // Get authenticated user's email from Spring Security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName(); // Assuming email is used as username
+
+        // Fetch user details from service based on email
+        Optional<SignUpDTO> signUpDTOOptional = signUpService.findByEmailAddress(userEmail);
+        if (signUpDTOOptional.isPresent()) {
+            SignUpDTO signUpDTO = signUpDTOOptional.get();
+
+            // Create UserProfileDTO and populate with fetched details
+            UserProfileDTO user = new UserProfileDTO();
+            user.setProfilePicturePath(signUpDTO.getProfilePicturePath());
+            user.setFirstName(signUpDTO.getFirstName());
+            user.setLastName(signUpDTO.getLastName());
+
+            model.addAttribute("user", user);
+
+            return "registration/Edit.jsp"; // The name of your Thymeleaf template file (profile.html in your case)
+        } else {
+            // Handle scenario where user details are not found (unlikely in normal login flow)
+            return "redirect:/login"; // Redirect to login page if user details are not found
+        }
     }
 }
