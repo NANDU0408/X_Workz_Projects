@@ -49,5 +49,7 @@ public interface SignUpService {
 
     List<ImageDownloadDTO> findByUserIdAndStatus(int id, String active);
 
+    public boolean updateProfile(SignUpDTO updatedProfile);
+
     ;
 }

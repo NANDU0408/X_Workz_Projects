@@ -23,6 +23,8 @@ public class SpringProjectApplicationWebConfiguration implements WebMvcConfigure
     public void addResourceHandlers(ResourceHandlerRegistry registry){
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("C:\\Users\\Admin\\OneDrive\\Desktop\\uplodedImages\\");
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("/linkFiles/");
     }
 
 

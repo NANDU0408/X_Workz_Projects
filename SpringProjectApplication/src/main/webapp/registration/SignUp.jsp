@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,17 +9,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X-Workz</title>
     <link rel="icon" href="/SpringProjectApplication/images/imageFiles/xworkz_logo.jpeg">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha384-Q5Pl1rC/oStfi2M1kCzKJwECcpOd+kdmPLWjszkcft5Sa+h7sc6LBN7sLk2kPvh5" crossorigin="anonymous"></script>
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="/SpringProjectApplication/images/css/bootstrap.css" rel="stylesheet">
     <base href="http://localhost:8080/SpringProjectApplication/">
 
-     <!-- Font Awesome -->
-        <script src="https://kit.fontawesome.com/de5723d334.js" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/de5723d334.js" crossorigin="anonymous"></script>
 
     <style>
         .error-message {
@@ -29,40 +26,68 @@
             padding-top: 60px;
         }
         .myContainer {
-                    max-width: 800px;
-                }
+            max-width: 800px;
+        }
         .mycard {
-                    border-radius: 15px;
-                    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-                    padding: 30px;
-                }
-                .navbar-brand {
-                    flex-grow: 1;
-                    text-align: left;
-                }
-                .navbar-nav {
-                    flex-direction: row;
-                }
-                .navbar-nav .nav-item {
-                    margin-left: 10px;
-                }
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .navbar-brand {
+            flex-grow: 1;
+            text-align: left;
+        }
+        .navbar-nav {
+            flex-direction: row;
+        }
+        .navbar-nav .nav-item {
+            margin-left: 10px;
+        }
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha384-Q5Pl1rC/oStfi2M1kCzKJwECcpOd+kdmPLWjszkcft5Sa+h7sc6LBN7sLk2kPvh5" crossorigin="anonymous"></script>
+
     <script>
         $(document).ready(function() {
-            // Handle click event for all dropdown toggles
-            $('.dropdown-toggle').on('click', function(e) {
-                var $el = $(this).next('.dropdown-menu');
-                $('.dropdown-menu').not($el).hide();
-                $el.toggle();
-                e.stopPropagation();
+            // Function to check if email exists
+            $('#emailAddress').blur(function() {
+                const email = $(this).val().trim();
+                if (email !== '') {
+                    $.ajax({
+                        url: 'api/profile/email',
+                        type: 'GET',
+                        data: { email: email },
+                        success: function(exists) {
+                            if (exists) {
+                                $('#emailAddressError').text('Email already exists');
+                            } else {
+                                $('#emailAddressError').text('');
+                            }
+                        },
+                        error: function() {
+                            $('#emailAddressError').text('Error checking email');
+                        }
+                    });
+                }
             });
 
-            // Close dropdown when clicking outside of it
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('.dropdown-toggle').length) {
-                    $('.dropdown-menu').hide();
+            // Function to check if mobile number exists
+            $('#mobileNumber').blur(function() {
+                const mobileNumber = $(this).val().trim();
+                if (mobileNumber !== '') {
+                    $.ajax({
+                        url: 'api/profile/phone',
+                        type: 'GET',
+                        data: { phone: mobileNumber },
+                        success: function(exists) {
+                            if (exists) {
+                                $('#mobileNumberError').text('Mobile number already exists');
+                            } else {
+                                $('#mobileNumberError').text('');
+                            }
+                        },
+                        error: function() {
+                            $('#mobileNumberError').text('Error checking mobile number');
+                        }
+                    });
                 }
             });
         });
@@ -87,11 +112,11 @@
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
                 <li class="nav-item">
-                                    <a class="nav-link" href="registration/SignIn.jsp?role=user" style="text-align: center;">
-                                        <span style="display: block;"><i class="fa-solid fa-user"></i></span>
-                                        <span class="d-block"></span>
-                                    </a>
-                                </li>
+                    <a class="nav-link" href="registration/SignIn.jsp?role=user" style="text-align: center;">
+                        <span style="display: block;"><i class="fa-solid fa-user"></i></span>
+                        <span class="d-block"></span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -102,12 +127,12 @@
         <div class="col-md-6">
             <h2 class="text-center mb-4 mt-4">Sign-Up Form</h2>
             <form action="signUp" method="POST">
-            <c:if test="${successMessage.length() > 0}">
-                <div class="alert alert-danger">${successMessage}</div>
-            </c:if>
-            <c:if test="${failureMessage.length() > 0}">
-                <div class="alert alert-danger">${failureMessage}</div>
-            </c:if>
+                <c:if test="${successMessage.length() > 0}">
+                    <div class="alert alert-danger">${successMessage}</div>
+                </c:if>
+                <c:if test="${failureMessage.length() > 0}">
+                    <div class="alert alert-danger">${failureMessage}</div>
+                </c:if>
                 <span style="color : red;">
                     <c:forEach items="${errors}" var="objectError">
                         ${objectError.defaultMessage}</br>
@@ -128,7 +153,7 @@
 
                 <div class="mb-3">
                     <label for="emailAddress" class="form-label">Email</label>
-                    <input type="emailAddress" class="form-control" id="emailAddress" name="emailAddress" value="${dto.emailAddress}" onblur="emailAddressValidation()">
+                    <input type="email" class="form-control" id="emailAddress" name="emailAddress" value="${dto.emailAddress}" onblur="emailAddressValidation()">
                     <span id="emailAddressError" class="error-message"></span>
                 </div>
 
@@ -145,19 +170,19 @@
                 </div>
 
                 <div class="mb-1 d-flex justify-content-center">
-                    <input type="submit" id="submitButton" class="btn btn-primary" value="Submit" name="submit"/>
+                    <input type="submit" id="submitButton" class="btn btn-primary" value="Submit" name="submit" disabled/>
                     <button type="button" class="btn btn-secondary ms-2" onclick="refreshPage()">Refresh</button>
                 </div>
             </form>
         </div>
     </div>
-
-    <script>
-        function refreshPage() {
-            window.location.reload();
-        }
-    </script>
 </div>
-<script src="/SpringProjectApplication/images/javaScript/SignUp.js"></script>
+
+<script>
+    function refreshPage() {
+        window.location.reload();
+    }
+</script>
+<script src="/Trust/images/javaScript/SignUp.js"></script>
 </body>
 </html>

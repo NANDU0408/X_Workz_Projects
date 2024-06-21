@@ -207,4 +207,20 @@ public class SignUpServiceImpl implements SignUpService {
         return signUpRepo.findByUserIdAndStatus(userId, status);
     }
 
+    public boolean updateProfile(SignUpDTO updatedProfile) {
+        Optional<SignUpDTO> existingProfileOptional = signUpRepo.findByEmailAddress(updatedProfile.getEmailAddress());
+        if (existingProfileOptional.isPresent()) {
+            SignUpDTO existingProfile = existingProfileOptional.get();
+            existingProfile.setFirstName(updatedProfile.getFirstName());
+            existingProfile.setLastName(updatedProfile.getLastName());
+            existingProfile.setMobileNumber(updatedProfile.getMobileNumber());
+            if (updatedProfile.getProfilePicture() != null) {
+                existingProfile.setProfilePicture(updatedProfile.getProfilePicture());
+            }
+            signUpRepo.save(existingProfile);
+            return true;
+        }
+        return false;
+    }
+
 }
