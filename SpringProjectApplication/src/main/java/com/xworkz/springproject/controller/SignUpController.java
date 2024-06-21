@@ -78,7 +78,9 @@ public class SignUpController {
                         Optional<List<ImageDownloadDTO>> imageDownloadDTO = signUpService.passImageDetails(validatedUser.get());
                         if (imageDownloadDTO.isPresent()){
                             System.out.println("Image has been found and ready to set" +imageDownloadDTO);
-                            model.addAttribute("userImageData",imageDownloadDTO.get().get(0));
+                            if (imageDownloadDTO.isPresent() && !imageDownloadDTO.get().isEmpty()) {
+                                model.addAttribute("userImageData", imageDownloadDTO.get().get(0));
+                            }
                         }
                         return "registration/Home.jsp"; // Redirect to home page if login is successful
                     }
