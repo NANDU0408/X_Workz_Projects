@@ -170,7 +170,7 @@
                 </div>
 
                 <div class="mb-1 d-flex justify-content-center">
-                    <input type="submit" id="submitButton" class="btn btn-primary" value="Submit" name="submit" disabled/>
+                    <input type="submit" id="submitButton" class="btn btn-primary" value="Submit" name="submit"/>
                     <button type="button" class="btn btn-secondary ms-2" onclick="refreshPage()">Refresh</button>
                 </div>
             </form>
@@ -183,6 +183,5 @@
         window.location.reload();
     }
 </script>
-<script src="/Trust/images/javaScript/SignUp.js"></script>
 </body>
 </html>

@@ -139,6 +139,15 @@
         <li class="nav-item">
             <a class="nav-link" href="registration/Edit.jsp">Edit Profile</a>
         </li>
+          <li class="nav-item dropdown">
+                             <a class="nav-link dropdown-toggle" href="#" id="complaintDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                 Complaints
+                             </a>
+                             <ul class="dropdown-menu" aria-labelledby="complaintDropdown">
+                                 <li><a class="dropdown-item" href="registration/RaiseComplaint.jsp">Raise Complaint</a></li>
+                                 <li><a class="dropdown-item" href="registration/ViewComplaints.jsp">View Complaints</a></li>
+                             </ul>
+                         </li>
     </ul>
 </div>
 

@@ -15,16 +15,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan("com.xworkz")
 @PropertySource("classpath:application.properties")
 public class SpringProjectApplicationWebConfiguration implements WebMvcConfigurer {
-    public SpringProjectApplicationWebConfiguration(){
+    public SpringProjectApplicationWebConfiguration() {
         System.out.println("Running SpringProjectApplicationWebConfiguration");
     }
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry){
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("C:\\Users\\Admin\\OneDrive\\Desktop\\uplodedImages\\");
-        registry.addResourceHandler("/images/**")
+//        registry.addResourceHandler("/otherImages/**")
+//                .addResourceLocations("E:\\X_Workz_Projects\\SpringProjectApplication\\src\\main\\webapp\\linkFiles\\");
+//        registry.addResourceHandler("/javaScript/**")
+//                .addResourceLocations("E:\\X_Workz_Projects\\SpringProjectApplication\\src\\main\\webapp\\linkFiles\\");
+
+        registry.addResourceHandler("/resources/**")
                 .addResourceLocations("/linkFiles/");
+
     }
 
 
