@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -30,38 +27,48 @@ public class RaiseComplaintsViewerController {
     private SignUpService signUpService;
 
 
-    @PostMapping("/complaint")
-    public String submitComplaint(@Valid @ModelAttribute("dto") RaiseComplaintDTO raiseComplaintDTO,
-                                  BindingResult bindingResult, Model model, HttpSession session) {
 
-        System.out.println("Running RaiseComplaintsViewerController" + raiseComplaintDTO);
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("errors", bindingResult.getAllErrors());
-            return "registration/ViewComplaints.jsp";
-        }
-
-        // Fetch logged-in user details from session
+    @GetMapping("/editComplaint/{complaintId}")
+    public String editComplaint(@PathVariable("complaintId") int complaintId, Model model, HttpSession session) {
+        Optional<RaiseComplaintDTO> complaintOpt = complaintService.findComplaintById(complaintId);
         SignUpDTO loggedInUser = (SignUpDTO) session.getAttribute("userData");
-        if (loggedInUser == null) {
-            model.addAttribute("failureMessage", "User is not logged in.");
-            return "registration/ViewComplaints.jsp"; // Redirect to login page if user is not logged in
-        }
+        if (complaintOpt.isPresent()) {
+            model.addAttribute("complaint", complaintOpt.get());
+            System.out.println("Running editComplaint in Controller "+complaintOpt);
 
-        // Save the complaint using service
-        System.out.println("Controller" + raiseComplaintDTO);
-        Optional<RaiseComplaintDTO> savedDto = complaintService.saveComplaint(raiseComplaintDTO, loggedInUser);
-
-        if (savedDto.isPresent()) {
-            System.out.println("Controller Raise" + raiseComplaintDTO);
-            model.addAttribute("successMessage", "Complaint submitted successfully!");
+            RaiseComplaintDTO raiseComplaintDTO = complaintOpt.get();
+            Optional<RaiseComplaintDTO> savedDto = complaintService.saveComplaint(raiseComplaintDTO, loggedInUser);
+            return "registration/ViewComplaints.jsp"; // JSP page for editing the complaint
         } else {
-            model.addAttribute("failureMessage", "Failed to submit complaint. Please try again.");
+            model.addAttribute("error", "Complaint not found");
+            return "registration/ViewComplaints.jsp"; // Error page
         }
+    }
 
-        // Fetch all complaints related to the logged-in user
-        List<RaiseComplaintDTO> userComplaints = complaintService.findAllComplaintsByUserId(loggedInUser.getId());
-        model.addAttribute("complaintLists", userComplaints); // Add user's complaints to the model
-
+    @GetMapping("/viewComplaints")
+    public String viewComplaints(Model model,HttpSession session) {
+        SignUpDTO loggedInUser = (SignUpDTO) session.getAttribute("userData");
+        List<RaiseComplaintDTO> complaintList = complaintService.findAllComplaints(loggedInUser.getId());
+        model.addAttribute("complaintLists", complaintList);
+        System.out.println("Running viewComplaints in Controller"+complaintList);
         return "registration/ViewComplaints.jsp";
     }
-}
+
+    @GetMapping("/viewActiveComplaints")
+    public String viewActiveComplaints(Model model, HttpSession session) {
+        SignUpDTO loggedInUser = (SignUpDTO) session.getAttribute("userData");
+        List<RaiseComplaintDTO> complaintList = complaintService.findComplaintsByStatus(loggedInUser.getId(), "Active"); // Assuming you have a method to fetch active complaints
+        model.addAttribute("complaintLists", complaintList);
+        System.out.println("Running viewActiveComplaints in Controller" + complaintList);
+        return "registration/ViewComplaints.jsp";
+    }
+
+    @GetMapping("/viewInactiveComplaints")
+    public String viewInactiveComplaints(Model model, HttpSession session) {
+        SignUpDTO loggedInUser = (SignUpDTO) session.getAttribute("userData");
+        List<RaiseComplaintDTO> complaintList = complaintService.findComplaintsByStatus(loggedInUser.getId(), "Inactive"); // Assuming you have a method to fetch inactive complaints
+        model.addAttribute("complaintLists", complaintList);
+        System.out.println("Running viewInactiveComplaints in Controller" + complaintList);
+        return "registration/ViewComplaints.jsp";
+    }
+    }

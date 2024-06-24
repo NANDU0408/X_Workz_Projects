@@ -23,9 +23,22 @@ public class ComplaintServiceImpl implements ComplaintService{
         return complaintRepo.saveComplaint(raiseComplaintDTO, signUpDTO);
     }
 
+
+
     @Override
-    public List<RaiseComplaintDTO> findAllComplaintsByUserId(int userId) {
-        System.out.println("Running findAllComplaintsByUserId in ComplaintServiceImpl");
-        return complaintRepo.findAllComplaintsByUserId(userId);
+    public List<RaiseComplaintDTO> findAllComplaints(int userId) {
+        System.out.println("Running findAllComplaints in ComplaintServiceImpl");
+        return complaintRepo.findAllComplaints(userId);
+    }
+
+    @Override
+    public Optional<RaiseComplaintDTO> findComplaintById(int complaintId) {
+        System.out.println("Running findComplaintById in ComplaintServiceImpl");
+        return complaintRepo.findComplaintById(complaintId);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> findComplaintsByStatus(int userId, String status) {
+        return complaintRepo.findByUserIdAndStatus(userId, status);
     }
 }

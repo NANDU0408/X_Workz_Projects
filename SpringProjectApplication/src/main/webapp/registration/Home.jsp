@@ -7,10 +7,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>X-Workz</title>
-    <link rel="icon" href="/SpringProjectApplication/images/imageFiles/xworkz_logo.jpeg">
+    <title>System Issue Management</title>
+    <link rel="icon" href="resources/imageFiles/xworkz_logo.jpeg">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/SpringProjectApplication/images/css/bootstrap.css" rel="stylesheet">
+    <link href="resources/css/bootstrap.css" rel="stylesheet">
     <base href="http://localhost:8080/SpringProjectApplication/">
 
     <!-- Font Awesome -->
@@ -98,8 +98,8 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <img src="/SpringProjectApplication/images/imageFiles/xworkz_logo.jpeg" alt="Logo" style="width: 50px;">
-                X-Workz
+                <img src="resources/imageFiles/xworkz_logo.jpeg" alt="Logo" style="width: 50px;">
+                System Issue Management
             </a>
             <!-- Navbar toggler button -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -145,7 +145,7 @@
                              </a>
                              <ul class="dropdown-menu" aria-labelledby="complaintDropdown">
                                  <li><a class="dropdown-item" href="registration/RaiseComplaint.jsp">Raise Complaint</a></li>
-                                 <li><a class="dropdown-item" href="registration/ViewComplaints.jsp">View Complaints</a></li>
+                                 <li><a class="dropdown-item" href="viewComplaints">View Complaints</a></li>
                              </ul>
                          </li>
     </ul>

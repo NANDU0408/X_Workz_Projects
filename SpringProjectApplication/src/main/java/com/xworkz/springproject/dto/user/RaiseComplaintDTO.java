@@ -19,7 +19,7 @@ public class RaiseComplaintDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "complaint_id")
+    @Column(name = "id")
     private int complaintId;
 
     @NotNull(message = "Complaint Type should not be null")
@@ -71,6 +71,9 @@ public class RaiseComplaintDTO {
 
     @Column(name = "updated_by")
     private String updatedBy;
+
+    @Column(name = "status")
+    private String status;
 
 }
 

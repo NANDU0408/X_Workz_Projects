@@ -6,12 +6,10 @@ import com.xworkz.springproject.model.service.SignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,10 +62,53 @@ public class ComplaintRepoImpl implements ComplaintRepo{
     }
 
     @Override
-    public List<RaiseComplaintDTO> findAllComplaintsByUserId(int userId) {
+    public List<RaiseComplaintDTO> findAllComplaints(int userId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        System.out.println("Running findAllComplaintsByUserId in ComplaintRepoImpl");
-        Query query = entityManager.createQuery("SELECT s FROM SignUpDTO s");
-        return query.getResultList();
+        try {
+            System.out.println("Running findAllComplaints in ComplaintRepoImpl");
+            Query query = entityManager.createQuery("SELECT r FROM RaiseComplaintDTO r where r.userId=:userId");
+            query.setParameter("userId",userId);
+            System.out.println(query);
+            List<RaiseComplaintDTO> raiseComplaintDTOS = query.getResultList();
+            System.out.println(raiseComplaintDTOS);
+            return raiseComplaintDTOS;
+        }
+        catch (Exception e){
+            System.out.println("Error found while fetching the data");
+            e.printStackTrace();
+        }
+        finally {
+            entityManager.close();
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Optional<RaiseComplaintDTO> findComplaintById(int complaintId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            System.out.println("Running findComplaintById in ComplaintRepoImpl");
+            RaiseComplaintDTO complaint = entityManager.find(RaiseComplaintDTO.class, complaintId);
+            System.out.println(complaint);
+            return Optional.ofNullable(complaint);
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> findByUserIdAndStatus(int userId, String status) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(
+                    "SELECT r FROM RaiseComplaintDTO r WHERE r.userId = :userId AND r.status = :status",
+                    RaiseComplaintDTO.class);
+            query.setParameter("userId", userId);
+            query.setParameter("status", status);
+            return query.getResultList();
+        } finally {
+            entityManager.close();
+        }
     }
 }

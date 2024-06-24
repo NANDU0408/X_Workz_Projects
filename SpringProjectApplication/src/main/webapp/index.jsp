@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>X-Workz</title>
-    <link rel="icon" href="/SpringProjectApplication/images/imageFiles/xworkz_logo.jpeg">
+    <title>System Issue Management</title>
+    <link rel="icon" href="resources/imageFiles/xworkz_logo.jpeg">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha384-Q5Pl1rC/oStfi2M1kCzKJwECcpOd+kdmPLWjszkcft5Sa+h7sc6LBN7sLk2kPvh5" crossorigin="anonymous"></script>
@@ -67,8 +67,8 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="index.jsp" style="margin-right: auto;">
-            <img src="/SpringProjectApplication/images/imageFiles/xworkz_logo.jpeg" alt="Logo" style="width: 50px;">
-            X-Workz
+            <img src="resources/imageFiles/xworkz_logo.jpeg" alt="Logo" style="width: 50px;">
+            System Issue Management
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
