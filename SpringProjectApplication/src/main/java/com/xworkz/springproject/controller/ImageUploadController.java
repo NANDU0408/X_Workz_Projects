@@ -3,15 +3,12 @@ package com.xworkz.springproject.controller;
 import com.xworkz.springproject.dto.user.ImageDownloadDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 import com.xworkz.springproject.model.service.SignUpService;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;

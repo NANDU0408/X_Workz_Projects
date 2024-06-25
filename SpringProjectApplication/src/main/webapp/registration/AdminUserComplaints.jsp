@@ -99,16 +99,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="registration/Home.jsp">User Home</a>
+                    <a class="nav-link" href="registration/AdminHome.jsp">Admin Home</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         View Complaints
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="viewComplaints">All Complaints</a></li>
-                                <li><a class="dropdown-item" href="viewActiveComplaints">Active Complaints</a></li>
-                                <li><a class="dropdown-item" href="viewInactiveComplaints">Inactive Complaints</a></li>
+                                <li><a class="dropdown-item" href="adminViewComplaints">All Complaints</a></li>
+                                <li><a class="dropdown-item" href="adminViewActiveComplaints">Active Complaints</a></li>
+                                <li><a class="dropdown-item" href="adminViewInactiveComplaints">Inactive Complaints</a></li>
                     </ul>
                 </li>
             </ul>
@@ -143,7 +143,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="complaint" items="${complaintLists}">
+                    <c:forEach var="complaint" items="${adminComplaintLists}">
                         <tr>
                             <td>${complaint.complaintId}</td>
                             <td>${complaint.complaintType}</td>
@@ -160,12 +160,9 @@
                             <td>${complaint.updatedBy}</td>
                             <td>${complaint.status}</td>
                             <td>
-                                 <c:if test="${complaint.status == 'ACTIVE'}">
-                                                <form action="registration/EditComplaints.jsp" method="post">
-                                                    <input type="hidden" name="complaintId" value="${complaint.complaintId}">
-                                                    <button type="submit" class="btn btn-primary">Edit</button>
-                                                </form>
-                                            </c:if>
+                                <form action="editComplaint/${complaint.complaintId}" method="get">
+                                    <button type="submit" class="edit-btn">Edit</button>
+                                </form>
                             </td>
                         </tr>
                     </c:forEach>

@@ -4,10 +4,10 @@ import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 import com.xworkz.springproject.model.repository.ComplaintRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,10 +17,25 @@ public class ComplaintServiceImpl implements ComplaintService{
     @Autowired
     private ComplaintRepo complaintRepo;
 
+    @Autowired
+    private JavaMailSender emailSender;
+
     @Override
     public Optional<RaiseComplaintDTO> saveComplaint(RaiseComplaintDTO raiseComplaintDTO, SignUpDTO signUpDTO) {
         System.out.println("Running saveComplaint in ComplaintServiceImpl"+raiseComplaintDTO);
         return complaintRepo.saveComplaint(raiseComplaintDTO, signUpDTO);
+    }
+
+    public void sendEmail(SignUpDTO signUpDTO, RaiseComplaintDTO raiseComplaintDTO) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(signUpDTO.getEmailAddress());
+        message.setSubject("Complaint Registration Information");
+        message.setText("Dear "+signUpDTO.getFirstName()+" "+signUpDTO.getLastName()+" You have been successfully registered the complaint,\n\n" +
+                "Your complaint ID is "+signUpDTO.getPassword()+"\n\n" +
+                "Please Sign In through this password: "+
+                "Thanks and Regards,\n"+" "+
+                "XworkzProject Team");
+        emailSender.send(message);
     }
 
 
@@ -32,6 +47,12 @@ public class ComplaintServiceImpl implements ComplaintService{
     }
 
     @Override
+    public List<RaiseComplaintDTO> findAllComplaintsForAdmin() {
+        System.out.println("Running findAllComplaintsForAdmin in ComplaintServiceImpl");
+        return complaintRepo.findAllComplaintsForAdmin();
+    }
+
+    @Override
     public Optional<RaiseComplaintDTO> findComplaintById(int complaintId) {
         System.out.println("Running findComplaintById in ComplaintServiceImpl");
         return complaintRepo.findComplaintById(complaintId);
@@ -40,5 +61,10 @@ public class ComplaintServiceImpl implements ComplaintService{
     @Override
     public List<RaiseComplaintDTO> findComplaintsByStatus(int userId, String status) {
         return complaintRepo.findByUserIdAndStatus(userId, status);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> findComplaintsByStatusForAdmin(String status) {
+        return complaintRepo.findByUserStatusForAdmin(status);
     }
 }

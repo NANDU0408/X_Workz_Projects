@@ -85,6 +85,29 @@ public class ComplaintRepoImpl implements ComplaintRepo{
     }
 
     @Override
+    public List<RaiseComplaintDTO> findAllComplaintsForAdmin() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            System.out.println("Running findAllComplaints in ComplaintRepoImpl");
+            Query query = entityManager.createQuery("SELECT r FROM RaiseComplaintDTO r");
+//            query.setParameter("userId",userId);
+            System.out.println(query);
+            List<RaiseComplaintDTO> raiseComplaintDTOS = query.getResultList();
+            System.out.println(raiseComplaintDTOS);
+            return raiseComplaintDTOS;
+        }
+        catch (Exception e){
+            System.out.println("Error found while fetching the data");
+            e.printStackTrace();
+        }
+        finally {
+            entityManager.close();
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
     public Optional<RaiseComplaintDTO> findComplaintById(int complaintId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
@@ -105,6 +128,21 @@ public class ComplaintRepoImpl implements ComplaintRepo{
                     "SELECT r FROM RaiseComplaintDTO r WHERE r.userId = :userId AND r.status = :status",
                     RaiseComplaintDTO.class);
             query.setParameter("userId", userId);
+            query.setParameter("status", status);
+            return query.getResultList();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> findByUserStatusForAdmin(String status) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(
+                    "SELECT r FROM RaiseComplaintDTO r WHERE r.status = :status",
+                    RaiseComplaintDTO.class);
+//            query.setParameter("userId", userId);
             query.setParameter("status", status);
             return query.getResultList();
         } finally {

@@ -41,13 +41,18 @@ public class ComplaintController {
         // Fetch logged-in user details from session
         SignUpDTO loggedInUser = (SignUpDTO) session.getAttribute("userData");
 
+        if (loggedInUser == null) {
+            model.addAttribute("failureMessage", "User not logged in. Please log in to submit a complaint.");
+            return "registration/RaiseComplaint.jsp";
+        }
 
 
         // Save the complaint using service
         Optional<RaiseComplaintDTO> savedDto = complaintService.saveComplaint(raiseComplaintDTO, loggedInUser);
 
         if (savedDto.isPresent()) {
-            model.addAttribute("successMessage", "Complaint submitted successfully!");
+            model.addAttribute("successMessage", "Complaint submitted successfully, please check your email for the complaint info!");
+            complaintService.sendEmail(loggedInUser, savedDto.get());
         } else {
             model.addAttribute("failureMessage", "Failed to submit complaint. Please try again.");
         }

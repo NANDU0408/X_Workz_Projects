@@ -92,18 +92,55 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.jsp">Home</a>
+                    <a class="nav-link" href="adminHome">Admin Home</a>
                 </li>
-                <li class="nav-item">
-                     <a class="nav-link" href="userDetails">User Details</a>
-                </li>
-                <li class="nav-item">
-                     <a class="nav-link" href="adminViewComplaints">View User Complaints</a>
-                </li>
+
             </ul>
         </div>
     </div>
-</nav>x``
+</nav>
+
+<div class="container mt-4">
+    <h2>Sign Up Details</h2>
+    <table class="custom-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email Address</th>
+            <th>Phone Number</th>
+            <th>Agree Terms</th>
+            <th>Created By</th>
+            <th>Created Date</th>
+            <th>Updated By</th>
+            <th>Updated Date</th>
+            <th>Count</th>
+            <th>Failed Attempts Count</th>
+            <th>Failed Attempt DateTime</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="signup" items="${detailsList}">
+            <tr>
+                <td>${signup.id}</td>
+                <td>${signup.firstName}</td>
+                <td>${signup.lastName}</td>
+                <td>${signup.emailAddress}</td>
+                <td>${signup.mobileNumber}</td>
+                <td>${signup.agreeTerms}</td>
+                <td>${signup.createdBy}</td>
+                <td>${signup.createdDate}</td>
+                <td>${signup.updatedBy}</td>
+                <td>${signup.updatedDate}</td>
+                <td>${signup.count}</td>
+                <td>${signup.failedAttemptsCount}</td>
+                <td>${signup.failedAttemptDateTime}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</div>
 
 <script>
     function refreshPage() {

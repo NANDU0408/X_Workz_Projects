@@ -11,8 +11,11 @@ public interface ComplaintRepo  {
 
     public List<RaiseComplaintDTO> findAllComplaints(int userId);
 
+    List<RaiseComplaintDTO> findAllComplaintsForAdmin();
+
     public Optional<RaiseComplaintDTO> findComplaintById(int complaintId);
 
     List<RaiseComplaintDTO> findByUserIdAndStatus(int userId, String status);
 
+    List<RaiseComplaintDTO> findByUserStatusForAdmin(String status);
 }

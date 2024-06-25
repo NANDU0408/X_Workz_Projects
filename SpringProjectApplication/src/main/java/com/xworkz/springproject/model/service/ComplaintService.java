@@ -10,10 +10,15 @@ public interface ComplaintService {
 
     public Optional<RaiseComplaintDTO> saveComplaint(RaiseComplaintDTO raiseComplaintDTO, SignUpDTO signUpDTO);
 
+    public void sendEmail(SignUpDTO signUpDTO, RaiseComplaintDTO raiseComplaintDTO);
+
     List<RaiseComplaintDTO> findAllComplaints(int userId);
+
+    List<RaiseComplaintDTO> findAllComplaintsForAdmin();
 
     public Optional<RaiseComplaintDTO> findComplaintById(int complaintId);
 
     List<RaiseComplaintDTO> findComplaintsByStatus(int userId, String status);
 
+    List<RaiseComplaintDTO> findComplaintsByStatusForAdmin(String status);
 }
