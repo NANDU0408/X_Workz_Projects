@@ -66,7 +66,7 @@ public class ComplaintRepoImpl implements ComplaintRepo{
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             System.out.println("Running findAllComplaints in ComplaintRepoImpl");
-            Query query = entityManager.createQuery("SELECT r FROM RaiseComplaintDTO r where r.userId=:userId");
+            Query query = entityManager.createQuery("SELECT r FROM RaiseComplaintDTO r WHERE r.userId = :userId ORDER BY r.updatedDate DESC");
             query.setParameter("userId",userId);
             System.out.println(query);
             List<RaiseComplaintDTO> raiseComplaintDTOS = query.getResultList();
@@ -89,7 +89,7 @@ public class ComplaintRepoImpl implements ComplaintRepo{
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             System.out.println("Running findAllComplaints in ComplaintRepoImpl");
-            Query query = entityManager.createQuery("SELECT r FROM RaiseComplaintDTO r");
+            Query query = entityManager.createQuery("SELECT r FROM RaiseComplaintDTO r ORDER BY r.updatedDate DESC");
 //            query.setParameter("userId",userId);
             System.out.println(query);
             List<RaiseComplaintDTO> raiseComplaintDTOS = query.getResultList();
@@ -148,5 +148,84 @@ public class ComplaintRepoImpl implements ComplaintRepo{
         } finally {
             entityManager.close();
         }
+    }
+
+    @Override
+    public Optional<RaiseComplaintDTO> findById(int complaintId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            System.out.println("Running findById in ComplaintRepoImpl");
+            RaiseComplaintDTO complaint = entityManager.find(RaiseComplaintDTO.class, complaintId);
+            System.out.println(complaint);
+            return Optional.ofNullable(complaint);        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    @Transactional
+    public Optional<RaiseComplaintDTO> mergeDescription(RaiseComplaintDTO raiseComplaintDTO) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+
+            // Update description using JPQL query
+            int updatedEntities = entityManager.createQuery(
+                            "UPDATE RaiseComplaintDTO c SET c.description = :description WHERE c.complaintId = :complaintId")
+                    .setParameter("description", raiseComplaintDTO.getDescription())
+                    .setParameter("complaintId", raiseComplaintDTO.getComplaintId())
+                    .executeUpdate();
+
+            entityManager.getTransaction().commit();
+
+            if (updatedEntities > 0) {
+                return Optional.of(raiseComplaintDTO);
+            } else {
+                return Optional.empty();
+            }
+        } catch (PersistenceException e) {
+            entityManager.getTransaction().rollback();
+            System.out.println("Exception while updating description: " + e.getMessage());
+            e.printStackTrace();
+            return Optional.empty();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsByType(String keyword) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        String queryStr = "SELECT r FROM RaiseComplaintDTO r " +
+                "WHERE r.complaintType LIKE CONCAT('%', :keyword, '%')";
+
+        TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(queryStr, RaiseComplaintDTO.class);
+        query.setParameter("keyword", keyword);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsByCity(String keyword) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        String queryStr = "SELECT r FROM RaiseComplaintDTO r " +
+                "WHERE r.city LIKE CONCAT('%', :keyword, '%')";
+
+        TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(queryStr, RaiseComplaintDTO.class);
+        query.setParameter("keyword", keyword);
+
+        return query.getResultList();
+}
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsByUpdatedDate(String keyword) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        String queryStr = "SELECT r FROM RaiseComplaintDTO r " +
+                "WHERE r.updatedDate LIKE CONCAT('%', :keyword, '%')";
+
+        TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(queryStr, RaiseComplaintDTO.class);
+        query.setParameter("keyword", keyword);
+
+        return query.getResultList();
     }
 }

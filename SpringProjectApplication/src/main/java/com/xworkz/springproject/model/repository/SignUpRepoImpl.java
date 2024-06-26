@@ -162,7 +162,7 @@ public class SignUpRepoImpl implements SignUpRepo {
     @Override
     public List<SignUpDTO> findAll() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createQuery("SELECT s FROM SignUpDTO s");
+        Query query = entityManager.createQuery("SELECT s FROM SignUpDTO s ORDER BY s.updatedDate DESC");
         return query.getResultList();
     }
 

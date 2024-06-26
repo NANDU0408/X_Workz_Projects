@@ -3,6 +3,7 @@ package com.xworkz.springproject.model.repository;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +19,15 @@ public interface ComplaintRepo  {
     List<RaiseComplaintDTO> findByUserIdAndStatus(int userId, String status);
 
     List<RaiseComplaintDTO> findByUserStatusForAdmin(String status);
+
+    Optional<RaiseComplaintDTO> findById(int complaintId);
+
+    @Transactional
+    Optional<RaiseComplaintDTO> mergeDescription(RaiseComplaintDTO raiseComplaintDTO);
+
+    List<RaiseComplaintDTO> searchComplaintsByType(String keyword);
+
+    List<RaiseComplaintDTO> searchComplaintsByCity(String keyword);
+
+    List<RaiseComplaintDTO> searchComplaintsByUpdatedDate(String keyword);
 }

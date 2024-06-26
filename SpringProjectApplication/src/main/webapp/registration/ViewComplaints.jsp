@@ -120,6 +120,20 @@
 
 <div class="container mt-4">
     <h2>Raise Complaint Details</h2>
+
+ <!-- Search Bar -->
+    <form class="mb-4 d-flex justify-content-center" action="searchComplaints" method="get">
+        <div class="input-group" style="max-width: 400px;">
+            <input type="text" class="form-control form-control-sm fw-bold border border-2 border-dark" placeholder="Search by Complaint Type, City, Updated Date..." name="search">
+            <select class="form-select form-select-sm fw-bold border border-2 border-dark" name="type">
+                <option value="type">Type</option>
+                <option value="city">City</option>
+                <option value="updatedDate">Updated Date</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm fw-bold border border-2 border-dark">Search</button>
+        </div>
+    </form>
+
     <c:choose>
         <c:when test="${!complaintLists.isEmpty()}">
             <table class="custom-table">
@@ -132,8 +146,6 @@
                     <th>City</th>
                     <th>Address</th>
                     <th>Description</th>
-                    <th>Agree Terms</th>
-                    <th>User ID</th>
                     <th>Created Date</th>
                     <th>Created By</th>
                     <th>Updated Date</th>
@@ -152,8 +164,6 @@
                             <td>${complaint.city}</td>
                             <td>${complaint.address}</td>
                             <td>${complaint.description}</td>
-                            <td>${complaint.agreeTerms}</td>
-                            <td>${complaint.userId}</td>
                             <td>${complaint.createdDate}</td>
                             <td>${complaint.createdBy}</td>
                             <td>${complaint.updatedDate}</td>
@@ -161,7 +171,7 @@
                             <td>${complaint.status}</td>
                             <td>
                                  <c:if test="${complaint.status == 'ACTIVE'}">
-                                                <form action="registration/EditComplaints.jsp" method="post">
+                                                <form action="editPage" method="get">
                                                     <input type="hidden" name="complaintId" value="${complaint.complaintId}">
                                                     <button type="submit" class="btn btn-primary">Edit</button>
                                                 </form>

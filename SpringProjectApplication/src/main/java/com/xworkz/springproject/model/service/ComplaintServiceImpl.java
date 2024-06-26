@@ -8,6 +8,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,5 +67,31 @@ public class ComplaintServiceImpl implements ComplaintService{
     @Override
     public List<RaiseComplaintDTO> findComplaintsByStatusForAdmin(String status) {
         return complaintRepo.findByUserStatusForAdmin(status);
+    }
+
+    @Override
+    public Optional<RaiseComplaintDTO> findById(int complaintId) {
+        return complaintRepo.findById(complaintId);
+    }
+
+    @Override
+    @Transactional
+    public Optional<RaiseComplaintDTO> mergeDescription(RaiseComplaintDTO raiseComplaintDTO) {
+        return complaintRepo.mergeDescription(raiseComplaintDTO);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsByType(String keyword) {
+        return complaintRepo.searchComplaintsByType(keyword);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsByCity(String keyword) {
+        return complaintRepo.searchComplaintsByCity(keyword);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsByUpdatedDate(String keyword) {
+        return complaintRepo.searchComplaintsByUpdatedDate(keyword);
     }
 }

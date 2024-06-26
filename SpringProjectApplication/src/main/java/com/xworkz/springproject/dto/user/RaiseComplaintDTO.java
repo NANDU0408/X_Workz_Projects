@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @ToString
 @Entity
 @Table(name ="raiseComplaint_form")
-public class RaiseComplaintDTO {
+public class RaiseComplaintDTO implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
