@@ -94,4 +94,19 @@ public class ComplaintServiceImpl implements ComplaintService{
     public List<RaiseComplaintDTO> searchComplaintsByUpdatedDate(String keyword) {
         return complaintRepo.searchComplaintsByUpdatedDate(keyword);
     }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsByTypeForAdmin(String keyword) {
+        return complaintRepo.searchComplaintsByTypeForAdmin(keyword);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsByCityForAdmin(String keyword) {
+        return complaintRepo.searchComplaintsByCityForAdmin(keyword);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsByUpdatedDateForAdmin(String keyword) {
+        return complaintRepo.searchComplaintsByUpdatedDateForAdmin(keyword);
+    }
 }

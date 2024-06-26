@@ -120,6 +120,20 @@
 
 <div class="container mt-4">
     <h2>Raise Complaint Details</h2>
+
+     <!-- Search Bar -->
+        <form class="mb-4 d-flex justify-content-center" action="searchComplaintsAdmin" method="get">
+            <div class="input-group" style="max-width: 400px;">
+                <input type="text" class="form-control form-control-sm fw-bold border border-2 border-dark" placeholder="Search by Complaint Type, City, Updated Date..." name="search">
+                <select class="form-select form-select-sm fw-bold border border-2 border-dark" name="type">
+                    <option value="type">Type</option>
+                    <option value="city">City</option>
+                    <option value="updatedDate">Updated Date</option>
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm fw-bold border border-2 border-dark">Search</button>
+            </div>
+        </form>
+
     <c:choose>
         <c:when test="${!complaintLists.isEmpty()}">
             <table class="custom-table">
@@ -139,7 +153,7 @@
                     <th>Updated Date</th>
                     <th>Updated By</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th>Complaint Status:</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -160,9 +174,15 @@
                             <td>${complaint.updatedBy}</td>
                             <td>${complaint.status}</td>
                             <td>
-                                <form action="editComplaint/${complaint.complaintId}" method="get">
-                                    <button type="submit" class="edit-btn">Edit</button>
-                                </form>
+                                <form action="yourFormAction" method="post">
+                                        <label for="status"></label>
+                                        <select name="status" id="status">
+                                            <option value="Resolved">Resolved</option>
+                                            <option value="Pending">Pending</option>
+                                            <option value="InAction">InAction</option>
+                                        </select>
+                                        <input type="submit" value="Submit">
+                                    </form>
                             </td>
                         </tr>
                     </c:forEach>

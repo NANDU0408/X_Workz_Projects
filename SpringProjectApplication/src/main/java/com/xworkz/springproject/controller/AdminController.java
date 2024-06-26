@@ -108,4 +108,24 @@ public class AdminController {
         System.out.println("Running viewInactiveComplaints in Controller: " + complaintList);
         return "registration/AdminUserComplaints.jsp";
     }
+
+    @GetMapping("/searchComplaintsAdmin")
+    public String searchComplaints(
+            @RequestParam("search") String keyword,
+            @RequestParam(value = "type", required = false) String type,
+            Model model) {
+
+        List<RaiseComplaintDTO> searchResults = null;
+
+        if ("type".equals(type)) {
+            searchResults = complaintService.searchComplaintsByTypeForAdmin(keyword);
+        } else if ("city".equals(type)) {
+            searchResults = complaintService.searchComplaintsByCityForAdmin(keyword);
+        } else if ("updatedDate".equals(type)) {
+            searchResults = complaintService.searchComplaintsByUpdatedDateForAdmin(keyword);
+        }
+
+        model.addAttribute("adminComplaintLists", searchResults);
+        return "registration/AdminUserComplaints.jsp";
+    }
 }

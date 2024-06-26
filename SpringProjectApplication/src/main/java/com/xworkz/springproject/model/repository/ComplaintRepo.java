@@ -30,4 +30,10 @@ public interface ComplaintRepo  {
     List<RaiseComplaintDTO> searchComplaintsByCity(String keyword);
 
     List<RaiseComplaintDTO> searchComplaintsByUpdatedDate(String keyword);
+
+    List<RaiseComplaintDTO> searchComplaintsByTypeForAdmin(String keyword);
+
+    List<RaiseComplaintDTO> searchComplaintsByCityForAdmin(String keyword);
+
+    List<RaiseComplaintDTO> searchComplaintsByUpdatedDateForAdmin(String keyword);
 }
