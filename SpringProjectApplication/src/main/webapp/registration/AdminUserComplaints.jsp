@@ -122,17 +122,40 @@
     <h2>Raise Complaint Details</h2>
 
      <!-- Search Bar -->
-        <form class="mb-4 d-flex justify-content-center" action="searchComplaintsAdmin" method="get">
-            <div class="input-group" style="max-width: 400px;">
-                <input type="text" class="form-control form-control-sm fw-bold border border-2 border-dark" placeholder="Search by Complaint Type, City, Updated Date..." name="search">
-                <select class="form-select form-select-sm fw-bold border border-2 border-dark" name="type">
-                    <option value="type">Type</option>
-                    <option value="city">City</option>
-                    <option value="updatedDate">Updated Date</option>
-                </select>
-                <button type="submit" class="btn btn-primary btn-sm fw-bold border border-2 border-dark">Search</button>
-            </div>
-        </form>
+     <div class="col-md-6">
+                  <div class="d-flex justify-content-center mb-4 mt-3">
+                         <div class="card px-1 py-1 bg-light">
+                             <div class="card-body">
+
+                         <form action="searchComplaintsAdmin" method="get">
+                             <div class="row g-3">
+                                 <div class="col-auto">
+                                     <label for="type" class="form-label text-dark">Type</label>
+                                     <select class="form-select" id="type" name="type">
+                                         <option value="0" ${selectedType == null ? 'selected' : ''}>Choose...</option>
+                                         <option value="Noise" ${selectedType == 'Noise Problem' ? 'selected' : ''}>Noise</option>
+                                         <option value="Pollution" ${selectedType == 'Drainage Problem' ? 'selected' : ''}>Pollution</option>
+                                         <option value="Drainage Problem" ${selectedType == 'Drainage Problem' ? 'selected' : ''}>Drainage Problem</option>
+                                         <option value="Electric Problem" ${selectedType == 'Electric Problem' ? 'selected' : ''}>Electric Problem</option>
+                                         <option value="Water Leakage" ${selectedType == 'Water Leakage' ? 'selected' : ''}>Water Leakage</option>
+                                         <option value="Wastage Problem" ${selectedType == 'Wastage Problem' ? 'selected' : ''}>Wastage Problem</option>
+                                         <option value="Water Problem" ${selectedType == 'Water Problem' ? 'selected' : ''}>Water Problem</option>
+                                     </select>
+                                 </div>
+                                 <div class="col-auto">
+                                     <label for="area" class="form-label text-dark">Area</label>
+                                     <input type="text" class="form-control" id="area" name="area" value="${selectedArea}">
+                                 </div>
+                                 <div class="col-auto align-self-end">
+                                     <input type="submit" value="Search" name="search" id="search" class="btn btn-primary">
+                                 </div>
+                             </div>
+
+                         </form>
+                     </div>
+                 </div>
+             </div>
+         </div>
 
     <c:choose>
         <c:when test="${!complaintLists.isEmpty()}">

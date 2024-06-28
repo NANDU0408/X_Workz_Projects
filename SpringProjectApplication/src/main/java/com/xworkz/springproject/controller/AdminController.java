@@ -109,23 +109,29 @@ public class AdminController {
         return "registration/AdminUserComplaints.jsp";
     }
 
+
     @GetMapping("/searchComplaintsAdmin")
     public String searchComplaints(
-            @RequestParam("search") String keyword,
-            @RequestParam(value = "type", required = false) String type,
-            Model model) {
+            @RequestParam(name = "type",required = false) String complaintType,
+            @RequestParam(name = "area", required = false) String city,
+            Model model
+    ) {
+        List<RaiseComplaintDTO> complaints;
 
-        List<RaiseComplaintDTO> searchResults = null;
+        System.out.println("Type: " + complaintType + ", City: " + city);
 
-        if ("type".equals(type)) {
-            searchResults = complaintService.searchComplaintsByTypeForAdmin(keyword);
-        } else if ("city".equals(type)) {
-            searchResults = complaintService.searchComplaintsByCityForAdmin(keyword);
-        } else if ("updatedDate".equals(type)) {
-            searchResults = complaintService.searchComplaintsByUpdatedDateForAdmin(keyword);
+        if (complaintType != null && !complaintType.isEmpty() && city != null && !city.isEmpty()) {
+            // Search by both type and city
+            complaints = complaintService.searchComplaintsByComplaintTypeAndCityForAdmin(complaintType, city);
+        } else if (complaintType != null && !complaintType.isEmpty() || city != null && !city.isEmpty()) {
+            // Search by type or city
+            complaints = complaintService.searchComplaintsBycomplaintTypeOrcityForAdmin(complaintType,city);
+        } else {
+            // Fetch all complaints
+            complaints = complaintService.findAllComplaints();
         }
 
-        model.addAttribute("adminComplaintLists", searchResults);
+        model.addAttribute("adminComplaintLists", complaints);
         return "registration/AdminUserComplaints.jsp";
     }
 }

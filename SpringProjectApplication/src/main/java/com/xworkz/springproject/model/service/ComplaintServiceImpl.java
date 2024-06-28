@@ -96,17 +96,27 @@ public class ComplaintServiceImpl implements ComplaintService{
     }
 
     @Override
-    public List<RaiseComplaintDTO> searchComplaintsByTypeForAdmin(String keyword) {
-        return complaintRepo.searchComplaintsByTypeForAdmin(keyword);
+    public List<RaiseComplaintDTO> searchComplaintsByTypeForAdmin(String complaintType) {
+        return complaintRepo.searchComplaintsByTypeForAdmin(complaintType);
     }
 
     @Override
-    public List<RaiseComplaintDTO> searchComplaintsByCityForAdmin(String keyword) {
-        return complaintRepo.searchComplaintsByCityForAdmin(keyword);
+    public List<RaiseComplaintDTO> searchComplaintsByCityForAdmin(String city) {
+        return complaintRepo.searchComplaintsByCityForAdmin(city);
     }
 
     @Override
-    public List<RaiseComplaintDTO> searchComplaintsByUpdatedDateForAdmin(String keyword) {
-        return complaintRepo.searchComplaintsByUpdatedDateForAdmin(keyword);
+    public List<RaiseComplaintDTO> searchComplaintsByComplaintTypeAndCityForAdmin(String complaintType, String city) {
+        return complaintRepo.searchComplaintsBycomplaintTypeAndcityForAdmin(complaintType, city);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city) {
+        return complaintRepo.searchComplaintsBycomplaintTypeOrcityForAdmin(complaintType,city);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> findAllComplaints() {
+        return complaintRepo.findAllComplaints();
     }
 }

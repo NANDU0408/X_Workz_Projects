@@ -98,8 +98,11 @@
                         <option value="">Select Complaint Type</option>
                         <option value="Noise">Noise</option>
                         <option value="Pollution">Pollution</option>
+                        <option value="Drainage Problem">Water Leakage</option>
+                        <option value="Electric Problem">Water Leakage</option>
                         <option value="Water Leakage">Water Leakage</option>
-                        <option value="Other">Other</option>
+                        <option value="Wastage Problem">Water Leakage</option>
+                        <option value="Water Problem">Water Leakage</option>
                     </select>
                     <span id="complaintTypeError" class="error-message"></span>
                 </div>
