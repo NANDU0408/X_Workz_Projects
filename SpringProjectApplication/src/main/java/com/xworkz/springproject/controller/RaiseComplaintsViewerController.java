@@ -1,7 +1,5 @@
 package com.xworkz.springproject.controller;
 
-import com.xworkz.springproject.dto.user.EditComplaintDTO;
-import com.xworkz.springproject.dto.user.ImageDownloadDTO;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 import com.xworkz.springproject.model.service.ComplaintService;
@@ -10,14 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 

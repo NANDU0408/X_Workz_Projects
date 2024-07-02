@@ -112,6 +112,7 @@ public class ComplaintServiceImpl implements ComplaintService{
 
     @Override
     public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city) {
+        System.out.println("Running searchComplaintsBycomplaintTypeOrcityForAdmin in ComplaintRepo");
         return complaintRepo.searchComplaintsBycomplaintTypeOrcityForAdmin(complaintType,city);
     }
 

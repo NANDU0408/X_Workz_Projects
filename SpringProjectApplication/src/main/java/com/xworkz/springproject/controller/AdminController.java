@@ -122,12 +122,15 @@ public class AdminController {
 
         if (complaintType != null && !complaintType.isEmpty() && city != null && !city.isEmpty()) {
             // Search by both type and city
+            System.out.println("check for both type and city");
             complaints = complaintService.searchComplaintsByComplaintTypeAndCityForAdmin(complaintType, city);
         } else if (complaintType != null && !complaintType.isEmpty() || city != null && !city.isEmpty()) {
             // Search by type or city
             complaints = complaintService.searchComplaintsBycomplaintTypeOrcityForAdmin(complaintType,city);
+            System.out.println("Running searchComplaints in AdminController for any of complaint type or city" +complaints);
         } else {
             // Fetch all complaints
+            System.out.println("default search");
             complaints = complaintService.findAllComplaints();
         }
 

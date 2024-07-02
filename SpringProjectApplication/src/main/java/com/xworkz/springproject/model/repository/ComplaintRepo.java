@@ -1,5 +1,6 @@
 package com.xworkz.springproject.model.repository;
 
+import com.xworkz.springproject.dto.dept.WaterDeptDTO;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 
@@ -40,4 +41,6 @@ public interface ComplaintRepo  {
     List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city);
 
     List<RaiseComplaintDTO> findAllComplaints();
+
+    List<WaterDeptDTO> getdeptIdAnddeptName(int deptId, String deptName);
 }

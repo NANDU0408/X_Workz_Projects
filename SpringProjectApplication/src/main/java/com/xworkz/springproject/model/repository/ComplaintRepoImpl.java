@@ -1,5 +1,6 @@
 package com.xworkz.springproject.model.repository;
 
+import com.xworkz.springproject.dto.dept.WaterDeptDTO;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 import com.xworkz.springproject.model.service.SignUpService;
@@ -157,7 +158,8 @@ public class ComplaintRepoImpl implements ComplaintRepo{
             System.out.println("Running findById in ComplaintRepoImpl");
             RaiseComplaintDTO complaint = entityManager.find(RaiseComplaintDTO.class, complaintId);
             System.out.println(complaint);
-            return Optional.ofNullable(complaint);        } finally {
+            return Optional.ofNullable(complaint);
+        } finally {
             entityManager.close();
         }
     }
@@ -274,15 +276,20 @@ public class ComplaintRepoImpl implements ComplaintRepo{
 
     @Override
     public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city) {
+        System.out.println("or complaint");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         String queryStr = "SELECT r FROM RaiseComplaintDTO r " +
                 "WHERE r.complaintType = :complaintType OR r.city = :city";
 
         TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(queryStr, RaiseComplaintDTO.class);
+        System.out.println("Running searchComplaintsBycomplaintTypeOrcityForAdmin in ComplaintRepoImpl" +query);
         query.setParameter("complaintType", complaintType);
         query.setParameter("city", city);
+        List<RaiseComplaintDTO> list = query.getResultList();
 
-        return query.getResultList();
+        System.out.println(list);
+
+        return list;
     }
 
     @Override
@@ -296,5 +303,22 @@ public class ComplaintRepoImpl implements ComplaintRepo{
         } finally {
             entityManager.close();
         }
+    }
+
+    @Override
+    public List<WaterDeptDTO> getdeptIdAnddeptName(int deptId, String deptName) {
+        System.out.println("Dept Id and Dept Name");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        String queryStr = "SELECT r.deptId, r.deptName FROM WaterDeptDTO r";
+
+        TypedQuery<WaterDeptDTO> query = entityManager.createQuery(queryStr, WaterDeptDTO.class);
+        System.out.println("Running getdeptIdAnddeptName in ComplaintRepoImpl" +query);
+        query.setParameter("deptId", deptId);
+        query.setParameter("deptName", deptName);
+        List<WaterDeptDTO> list = query.getResultList();
+
+        System.out.println(list);
+
+        return list;
     }
 }
