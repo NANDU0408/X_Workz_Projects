@@ -1,5 +1,8 @@
 package com.xworkz.springproject.model.service;
 
+import com.xworkz.springproject.dto.dept.WaterDeptDTO;
+import com.xworkz.springproject.dto.requestDto.HistoryDTO;
+import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 import com.xworkz.springproject.model.repository.ComplaintRepo;
@@ -119,5 +122,20 @@ public class ComplaintServiceImpl implements ComplaintService{
     @Override
     public List<RaiseComplaintDTO> findAllComplaints() {
         return complaintRepo.findAllComplaints();
+    }
+
+    @Override
+    public List<WaterDeptDTO>  getDeptIdAndDeptName() {
+        return complaintRepo.getdeptIdAnddeptName();
+    }
+
+    @Override
+    public boolean savedeptIdAnddeptName(int complaintId,int deptId,String complaintStatus) {
+        return complaintRepo.savedeptIdAnddeptName(complaintId,deptId,complaintStatus);
+    }
+
+    @Override
+    public Optional<RaiseComplaintDTO> saveHistory(HistoryDTO historyDTO,RaiseComplaintDTO raiseComplaintDTO, RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto){
+      return complaintRepo.saveHistory(historyDTO,raiseComplaintDTO,requestToDeptAndStatusOfComplaintDto);
     }
 }

@@ -1,6 +1,8 @@
 package com.xworkz.springproject.model.repository;
 
 import com.xworkz.springproject.dto.dept.WaterDeptDTO;
+import com.xworkz.springproject.dto.requestDto.HistoryDTO;
+import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 import com.xworkz.springproject.model.service.SignUpService;
@@ -306,19 +308,84 @@ public class ComplaintRepoImpl implements ComplaintRepo{
     }
 
     @Override
-    public List<WaterDeptDTO> getdeptIdAnddeptName(int deptId, String deptName) {
+    public List<WaterDeptDTO> getdeptIdAnddeptName() {
         System.out.println("Dept Id and Dept Name");
+
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        String queryStr = "SELECT r.deptId, r.deptName FROM WaterDeptDTO r";
+        List<WaterDeptDTO> list=null;
 
-        TypedQuery<WaterDeptDTO> query = entityManager.createQuery(queryStr, WaterDeptDTO.class);
-        System.out.println("Running getdeptIdAnddeptName in ComplaintRepoImpl" +query);
-        query.setParameter("deptId", deptId);
-        query.setParameter("deptName", deptName);
-        List<WaterDeptDTO> list = query.getResultList();
 
-        System.out.println(list);
+        try {
+            String queryStr = "SELECT r FROM WaterDeptDTO r";
+            System.out.println(queryStr);
+            TypedQuery<WaterDeptDTO> query = entityManager.createQuery(queryStr, WaterDeptDTO.class);
+            list = query.getResultList();
+            System.out.println(list);
+        } finally {
+            entityManager.close();
+        }
 
         return list;
     }
+
+    @Override
+    public boolean savedeptIdAnddeptName(int complaintId,int deptId,String complaintStatus) {
+        System.out.println("Dept Id and Dept Name");
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+
+        try {
+            entityManager.getTransaction().begin();
+            String queryStr = "UPDATE RaiseComplaintDTO r SET r.deptAssign = :deptId, r.complaintStatus = :complaintStatus WHERE r.complaintId = :complaintId";
+            System.out.println(queryStr);
+            Query query = entityManager.createQuery(queryStr);
+            query.setParameter("deptId",String.valueOf(deptId));
+            query.setParameter("complaintStatus",complaintStatus);
+            query.setParameter("complaintId",complaintId);
+            query.executeUpdate();
+
+            entityManager.getTransaction().commit();
+            return true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            entityManager.getTransaction();
+        }
+        finally {
+            entityManager.close();
+        }
+
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public Optional<RaiseComplaintDTO> saveHistory(HistoryDTO historyDTO, RaiseComplaintDTO raiseComplaintDTO, RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        try {
+            entityManager.getTransaction().begin();
+
+//            historyDTO.setUserId(raiseComplaintDTO.getUserId());
+            historyDTO.setComplaintId(raiseComplaintDTO.getComplaintId());
+            historyDTO.setDepartmentId(requestToDeptAndStatusOfComplaintDto.getDepartmentId());
+            historyDTO.setComplaintStatus(raiseComplaintDTO.getComplaintStatus());
+
+            // Persisting HistoryDTO
+            entityManager.persist(historyDTO);
+
+            entityManager.getTransaction().commit();
+        } catch (PersistenceException e) {
+            entityManager.getTransaction().rollback();
+            e.printStackTrace();
+            System.out.println("Exception while saving data: " + e);
+            return Optional.empty();
+        } finally {
+            entityManager.close();
+        }
+        return Optional.of(raiseComplaintDTO);
+    }
+
+
 }

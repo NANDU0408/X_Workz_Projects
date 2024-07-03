@@ -152,6 +152,7 @@
         </div>
     </div>
 
+    <!-- Complaints Table -->
     <c:choose>
         <c:when test="${!complaintLists.isEmpty()}">
             <table class="custom-table">
@@ -191,19 +192,19 @@
                                 <td>${complaint.createdBy}</td>
                                 <td>${complaint.updatedDate}</td>
                                 <td>${complaint.updatedBy}</td>
-                               <td>
-                                    <label for="dept-${complaint.complaintId}"></label>
-                                    <select name="dept-${complaint.complaintId}" id="dept-${complaint.complaintId}">
+                                <td>
+                                    <label for="dept-${complaint.complaintId}">Assign Department:</label>
+                                    <select name="departmentId" id="dept-${complaint.complaintId}" class="form-select">
                                         <option value="" disabled selected>Choose...</option>
                                         <c:forEach var="department" items="${departments}">
-                                           <option value="${department.deptId}">${department.deptName}</option>
+                                            <option value="${department.deptId}">${department.deptName}</option>
                                         </c:forEach>
                                     </select>
-                               </td>
-                               <td>${complaint.status}</td>
-                               <td>
-                                    <label for="status-${complaint.complaintId}"></label>
-                                    <select name="status-${complaint.complaintId}" id="status-${complaint.complaintId}">
+                                </td>
+                                <td>${complaint.status}</td>
+                                <td>
+                                    <label for="status-${complaint.complaintId}">Change Status:</label>
+                                    <select name="complaintStatus" id="status-${complaint.complaintId}" class="form-select">
                                         <option value="" disabled selected>Choose...</option>
                                         <option value="Resolved">Resolved</option>
                                         <option value="Pending">Pending</option>

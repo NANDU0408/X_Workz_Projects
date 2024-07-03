@@ -2,8 +2,12 @@ package com.xworkz.springproject.controller;
 
 import com.xworkz.springproject.dto.admin.AdminDTO;
 import com.xworkz.springproject.dto.admin.AdminSignInDTO;
+import com.xworkz.springproject.dto.dept.WaterDeptDTO;
+import com.xworkz.springproject.dto.requestDto.HistoryDTO;
+import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
+import com.xworkz.springproject.model.service.AdminService;
 import com.xworkz.springproject.model.service.ComplaintService;
 import com.xworkz.springproject.model.service.SignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,9 @@ public class AdminController {
 
     @Autowired
     private ComplaintService complaintService;
+
+    @Autowired
+    private AdminService adminService;
 
     @PostMapping("/admin")
     public String login(@Valid @ModelAttribute("loginForm") AdminSignInDTO adminSignInDTO, BindingResult bindingResult, Model model, HttpSession session) {
@@ -68,8 +75,13 @@ public class AdminController {
     }
 
     @GetMapping("/adminViewComplaints")
-    public String viewComplaints(RaiseComplaintDTO raiseComplaintDTO,Model model, HttpSession session) {
+    public String viewComplaints(Model model, HttpSession session) {
         AdminDTO loggedInAdmin = (AdminDTO) session.getAttribute("adminData");
+        List<WaterDeptDTO> deptDTOList = complaintService.getDeptIdAndDeptName();
+
+        System.out.println(deptDTOList);
+        model.addAttribute("departments",deptDTOList);
+
         if (loggedInAdmin == null) {
             model.addAttribute("errorMsg", "Admin is not logged in or session has expired");
             return "registration/SignIn.jsp?role=admin"; // Redirect to the admin login page
@@ -137,4 +149,23 @@ public class AdminController {
         model.addAttribute("adminComplaintLists", complaints);
         return "registration/AdminUserComplaints.jsp";
     }
+
+    @PostMapping("assignToDept")
+    public String updatedComplaint(RaiseComplaintDTO raiseComplaintDTO, HistoryDTO historyDTO,RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto,
+                                   Model model, HttpSession session){
+        System.out.println("admin assigning department process is initiated : "+requestToDeptAndStatusOfComplaintDto);
+
+        adminService.assignDeptAndStatus(requestToDeptAndStatusOfComplaintDto);
+        System.out.println(requestToDeptAndStatusOfComplaintDto);
+
+        Optional<RaiseComplaintDTO> updatedComplaint = complaintService.saveHistory(historyDTO, raiseComplaintDTO, requestToDeptAndStatusOfComplaintDto);
+        if (updatedComplaint.isPresent()) {
+            System.out.println("History saved successfully: " + updatedComplaint.get());
+        } else {
+            System.out.println("Failed to save history.");
+        }
+
+        return viewComplaints(model,session);
+    }
+
 }

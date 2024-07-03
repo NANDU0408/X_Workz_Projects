@@ -1,5 +1,8 @@
 package com.xworkz.springproject.model.service;
 
+import com.xworkz.springproject.dto.dept.WaterDeptDTO;
+import com.xworkz.springproject.dto.requestDto.HistoryDTO;
+import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 
@@ -43,4 +46,10 @@ public interface ComplaintService {
     List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city);
 
     List<RaiseComplaintDTO> findAllComplaints();
+
+    public List<WaterDeptDTO>  getDeptIdAndDeptName();
+
+    public boolean savedeptIdAnddeptName(int complaintId,int deptId,String complaintStatus);
+
+    Optional<RaiseComplaintDTO> saveHistory(HistoryDTO historyDTO,RaiseComplaintDTO raiseComplaintDTO, RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto);
 }

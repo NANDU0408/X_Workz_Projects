@@ -1,6 +1,8 @@
 package com.xworkz.springproject.model.repository;
 
 import com.xworkz.springproject.dto.dept.WaterDeptDTO;
+import com.xworkz.springproject.dto.requestDto.HistoryDTO;
+import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
 
@@ -42,5 +44,10 @@ public interface ComplaintRepo  {
 
     List<RaiseComplaintDTO> findAllComplaints();
 
-    List<WaterDeptDTO> getdeptIdAnddeptName(int deptId, String deptName);
+    public List<WaterDeptDTO> getdeptIdAnddeptName();
+
+    public boolean savedeptIdAnddeptName(int complaintId,int deptId,String complaintStatus);
+
+    @Transactional
+    Optional<RaiseComplaintDTO> saveHistory(HistoryDTO historyDTO,RaiseComplaintDTO raiseComplaintDTO, RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto);
 }
