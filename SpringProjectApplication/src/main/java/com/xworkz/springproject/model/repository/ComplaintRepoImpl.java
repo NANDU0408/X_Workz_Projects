@@ -386,6 +386,4 @@ public class ComplaintRepoImpl implements ComplaintRepo{
         }
         return Optional.of(raiseComplaintDTO);
     }
-
-
 }

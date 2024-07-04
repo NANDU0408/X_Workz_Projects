@@ -201,7 +201,7 @@
                                         </c:forEach>
                                     </select>
                                 </td>
-                                <td>${complaint.status}</td>
+                                <td>${complaint.complaintStatus}</td>
                                 <td>
                                     <label for="status-${complaint.complaintId}">Change Status:</label>
                                     <select name="complaintStatus" id="status-${complaint.complaintId}" class="form-select">
