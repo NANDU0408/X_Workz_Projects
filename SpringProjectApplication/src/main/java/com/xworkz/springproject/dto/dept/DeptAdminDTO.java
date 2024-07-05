@@ -1,4 +1,4 @@
-package com.xworkz.springproject.dto.admin;
+package com.xworkz.springproject.dto.dept;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name ="admin_signIn_form")
-public class AdminDTO {
+@Table(name ="deptAdmin_signIn_form")
+public class DeptAdminDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

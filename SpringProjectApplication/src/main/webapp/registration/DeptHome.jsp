@@ -95,14 +95,20 @@
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
                 <li class="nav-item">
-                     <a class="nav-link" href="userDetails">User Details</a>
-                </li>
+                                    <a class="nav-link" href="registration/SignIn.jsp?role=deptadmin" style="text-align: center;">
+                                        <span style="display: block;"><i class="fas fa-crown"></i></span>
+                                        <span class="d-block">Department Admin</span>
+                                    </a>
+                                </li>
+                <li class="nav-item">
+                                   <a class="nav-link" href="registration/SignIn.jsp?role=deptemployee" style="text-align: center;">
+                                         <span style="display: block;"><i class="fas fa-user"></i></span>
+                                         <span class="d-block">Department Employee</span>
+                                   </a>
+                                 </li>
                 <li class="nav-item">
                      <a class="nav-link" href="adminViewComplaints">View User Complaints</a>
                 </li>
-                <form id="logoutAdminForm" action="<c:url value='/logoutAdmin' />" method="post" class="dropdown-item">
-                    <button type="submit" class="btn btn-link">Admin Logout</button>
-                </form>
             </ul>
         </div>
     </div>

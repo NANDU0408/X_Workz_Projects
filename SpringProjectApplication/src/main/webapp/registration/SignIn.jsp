@@ -73,6 +73,7 @@
     <div class="row justify-content-center">
         <c:choose>
             <c:when test="${param.role == 'admin'}">
+                <!-- Admin Login View -->
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header text-center custom-card-header">
@@ -102,7 +103,70 @@
                     </div>
                 </div>
             </c:when>
+            <c:when test="${param.role == 'deptadmin'}">
+                <!-- Department Admin Login View -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header text-center custom-card-header">
+                            <h2 class="mb-0">Department Admin Login</h2>
+                        </div>
+                        <div class="card-body">
+                            <form action="deptAdmin" method="POST">
+                                <c:if test="${not empty errorMsg}">
+                                    <div class="alert alert-danger">${errorMsg}</div>
+                                </c:if>
+                                <div class="mb-3">
+                                    <label for="deptAdminEmail" class="form-label">Email ID</label>
+                                    <input type="text" class="form-control" id="deptAdminEmail" name="emailAddress" value="${deptAdminLoginForm.emailAddress}" onblur="deptAdminEmailValidation()">
+                                    <span id="deptAdminEmailError" class="error-message"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="deptAdminPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="deptAdminPassword" name="password" value="${deptAdminLoginForm.password}" onblur="deptAdminPasswordValidation()">
+                                    <span id="deptAdminPasswordError" class="error-message"></span>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <input type="submit" id="deptAdminSubmitButton" class="btn btn-primary" value="Login" name="submit"/>
+                                    <button type="button" class="btn btn-secondary ms-2" onclick="refreshPage()">Refresh</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </c:when>
+            <c:when test="${param.role == 'deptemployee'}">
+                <!-- Department Employee Login View -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header text-center custom-card-header">
+                            <h2 class="mb-0">Department Employee Login</h2>
+                        </div>
+                        <div class="card-body">
+                            <form action="deptemployee" method="POST">
+                                <c:if test="${not empty errorMsg}">
+                                    <div class="alert alert-danger">${errorMsg}</div>
+                                </c:if>
+                                <div class="mb-3">
+                                    <label for="deptEmployeeEmail" class="form-label">Email ID</label>
+                                    <input type="text" class="form-control" id="deptEmployeeEmail" name="emailAddress" value="${deptEmployeeLoginForm.emailAddress}" onblur="deptEmployeeEmailValidation()">
+                                    <span id="deptEmployeeEmailError" class="error-message"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="deptEmployeePassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="deptEmployeePassword" name="password" value="${deptEmployeeLoginForm.password}" onblur="deptEmployeePasswordValidation()">
+                                    <span id="deptEmployeePasswordError" class="error-message"></span>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <input type="submit" id="deptEmployeeSubmitButton" class="btn btn-primary" value="Login" name="submit"/>
+                                    <button type="button" class="btn btn-secondary ms-2" onclick="refreshPage()">Refresh</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </c:when>
             <c:otherwise>
+                <!-- User Login View -->
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header text-center custom-card-header">
@@ -208,6 +272,46 @@
     function adminPasswordValidation() {
         const password = document.getElementById('adminPassword').value;
         const passwordError = document.getElementById('adminPasswordError');
+        if (password === '') {
+            passwordError.textContent = 'Password is required';
+        } else {
+            passwordError.textContent = '';
+        }
+    }
+
+    function deptAdminEmailValidation() {
+        const emailAddress = document.getElementById('deptAdminEmail').value;
+        const emailAddressError = document.getElementById('deptAdminEmailError');
+        if (emailAddress === '') {
+            emailAddressError.textContent = 'Email ID is required';
+        } else {
+            emailAddressError.textContent = '';
+        }
+    }
+
+    function deptAdminPasswordValidation() {
+        const password = document.getElementById('deptAdminPassword').value;
+        const passwordError = document.getElementById('deptAdminPasswordError');
+        if (password === '') {
+            passwordError.textContent = 'Password is required';
+        } else {
+            passwordError.textContent = '';
+        }
+    }
+
+    function deptEmployeeEmailValidation() {
+        const emailAddress = document.getElementById('deptEmployeeEmail').value;
+        const emailAddressError = document.getElementById('deptEmployeeEmailError');
+        if (emailAddress === '') {
+            emailAddressError.textContent = 'Email ID is required';
+        } else {
+            emailAddressError.textContent = '';
+        }
+    }
+
+    function deptEmployeePasswordValidation() {
+        const password = document.getElementById('deptEmployeePassword').value;
+        const passwordError = document.getElementById('deptEmployeePasswordError');
         if (password === '') {
             passwordError.textContent = 'Password is required';
         } else {

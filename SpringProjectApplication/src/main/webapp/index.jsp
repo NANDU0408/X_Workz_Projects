@@ -91,6 +91,12 @@
                         <span class="d-block">Admin</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                                    <a class="nav-link" href="registration/DeptHome.jsp" style="text-align: center;">
+                                        <span style="display: block;"><i class="fas fa-sitemap"></i></span>
+                                        <span class="d-block">Departments</span>
+                                    </a>
+                                </li>
             </ul>
         </div>
     </div>

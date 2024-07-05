@@ -1,4 +1,4 @@
-package com.xworkz.springproject.dto.admin;
+package com.xworkz.springproject.dto.dept;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
@@ -16,23 +16,23 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name ="admin_signIn_form")
-public class AdminDTO {
+@Table(name ="empReg_form")
+public class EmployeeRegisterDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
-    @NotNull(message = "First Name should not be null")
-    @Size(min = 3, max = 30, message = "First Name must be between 3 and 30 characters")
-    @Pattern(regexp = "^[a-zA-Z\\s-]+$", message = "First Name can only contain letters, spaces, and hyphens")
+    @NotNull(message = "Full Name should not be null")
+    @Size(min = 3, max = 30, message = "Full Name must be between 3 and 30 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s-]+$", message = "Full Name can only contain letters, spaces, and hyphens")
     @Column(name = "firstName")
     private String firstName;
 
-    @NotNull(message = "Last Name should not be null")
-    @Size(min = 3, max = 30, message = "Last Name must be between 3 and 30 characters")
-    @Pattern(regexp = "^[a-zA-Z\\s-]+$", message = "Last Name can only contain letters, spaces, and hyphens")
+    @NotNull(message = "Full Name should not be null")
+    @Size(min = 3, max = 30, message = "Full Name must be between 3 and 30 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s-]+$", message = "Full Name can only contain letters, spaces, and hyphens")
     @Column(name = "lastName")
     private String lastName;
 
@@ -41,6 +41,15 @@ public class AdminDTO {
     @Size(min = 3, max = 30, message = "Email must be between 3 and 30 characters")
     @Column(name = "emailAddress")
     private String emailAddress;
+
+    @NotNull(message = "Phone Number should not be null")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone Number must be 10 digits")
+    @Column(name = "phoneNumber")
+    private String mobileNumber;
+
+    @NotNull(message = "You must agree to the terms and conditions")
+    @Column(name = "agreeTerms")
+    private Boolean agreeTerms;
 
     @Column(name = "password")
     private String password;
@@ -58,6 +67,11 @@ public class AdminDTO {
     private LocalDateTime updatedDate;
 
     @Transient
-    @Column(name = "role") // New field for user role (admin or user)
     private String role;
+
+//    @Transient
+//    private String profilePicture;
+//
+//    @Column(name = "profilePicturePath")
+//    private String profilePicturePath;
 }

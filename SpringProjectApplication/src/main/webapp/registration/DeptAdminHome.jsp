@@ -95,14 +95,13 @@
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
                 <li class="nav-item">
-                     <a class="nav-link" href="userDetails">User Details</a>
-                </li>
-                <li class="nav-item">
                      <a class="nav-link" href="adminViewComplaints">View User Complaints</a>
                 </li>
-                <form id="logoutAdminForm" action="<c:url value='/logoutAdmin' />" method="post" class="dropdown-item">
-                    <button type="submit" class="btn btn-link">Admin Logout</button>
+                <li class="nav-item">
+                     <form action="registration/AddEmployee.jsp" method="get" style="display: inline;">
+                           <button type="submit" class="btn btn-primary facebook-btn">Add Employee</button>
                 </form>
+            </li>
             </ul>
         </div>
     </div>
