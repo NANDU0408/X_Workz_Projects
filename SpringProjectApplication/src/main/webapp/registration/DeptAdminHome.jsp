@@ -102,6 +102,11 @@
                            <button type="submit" class="btn btn-primary facebook-btn">Add Employee</button>
                 </form>
             </li>
+            <li class="nav-item">
+            <form id="logoutAdminForm" action="<c:url value='/logoutDeptAdmin' />" method="post" class="dropdown-item">
+                  <button type="submit" class="btn btn-link">Logout</button>
+            </form>
+            </li>
             </ul>
         </div>
     </div>

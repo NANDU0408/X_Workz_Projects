@@ -19,4 +19,10 @@ public class LogoutController {
         request.getSession().invalidate(); // Invalidate session
         return "registration/SignIn.jsp?role=admin"; // Redirect to login page
     }
+
+    @PostMapping("/logoutDeptAdmin")
+    public String logoutDeptAdmin(HttpServletRequest request) {
+        request.getSession().invalidate(); // Invalidate session
+        return "registration/SignIn.jsp?role=deptadmin"; // Redirect to login page
+    }
 }
