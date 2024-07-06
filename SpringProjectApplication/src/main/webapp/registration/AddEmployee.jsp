@@ -134,6 +134,12 @@
                 </span>
 
                 <div class="mb-3">
+                     <label for="dept_id" class="form-label">Department ID</label>
+                     <input type="text" class="form-control" id="dept_id" name="dept_id" value="${dto.dept_id}" onblur="dept_idValidation()">
+                     <span id="dept_idError" class="error-message"></span>
+                </div>
+
+                <div class="mb-3">
                     <label for="firstName" class="form-label">First Name</label>
                     <input type="text" class="form-control" id="firstName" name="firstName" value="${dto.firstName}" onblur="nameValidation()">
                     <span id="firstNameError" class="error-message"></span>
@@ -143,6 +149,12 @@
                     <label for="lastName" class="form-label">Last Name</label>
                     <input type="text" class="form-control" id="lastName" name="lastName" value="${dto.lastName}" onblur="nameValidation()">
                     <span id="lastNameError" class="error-message"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="designation" class="form-label">Designation</label>
+                    <input type="text" class="form-control" id="designation" name="designation" value="${dto.designation}" onblur="designationValidation()">
+                    <span id="designationError" class="error-message"></span>
                 </div>
 
                 <div class="mb-3">

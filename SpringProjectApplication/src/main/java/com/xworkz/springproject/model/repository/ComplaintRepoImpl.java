@@ -277,16 +277,17 @@ public class ComplaintRepoImpl implements ComplaintRepo{
     }
 
     @Override
-    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city) {
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city, String complaintStatus) {
         System.out.println("or complaint");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         String queryStr = "SELECT r FROM RaiseComplaintDTO r " +
-                "WHERE r.complaintType = :complaintType OR r.city = :city";
+                "WHERE r.complaintType = :complaintType OR r.city = :city OR r.complaintStatus = :complaintStatus";
 
         TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(queryStr, RaiseComplaintDTO.class);
         System.out.println("Running searchComplaintsBycomplaintTypeOrcityForAdmin in ComplaintRepoImpl" +query);
         query.setParameter("complaintType", complaintType);
         query.setParameter("city", city);
+        query.setParameter("complaintStatus", complaintStatus);
         List<RaiseComplaintDTO> list = query.getResultList();
 
         System.out.println(list);

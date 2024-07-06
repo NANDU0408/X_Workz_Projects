@@ -142,7 +142,7 @@
                             <h2 class="mb-0">Department Employee Login</h2>
                         </div>
                         <div class="card-body">
-                            <form action="deptemployee" method="POST">
+                            <form action="deptEmployeeLogin" method="POST">
                                 <c:if test="${not empty errorMsg}">
                                     <div class="alert alert-danger">${errorMsg}</div>
                                 </c:if>
@@ -156,6 +156,19 @@
                                     <input type="password" class="form-control" id="deptEmployeePassword" name="password" value="${deptEmployeeLoginForm.password}" onblur="deptEmployeePasswordValidation()">
                                     <span id="deptEmployeePasswordError" class="error-message"></span>
                                 </div>
+
+                                <div class="mb-3 captcha-container">
+                                                                   <label for="captcha-input" class="form-label">Enter Captcha</label>
+                                                                   <div id="captchaPreview" class="mb-2 bg-white p-2 text-center border"></div>
+                                                                   <div class="d-flex">
+                                                                       <input type="text" name="captcha" id="captcha" placeholder="Enter captcha text" class="form-control me-2">
+                                                                       <button type="button" class="btn btn-secondary captcha-btn" onclick="generateCaptcha()">
+                                                                           <i class="fas fa-sync-alt"></i>
+                                                                           &#8635;
+                                                                       </button>
+                                                                   </div>
+                                                                   <span id="captchaError" class="text-danger"></span>
+                                                               </div>
                                 <div class="d-flex justify-content-center">
                                     <input type="submit" id="deptEmployeeSubmitButton" class="btn btn-primary" value="Login" name="submit"/>
                                     <button type="button" class="btn btn-secondary ms-2" onclick="refreshPage()">Refresh</button>

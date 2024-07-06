@@ -24,6 +24,9 @@ public class EmployeeRegisterDTO {
     @Column(name = "id")
     private int id;
 
+    @Column(name = "dept_id")
+    private int dept_id;
+
     @NotNull(message = "Full Name should not be null")
     @Size(min = 3, max = 30, message = "Full Name must be between 3 and 30 characters")
     @Pattern(regexp = "^[a-zA-Z\\s-]+$", message = "Full Name can only contain letters, spaces, and hyphens")
@@ -35,6 +38,12 @@ public class EmployeeRegisterDTO {
     @Pattern(regexp = "^[a-zA-Z\\s-]+$", message = "Full Name can only contain letters, spaces, and hyphens")
     @Column(name = "lastName")
     private String lastName;
+
+    @NotNull(message = "Full Name should not be null")
+    @Size(min = 3, max = 30, message = "Full Name must be between 3 and 30 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s-]+$", message = "Full Name can only contain letters, spaces, and hyphens")
+    @Column(name = "designation")
+    private String designation;
 
     @NotNull(message = "Email Address should not be null")
     @Email(message = "Email should be valid")

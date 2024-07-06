@@ -98,17 +98,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="registration/AdminHome.jsp">Admin Home</a>
+                    <a class="nav-link" href="registration/DeptAdminHome.jsp">Department Admin Home</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        View Complaints
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="adminViewComplaints">All Complaints</a></li>
-                        <li><a class="dropdown-item" href="adminViewActiveComplaints">Active Complaints</a></li>
-                        <li><a class="dropdown-item" href="adminViewInactiveComplaints">Inactive Complaints</a></li>
-                    </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="deptAdminViewComplaints">All Complaints</a>
                 </li>
             </ul>
         </div>
@@ -123,7 +116,7 @@
         <div class="d-flex justify-content-center mb-4 mt-3">
             <div class="card px-1 py-1 bg-light">
                 <div class="card-body">
-                    <form action="searchComplaintsAdmin" method="get">
+                    <form action="searchComplaintsDeptAdmin" method="get">
                         <div class="row g-3">
                             <div class="col-auto">
                                 <label for="type" class="form-label text-dark">Type</label>
@@ -179,51 +172,54 @@
                         <th>Created By</th>
                         <th>Updated Date</th>
                         <th>Updated By</th>
-                        <th>Dept. Assign</th>
+                        <th>Department ID</th>
+                        <th>Assign Employee</th>
                         <th>Status</th>
                         <th>Complaint Status:</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="complaint" items="${adminComplaintLists}">
+                    <c:forEach var="complaint" items="${assignedComplaints}">
                         <tr>
-                            <form action="assignToDept" method="post">
-                                <td>${complaint.complaintId}</td>
-                                <td>${complaint.complaintType}</td>
-                                <td>${complaint.country}</td>
-                                <td>${complaint.state}</td>
-                                <td>${complaint.city}</td>
-                                <td>${complaint.address}</td>
-                                <td>${complaint.description}</td>
-                                <td>${complaint.userId}</td>
-                                <td>${complaint.createdDate}</td>
-                                <td>${complaint.createdBy}</td>
-                                <td>${complaint.updatedDate}</td>
-                                <td>${complaint.updatedBy}</td>
+                            <form action="assignToDeptEmp" method="post">
+                                <td>${complaint.raiseComplaintDTO.complaintId}</td>
+                                <td>${complaint.raiseComplaintDTO.complaintType}</td>
+                                <td>${complaint.raiseComplaintDTO.country}</td>
+                                <td>${complaint.raiseComplaintDTO.state}</td>
+                                <td>${complaint.raiseComplaintDTO.city}</td>
+                                <td>${complaint.raiseComplaintDTO.address}</td>
+                                <td>${complaint.raiseComplaintDTO.description}</td>
+                                <td>${complaint.raiseComplaintDTO.userId}</td>
+                                <td>${complaint.raiseComplaintDTO.createdDate}</td>
+                                <td>${complaint.raiseComplaintDTO.createdBy}</td>
+                                <td>${complaint.raiseComplaintDTO.updatedDate}</td>
+                                <td>${complaint.raiseComplaintDTO.updatedBy}</td>
+                                <td name="departmentId">${complaint.raiseComplaintDTO.deptAssign}</td>
                                 <td>
-                                    <label for="dept-${complaint.complaintId}">Assign Department:</label>
-                                    <select name="departmentId" id="dept-${complaint.complaintId}" class="form-select">
-                                        <option value="" disabled selected>Choose...</option>
-                                        <c:forEach var="department" items="${departments}">
-                                            <option value="${department.deptId}">${department.deptName}</option>
-                                        </c:forEach>
-                                    </select>
-                                </td>
-                                <td>${complaint.complaintStatus}</td>
-                                <td>
-                                    <label for="status-${complaint.complaintId}">Change Status:</label>
-                                    <select name="complaintStatus" id="status-${complaint.complaintId}" class="form-select">
-                                        <option value="" disabled selected>Choose...</option>
-                                        <option value="Resolved">Resolved</option>
-                                        <option value="Pending">Pending</option>
-                                        <option value="InAction">InAction</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="hidden" name="complaintId" value="${complaint.complaintId}">
-                                    <input type="submit" value="Submit" class="btn btn-primary">
-                                </td>
+                                        <label for="dept-${complaint.raiseComplaintDTO.complaintId}">Assign Employee:</label>
+                                        <select name="empId" id="dept-${complaint.raiseComplaintDTO.complaintId}" class="form-select">
+                                            <option value="" disabled selected>Choose...</option>
+                                            <c:forEach var="department" items="${complaint.employeeRegisterDTOList}">
+                                                <option value="${department.id}">${department.firstName}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </td>
+                                    <td>${complaint.raiseComplaintDTO.complaintStatus}</td>
+                                    <td>
+                                        <label for="status-${complaint.raiseComplaintDTO.complaintId}">Change Status:</label>
+                                        <select name="complaintStatus" id="status-${complaint.raiseComplaintDTO.complaintId}" class="form-select">
+                                            <option value="" disabled selected>Choose...</option>
+                                            <option value="Resolved">Resolved</option>
+                                            <option value="Pending">Pending</option>
+                                            <option value="InAction">InAction</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" name="complaintId" value="${complaint.raiseComplaintDTO.complaintId}">
+                                        <input type="hidden" name="deptAssign" value="${complaint.raiseComplaintDTO.deptAssign}">
+                                        <input type="submit" value="Submit" class="btn btn-primary">
+                                    </td>
                             </form>
                         </tr>
                     </c:forEach>

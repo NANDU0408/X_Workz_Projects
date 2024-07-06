@@ -2,12 +2,17 @@ package com.xworkz.springproject.model.service;
 
 import com.xworkz.springproject.dto.dept.DeptAdminDTO;
 import com.xworkz.springproject.dto.dept.EmployeeRegisterDTO;
+import com.xworkz.springproject.dto.requestDto.HistoryDTO;
+import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
+import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.model.repository.DeptRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -65,5 +70,67 @@ public class DeptServiceImpl implements DeptService{
                 "Thanks and Regards,\n"+" "+
                 "XworkzProject Team");
         emailSender.send(message);
+    }
+
+    @Override
+    @Transactional
+    public Optional<EmployeeRegisterDTO> validateSignInEmp(String emailAddress, String password) {
+        Optional<EmployeeRegisterDTO> employeeRegisterDTOOptional = deptRepo.findByEmpEmailAddress(emailAddress);
+        if (employeeRegisterDTOOptional.isPresent()) {
+            EmployeeRegisterDTO employeeRegisterDTO = employeeRegisterDTOOptional.get();
+            if (employeeRegisterDTO.getPassword().equals(password)) {
+
+                return Optional.of(employeeRegisterDTO);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<EmployeeRegisterDTO> findByEmpEmailAddress(String emailAddress) {
+        return deptRepo.findByEmpEmailAddress(emailAddress);
+    }
+
+    @Override
+    public Optional<List<EmployeeRegisterDTO>> findEmpoloyeeByDeptId(int deptId) {
+        System.out.println("service Find Employee by dept id "+ deptId);
+        return deptRepo.findEmployeeByDeptId(deptId);
+    }
+
+    @Override
+    public List<EmployeeRegisterDTO> getDeptIdAndDeptNameForDept() {
+        return deptRepo.getdeptIdAnddeptNameForDept();
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> findAllComplaintsForDeptAdmin() {
+        System.out.println("Running findAllComplaintsForAdmin in DeptServiceImpl");
+        return deptRepo.findAllComplaintsForDeptAdmin();
+    }
+
+    @Override
+    public boolean savedeptIdAnddeptNameForDeptAdmin(int complaintId, int deptId, String complaintStatus,String assignEmployee) {
+        return deptRepo.savedeptIdAnddeptNameForDeptAdmin(complaintId,deptId,complaintStatus,assignEmployee);
+    }
+
+    @Override
+    public boolean savedeptIdAnddeptNameForDeptHistory(int complaintId, int deptId, String complaintStatus, String assignEmployee) {
+        return deptRepo.savedeptIdAnddeptNameForDeptHistory(complaintId,deptId,complaintStatus,assignEmployee);
+    }
+
+    @Override
+    public Optional<RaiseComplaintDTO> saveHistoryForDept(HistoryDTO historyDTO, RaiseComplaintDTO raiseComplaintDTO, RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto){
+        return deptRepo.saveHistoryForDept(historyDTO,raiseComplaintDTO,requestToDeptAndStatusOfComplaintDto);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsByComplaintTypeAndCityForDept(String complaintType, String city) {
+        return deptRepo.searchComplaintsBycomplaintTypeAndcityForDept(complaintType, city);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdminDept(String complaintType, String city, String complaintStatus) {
+        System.out.println("Running searchComplaintsBycomplaintTypeOrcityForAdmin in ComplaintRepo");
+        return deptRepo.searchComplaintsBycomplaintTypeOrcityForDept(complaintType,city,complaintStatus);
     }
 }

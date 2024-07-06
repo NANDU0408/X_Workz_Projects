@@ -95,7 +95,7 @@
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
                 <li class="nav-item">
-                     <a class="nav-link" href="adminViewComplaints">View User Complaints</a>
+                     <a class="nav-link" href="deptAdminViewComplaints">View User Complaints</a>
                 </li>
                 <li class="nav-item">
                      <form action="registration/AddEmployee.jsp" method="get" style="display: inline;">

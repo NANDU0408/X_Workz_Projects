@@ -11,6 +11,10 @@
     <link rel="icon" href="resources/imageFiles/xworkz_logo.jpeg">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
     <base href="http://localhost:8080/SpringProjectApplication/">
+
+     <!-- Font Awesome -->
+        <script src="https://kit.fontawesome.com/de5723d334.js" crossorigin="anonymous"></script>
+
     <style>
         .error-message {
             color: red;
@@ -106,9 +110,6 @@
                                          <span class="d-block">Department Employee</span>
                                    </a>
                                  </li>
-                <li class="nav-item">
-                     <a class="nav-link" href="adminViewComplaints">View User Complaints</a>
-                </li>
             </ul>
         </div>
     </div>

@@ -76,6 +76,9 @@ public class RaiseComplaintDTO implements Serializable {
     @Column(name = "dept_assign")
     private String deptAssign;
 
+    @Column(name = "assign_employee")
+    private String assignEmployee;
+
     @Column(name = "status")
     private String status;
 

@@ -21,4 +21,6 @@ public class RequestToDeptAndStatusOfComplaintDto {
     @NotNull(message = "complaint status should not be null")
     private String complaintStatus;
 
+    @NotNull(message = "emp Id should not be null")
+    private String empId;
 }

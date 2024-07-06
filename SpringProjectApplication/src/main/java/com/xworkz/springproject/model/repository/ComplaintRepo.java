@@ -40,7 +40,7 @@ public interface ComplaintRepo  {
 
     List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndcityForAdmin(String complaintType, String city);
 
-    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city);
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city,String complaintStatus);
 
     List<RaiseComplaintDTO> findAllComplaints();
 

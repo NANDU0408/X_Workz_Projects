@@ -43,7 +43,7 @@ public interface ComplaintService {
 
     List<RaiseComplaintDTO> searchComplaintsByComplaintTypeAndCityForAdmin(String complaintType, String city);
 
-    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city);
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city, String complaintStatus);
 
     List<RaiseComplaintDTO> findAllComplaints();
 
