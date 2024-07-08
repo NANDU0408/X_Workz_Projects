@@ -103,6 +103,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="deptAdminViewComplaints">All Complaints</a>
                 </li>
+                 <li class="nav-item">
+                    <button type="button" id="downloadCSVBtn" class="btn btn-primary">Download Complaints as CSV</button>
+                 </li>
             </ul>
         </div>
     </div>
@@ -177,6 +180,7 @@
                         <th>Status</th>
                         <th>Complaint Status:</th>
                         <th>Actions</th>
+                        <th>History</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -221,6 +225,12 @@
                                         <input type="submit" value="Submit" class="btn btn-primary">
                                     </td>
                             </form>
+                            <td>
+                                                                    <form action="history" method="post">
+                                                                        <input type="hidden" name="complaintId" value="${complaint.raiseComplaintDTO.complaintId}">
+                                                                        <button type="button" class="btn btn-primary" onclick="openComplaintHistory('${complaint.raiseComplaintDTO.complaintId}')">View</button>
+                                                                    </form>
+                                                                </td>
                         </tr>
                     </c:forEach>
                 </tbody>
@@ -230,6 +240,69 @@
             <p>No complaints found.</p>
         </c:otherwise>
     </c:choose>
+    <script>
+        // Function to handle Ajax request for complaint history
+        function openComplaintHistory(complaintId) {
+            $.ajax({
+                type: "POST",
+                url: "history",  // Replace with your actual URL for fetching history
+                data: { complaintId: complaintId },
+                success: function(response) {
+                    // Populate modal with history data
+                    $('#historyModalBody').html(response);
+                    $('#historyModal').modal('show');  // Show modal after data is loaded
+                },
+                error: function() {
+                    alert('Error fetching complaint history.');
+                }
+            });
+        }
+    </script>
+
+    <script>
+        // Function to trigger CSV download
+        document.getElementById('downloadCSVBtn').addEventListener('click', function() {
+            // Prepare CSV content (replace with your actual data)
+            var csvContent = "Complaint ID,Complaint Type,Country,State,City,Address,Description,User ID,Created Date,Created By,Updated Date,Updated By,Department ID,Assign Employee,Status,Complaint Status\n";
+
+            // Iterate over complaints data (replace with your actual data source)
+            <c:forEach var="complaint" items="${assignedComplaints}">
+                csvContent += "${complaint.raiseComplaintDTO.complaintId},${complaint.raiseComplaintDTO.complaintType},${complaint.raiseComplaintDTO.country},${complaint.raiseComplaintDTO.state},${complaint.raiseComplaintDTO.city},${complaint.raiseComplaintDTO.address},${complaint.raiseComplaintDTO.description},${complaint.raiseComplaintDTO.userId},${complaint.raiseComplaintDTO.createdDate},${complaint.raiseComplaintDTO.createdBy},${complaint.raiseComplaintDTO.updatedDate},${complaint.raiseComplaintDTO.updatedBy},${complaint.raiseComplaintDTO.deptAssign},${complaint.raiseComplaintDTO.assignEmployee},${complaint.raiseComplaintDTO.status},${complaint.raiseComplaintDTO.complaintStatus}\n";
+            </c:forEach>
+
+            // Create a Blob object containing the CSV file
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+            // Create a link element, set its href to the Blob object, and trigger download
+            var link = document.createElement("a");
+            if (link.download !== undefined) { // Feature detection
+                var url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", "complaints.csv");
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert("Your browser doesn't support downloading files directly. Please try a different browser or download manually.");
+            }
+        });
+    </script>
+
+    <!-- Modal for Complaint History -->
+    <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="historyModalLabel">Complaint History Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="historyModalBody">
+                    <!-- History details will be loaded here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

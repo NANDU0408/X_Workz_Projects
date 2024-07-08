@@ -41,7 +41,13 @@ public interface ComplaintService {
 
     List<RaiseComplaintDTO> searchComplaintsByCityForAdmin(String city);
 
-    List<RaiseComplaintDTO> searchComplaintsByComplaintTypeAndCityForAdmin(String complaintType, String city);
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForAdmin(String complaintType, String city,String complaintStatus);
+
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndComplaintStatusForAdmin(String complaintType, String complaintStatus);
+
+    List<RaiseComplaintDTO> searchComplaintsCityAndComplaintStatusForAdmin(String city, String complaintStatus);
+
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityForAdmin(String complaintType, String city);
 
     List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city, String complaintStatus);
 

@@ -38,9 +38,15 @@ public interface ComplaintRepo  {
 
     List<RaiseComplaintDTO> searchComplaintsByCityForAdmin(String city);
 
-    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndcityForAdmin(String complaintType, String city);
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForAdmin(String complaintType, String city, String complaintStatus);
 
-    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city,String complaintStatus);
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndComplaintStatusForAdmin(String complaintType, String complaintStatus);
+
+    List<RaiseComplaintDTO> searchComplaintsCityAndComplaintStatusForAdmin(String city, String complaintStatus);
+
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityForAdmin(String complaintType, String city);
+
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdmin(String complaintType, String city, String complaintStatus);
 
     List<RaiseComplaintDTO> findAllComplaints();
 
@@ -50,4 +56,6 @@ public interface ComplaintRepo  {
 
     @Transactional
     Optional<RaiseComplaintDTO> saveHistory(HistoryDTO historyDTO,RaiseComplaintDTO raiseComplaintDTO, RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto);
+
+
 }

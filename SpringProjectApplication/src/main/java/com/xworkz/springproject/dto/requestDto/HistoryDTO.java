@@ -29,7 +29,7 @@ public class HistoryDTO {
     @Column(name = "department_id")
     private int departmentId;
 
-    @NotNull(message = "Complaint status should not be null")
+//    @NotNull(message = "Complaint status should not be null")
     @Column(name = "complaint_status")
     private String complaintStatus;
 }

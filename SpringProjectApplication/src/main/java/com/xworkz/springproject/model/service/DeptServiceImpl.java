@@ -124,13 +124,33 @@ public class DeptServiceImpl implements DeptService{
     }
 
     @Override
-    public List<RaiseComplaintDTO> searchComplaintsByComplaintTypeAndCityForDept(String complaintType, String city) {
-        return deptRepo.searchComplaintsBycomplaintTypeAndcityForDept(complaintType, city);
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForAdmin(String complaintType, String city, String complaintStatus) {
+        return deptRepo.searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForAdmin(complaintType, city,complaintStatus);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndComplaintStatusForAdmin(String complaintType, String complaintStatus){
+        return deptRepo.searchComplaintsBycomplaintTypeAndComplaintStatusForAdmin(complaintType,complaintStatus);
+    }
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsCityAndComplaintStatusForAdmin(String city, String complaintStatus){
+        return deptRepo.searchComplaintsCityAndComplaintStatusForAdmin(city,complaintStatus);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityForAdmin(String complaintType, String city){
+        return deptRepo.searchComplaintsBycomplaintTypeAndCityForAdmin(complaintType, city);
     }
 
     @Override
     public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdminDept(String complaintType, String city, String complaintStatus) {
-        System.out.println("Running searchComplaintsBycomplaintTypeOrcityForAdmin in ComplaintRepo");
+        System.out.println("Running searchComplaintsBycomplaintTypeOrcityForAdmin in DeptServiceImpl");
         return deptRepo.searchComplaintsBycomplaintTypeOrcityForDept(complaintType,city,complaintStatus);
+    }
+
+    @Override
+    public List<HistoryDTO> findCompaintHistoryByComplaintId(HistoryDTO historyDTO) {
+        System.out.println("Running findCompaintHistoryByComplaintId in DeptServiceImpl");
+        return deptRepo.findComplaintHistoryByComplaintId(historyDTO);
     }
 }

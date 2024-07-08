@@ -168,10 +168,16 @@ public class DeptAdminController {
 
         System.out.println("Type: " + complaintType + ", City: " + city);
 
-        if (complaintType != null && !complaintType.isEmpty() && city != null && !city.isEmpty()) {
+        if (complaintType != null && !complaintType.isEmpty() && city != null && !city.isEmpty() && complaintStatus != null && !complaintStatus.isEmpty()) {
             // Search by both type and city
             System.out.println("check for both type and city");
-            complaints = deptService.searchComplaintsByComplaintTypeAndCityForDept(complaintType, city);
+            complaints = deptService.searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForAdmin(complaintType, city,complaintStatus);
+        } else if (complaintType != null && !complaintType.isEmpty() && complaintStatus != null && !complaintStatus.isEmpty()) {
+            complaints = deptService.searchComplaintsBycomplaintTypeAndComplaintStatusForAdmin(complaintType,complaintStatus);
+        } else if (city != null &&!city.isEmpty() && complaintStatus != null && !complaintStatus.isEmpty()) {
+            complaints = deptService.searchComplaintsCityAndComplaintStatusForAdmin(city,complaintStatus);
+        } else if (complaintType != null && !complaintType.isEmpty() && city != null && !city.isEmpty()) {
+            complaints = deptService.searchComplaintsBycomplaintTypeAndCityForAdmin(complaintType,city);
         } else if (complaintType != null && !complaintType.isEmpty() || city != null && !city.isEmpty() || complaintStatus != null && !complaintStatus.isEmpty()) {
             // Search by type or city
             complaints = deptService.searchComplaintsBycomplaintTypeOrcityForAdminDept(complaintType,city,complaintStatus);
@@ -197,5 +203,19 @@ public class DeptAdminController {
 
         model.addAttribute("assignedComplaints", deptViewComplaintForEachCompliantDtoList);
         return "registration/DeptUserComplaints.jsp";
+    }
+
+    @PostMapping("/history")
+    public String viewComplaintHistory(@RequestParam("complaintId") int complaintId, Model model) {
+        // Fetch history based on complaintId
+        HistoryDTO historyDTO = new HistoryDTO();
+        historyDTO.setComplaintId(complaintId);
+        List<HistoryDTO> history = deptService.findCompaintHistoryByComplaintId(historyDTO);
+
+        // Add history to the model
+        model.addAttribute("historyTable", history);
+
+        // Return the view name to display the history
+        return "registration/ComplaintHistory.jsp";
     }
 }

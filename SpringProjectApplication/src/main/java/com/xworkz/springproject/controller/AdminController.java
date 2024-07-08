@@ -133,11 +133,17 @@ public class AdminController {
 
         System.out.println("Type: " + complaintType + ", City: " + city);
 
-        if (complaintType != null && !complaintType.isEmpty() && city != null && !city.isEmpty()) {
+        if (complaintType != null && !complaintType.isEmpty() && city != null && !city.isEmpty() && complaintStatus != null && !complaintStatus.isEmpty()) {
             // Search by both type and city
             System.out.println("check for both type and city");
-            complaints = complaintService.searchComplaintsByComplaintTypeAndCityForAdmin(complaintType, city);
-        } else if (complaintType != null && !complaintType.isEmpty() || city != null && !city.isEmpty() || complaintStatus != null && !complaintStatus.isEmpty()) {
+            complaints = complaintService.searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForAdmin(complaintType, city,complaintStatus);
+        } else if (complaintType != null && !complaintType.isEmpty() && complaintStatus != null && !complaintStatus.isEmpty()) {
+            complaints = complaintService.searchComplaintsBycomplaintTypeAndComplaintStatusForAdmin(complaintType,complaintStatus);
+        } else if (city != null &&!city.isEmpty() && complaintStatus != null && !complaintStatus.isEmpty()) {
+            complaints = complaintService.searchComplaintsCityAndComplaintStatusForAdmin(city,complaintStatus);
+        }else if (complaintType != null && !complaintType.isEmpty() && city != null && !city.isEmpty()) {
+            complaints = complaintService.searchComplaintsBycomplaintTypeAndCityForAdmin(complaintType,city);
+        }  else if (complaintType != null && !complaintType.isEmpty() || city != null && !city.isEmpty() || complaintStatus != null && !complaintStatus.isEmpty()) {
             // Search by type or city
             complaints = complaintService.searchComplaintsBycomplaintTypeOrcityForAdmin(complaintType,city,complaintStatus);
             System.out.println("Running searchComplaints in AdminController for any of complaint type or city" +complaints);

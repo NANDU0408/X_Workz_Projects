@@ -111,6 +111,9 @@
                                 <li><a class="dropdown-item" href="viewInactiveComplaints">Inactive Complaints</a></li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                     <button type="button" id="downloadCSVBtn" class="btn btn-primary">Download Complaints as CSV</button>
+                </li>
             </ul>
         </div>
     </div>
@@ -168,14 +171,14 @@
                             <td>${complaint.createdBy}</td>
                             <td>${complaint.updatedDate}</td>
                             <td>${complaint.updatedBy}</td>
-                            <td>${complaint.status}</td>
+                            <td>${complaint.complaintStatus}</td>
                             <td>
-                                 <c:if test="${complaint.status == 'ACTIVE'}">
-                                                <form action="editPage" method="get">
-                                                    <input type="hidden" name="complaintId" value="${complaint.complaintId}">
-                                                    <button type="submit" class="btn btn-primary">Edit</button>
-                                                </form>
-                                            </c:if>
+                                <c:if test="${complaint.complaintStatus == 'Pending' or complaint.complaintStatus == 'InAction'}">
+                                    <form action="editPage" method="get">
+                                        <input type="hidden" name="complaintId" value="${complaint.complaintId}">
+                                        <button type="submit" class="btn btn-primary">Edit</button>
+                                    </form>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>
@@ -187,6 +190,36 @@
         </c:otherwise>
     </c:choose>
 </div>
+
+<script>
+    // Function to trigger CSV download
+    document.getElementById('downloadCSVBtn').addEventListener('click', function() {
+        // Prepare CSV content
+        var csvContent = "Complaint ID,Complaint Type,Country,State,City,Address,Description,User ID,Created Date,Created By,Updated Date,Updated By,Department ID,Assign Employee,Status,Complaint Status\n";
+
+        // Iterate over complaints data
+        <c:forEach var="complaint" items="${complaintLists}">
+            csvContent += "${complaint.complaintId},${complaint.complaintType},${complaint.country},${complaint.state},${complaint.city},${complaint.address},${complaint.description},${complaint.createdDate},${complaint.createdBy},${complaint.updatedDate},${complaint.updatedBy},${complaint.deptAssign},${complaint.assignEmployee},${complaint.status},${complaint.complaintStatus}\n";
+        </c:forEach>
+
+        // Create a Blob object containing the CSV file
+        var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+        // Create a link element, set its href to the Blob object, and trigger download
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // Feature detection for download attribute support
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "complaints.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            alert("Your browser doesn't support downloading files directly. Please try a different browser or download manually.");
+        }
+    });
+</script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
