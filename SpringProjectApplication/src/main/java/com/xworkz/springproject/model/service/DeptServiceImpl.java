@@ -9,9 +9,12 @@ import com.xworkz.springproject.model.repository.DeptRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +26,12 @@ public class DeptServiceImpl implements DeptService{
 
     @Autowired
     private JavaMailSender emailSender;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final int PASSWORD_LENGTH = 16;
 
     @Override
     public Optional<DeptAdminDTO> validateDeptAdminSignIn(String emailAddress, String password) {
@@ -47,7 +56,19 @@ public class DeptServiceImpl implements DeptService{
             System.out.println("Phone number already exists");
             return Optional.empty();
         }
-        return deptRepo.saveEmp(employeeRegisterDTO);
+
+        // Encrypt the password before saving
+        String password = generateRandomPassword();
+        String encodedPassword = passwordEncoder.encode(password);
+        employeeRegisterDTO.setPassword(encodedPassword);
+
+        Optional<EmployeeRegisterDTO> employeeRegisterDTO1 = deptRepo.saveEmp(employeeRegisterDTO);
+        if (employeeRegisterDTO1.isPresent()) {
+            employeeRegisterDTO1.get().setPassword(password);
+            sendEmailEmp(employeeRegisterDTO1.get());
+        }
+
+        return employeeRegisterDTO1;
     }
 
     @Override
@@ -66,7 +87,7 @@ public class DeptServiceImpl implements DeptService{
         message.setTo(employeeRegisterDTO.getEmailAddress());
         message.setSubject("Employee Credentials");
         message.setText("Dear "+employeeRegisterDTO.getFirstName()+" "+employeeRegisterDTO.getLastName()+" You have been successfully Registered by Department Admin,\n\n" +
-                "Please Sign In through this password: "+employeeRegisterDTO.getPassword()+"\n\n" +
+                "Please Sign In through this email: "+employeeRegisterDTO.getEmailAddress()+ " and password: "+employeeRegisterDTO.getPassword()+"\n\n" +
                 "Thanks and Regards,\n"+" "+
                 "XworkzProject Team");
         emailSender.send(message);
@@ -78,12 +99,21 @@ public class DeptServiceImpl implements DeptService{
         Optional<EmployeeRegisterDTO> employeeRegisterDTOOptional = deptRepo.findByEmpEmailAddress(emailAddress);
         if (employeeRegisterDTOOptional.isPresent()) {
             EmployeeRegisterDTO employeeRegisterDTO = employeeRegisterDTOOptional.get();
-            if (employeeRegisterDTO.getPassword().equals(password)) {
+
+            if (employeeRegisterDTO.getPassword().equals(passwordEncoder.encode(password))) {
 
                 return Optional.of(employeeRegisterDTO);
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void updateEmpPassword(EmployeeRegisterDTO employeeRegisterDTO) {
+        System.out.println("Service update by password "+employeeRegisterDTO);
+        sendEmailEmp(employeeRegisterDTO);
+        employeeRegisterDTO.setPassword(passwordEncoder.encode(employeeRegisterDTO.getPassword()));
+        deptRepo.updateEmpPassword(employeeRegisterDTO);
     }
 
     @Override
@@ -152,5 +182,15 @@ public class DeptServiceImpl implements DeptService{
     public List<HistoryDTO> findCompaintHistoryByComplaintId(HistoryDTO historyDTO) {
         System.out.println("Running findCompaintHistoryByComplaintId in DeptServiceImpl");
         return deptRepo.findComplaintHistoryByComplaintId(historyDTO);
+    }
+
+    public String generateRandomPassword() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
+        for (int i = 0; i < PASSWORD_LENGTH; i++) {
+            password.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+
+        return password.toString();
     }
 }

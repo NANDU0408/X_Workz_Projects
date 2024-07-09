@@ -5,11 +5,14 @@ import com.xworkz.springproject.dto.dept.EmployeeRegisterDTO;
 import com.xworkz.springproject.dto.requestDto.HistoryDTO;
 import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
+import com.xworkz.springproject.dto.user.SignUpDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +23,12 @@ public class DeptRepoImpl implements DeptRepo{
 
     @Autowired
     private EntityManagerFactory entityManagerFactory;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final int PASSWORD_LENGTH = 16;
 
     @Override
     public Optional<DeptAdminDTO> findByDeptAdminEmailAddress(String emailAddress) {
@@ -41,6 +50,9 @@ public class DeptRepoImpl implements DeptRepo{
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
+
+
+//            employeeRegisterDTO.setPassword(encodedPassword);
             employeeRegisterDTO.setCreatedBy(employeeRegisterDTO.getFirstName() + " " + employeeRegisterDTO.getLastName());
             employeeRegisterDTO.setCreatedDate(LocalDateTime.now());
             employeeRegisterDTO.setUpdatedBy(employeeRegisterDTO.getFirstName() + " " + employeeRegisterDTO.getLastName());
@@ -56,6 +68,33 @@ public class DeptRepoImpl implements DeptRepo{
             entityManager.close();
         }
         return Optional.of(employeeRegisterDTO);
+    }
+
+    @Override
+    public boolean updateEmpPassword(EmployeeRegisterDTO employeeRegisterDTO) {
+        System.out.println("Repo update by password "+employeeRegisterDTO);
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            EmployeeRegisterDTO employeeRegisterDTO1 = entityManager.find(EmployeeRegisterDTO.class,employeeRegisterDTO.getId());
+            employeeRegisterDTO1.setPassword(employeeRegisterDTO.getPassword());
+            employeeRegisterDTO1.setUpdatedBy(employeeRegisterDTO.getFirstName()+" "+employeeRegisterDTO.getLastName());
+            employeeRegisterDTO1.setUpdatedDate(LocalDateTime.now());
+            employeeRegisterDTO1.setCount(employeeRegisterDTO.getCount()+1);
+
+
+            entityManager.getTransaction().commit();
+            return true;
+        } catch (PersistenceException e) {
+            entityManager.getTransaction().rollback();
+            e.printStackTrace();
+            System.out.println("Exception while saving data: " + e);
+
+        } finally {
+            entityManager.close();
+        }
+
+        return false;
     }
 
     @Override
@@ -343,5 +382,15 @@ public class DeptRepoImpl implements DeptRepo{
         System.out.println("Running findComplaintHistoryByComplaintId in ComplaintRepoImpl" +query);
 
         return query.getResultList();
+    }
+
+    public String generateRandomPassword() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
+        for (int i = 0; i < PASSWORD_LENGTH; i++) {
+            password.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+
+        return password.toString();
     }
 }

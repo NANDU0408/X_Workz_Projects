@@ -19,6 +19,8 @@ public interface DeptRepo {
     @Transactional
     Optional<EmployeeRegisterDTO> saveEmp(EmployeeRegisterDTO employeeRegisterDTO);
 
+    boolean updateEmpPassword(EmployeeRegisterDTO employeeRegisterDTO);
+
     boolean checkEmailExists(String emailAddress);
 
     boolean checkPhoneNumberExists(String mobileNumber);

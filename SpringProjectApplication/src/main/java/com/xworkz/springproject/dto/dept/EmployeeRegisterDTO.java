@@ -75,6 +75,9 @@ public class EmployeeRegisterDTO {
     @Column(name = "updatedDate")
     private LocalDateTime updatedDate;
 
+    @Column(name = "count")
+    private int count;
+
     @Transient
     private String role;
 

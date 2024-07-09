@@ -26,6 +26,8 @@ public interface DeptService {
     @Transactional
     Optional<EmployeeRegisterDTO> validateSignInEmp(String emailAddress, String password);
 
+    void updateEmpPassword(EmployeeRegisterDTO employeeRegisterDTO);
+
     Optional<EmployeeRegisterDTO> findByEmpEmailAddress(String emailAddress);
 
     Optional<List<EmployeeRegisterDTO>> findEmpoloyeeByDeptId(int deptId);

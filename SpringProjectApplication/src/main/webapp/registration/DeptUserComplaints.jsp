@@ -222,7 +222,7 @@
                                     <td>
                                         <input type="hidden" name="complaintId" value="${complaint.raiseComplaintDTO.complaintId}">
                                         <input type="hidden" name="deptAssign" value="${complaint.raiseComplaintDTO.deptAssign}">
-                                        <input type="submit" value="Submit" class="btn btn-primary">
+                                        <input type="submit" value="Update" class="btn btn-primary">
                                     </td>
                             </form>
                             <td>
@@ -259,35 +259,70 @@
         }
     </script>
 
-    <script>
-        // Function to trigger CSV download
-        document.getElementById('downloadCSVBtn').addEventListener('click', function() {
-            // Prepare CSV content (replace with your actual data)
-            var csvContent = "Complaint ID,Complaint Type,Country,State,City,Address,Description,User ID,Created Date,Created By,Updated Date,Updated By,Department ID,Assign Employee,Status,Complaint Status\n";
+   <script>
+       // Function to escape CSV special characters
+       function escapeCsvValue(value) {
+           if (value == null) return '';
+           if (typeof value !== 'string') value = String(value);
+           if (value.includes('"') || value.includes(',') || value.includes('\n')) {
+               value = '"' + value.replace(/"/g, '""') + '"';
+           }
+           return value;
+       }
 
-            // Iterate over complaints data (replace with your actual data source)
-            <c:forEach var="complaint" items="${assignedComplaints}">
-                csvContent += "${complaint.raiseComplaintDTO.complaintId},${complaint.raiseComplaintDTO.complaintType},${complaint.raiseComplaintDTO.country},${complaint.raiseComplaintDTO.state},${complaint.raiseComplaintDTO.city},${complaint.raiseComplaintDTO.address},${complaint.raiseComplaintDTO.description},${complaint.raiseComplaintDTO.userId},${complaint.raiseComplaintDTO.createdDate},${complaint.raiseComplaintDTO.createdBy},${complaint.raiseComplaintDTO.updatedDate},${complaint.raiseComplaintDTO.updatedBy},${complaint.raiseComplaintDTO.deptAssign},${complaint.raiseComplaintDTO.assignEmployee},${complaint.raiseComplaintDTO.status},${complaint.raiseComplaintDTO.complaintStatus}\n";
-            </c:forEach>
+       // Function to trigger CSV download
+       document.getElementById('downloadCSVBtn').addEventListener('click', function() {
+           // Prepare CSV content
+           var csvContent = "Complaint ID,Complaint Type,Country,State,City,Address,Description,User ID,Created Date,Created By,Updated Date,Updated By,Department ID,Assign Employee,Status,Complaint Status\n";
 
-            // Create a Blob object containing the CSV file
-            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+           // Iterate over complaints data
+           <c:forEach var="complaint" items="${assignedComplaints}">
+               csvContent += [
+                   escapeCsvValue("${complaint.raiseComplaintDTO.complaintId}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.complaintType}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.country}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.state}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.city}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.address}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.description}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.userId}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.createdDate}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.createdBy}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.updatedDate}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.updatedBy}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.deptAssign}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.assignEmployee}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.status}"),
+                   escapeCsvValue("${complaint.raiseComplaintDTO.complaintStatus}")
+               ].join(",") + "\n";
+           </c:forEach>
 
-            // Create a link element, set its href to the Blob object, and trigger download
-            var link = document.createElement("a");
-            if (link.download !== undefined) { // Feature detection
-                var url = URL.createObjectURL(blob);
-                link.setAttribute("href", url);
-                link.setAttribute("download", "complaints.csv");
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } else {
-                alert("Your browser doesn't support downloading files directly. Please try a different browser or download manually.");
-            }
-        });
-    </script>
+           // Create a Blob object containing the CSV file
+           var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+           // Create a link element, set its href to the Blob object, and trigger download
+           var link = document.createElement("a");
+           if (link.download !== undefined) { // Feature detection
+               var url = URL.createObjectURL(blob);
+               link.setAttribute("href", url);
+               link.setAttribute("download", "complaints.csv");
+               link.style.visibility = 'hidden';
+               document.body.appendChild(link);
+               link.click();
+               document.body.removeChild(link);
+           } else {
+               alert("Your browser doesn't support downloading files directly. Please try a different browser or download manually.");
+           }
+       });
+   </script>
+
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script>
+       $(document).ready(function() {
+           // Custom dropdown toggle script (if any)
+           // Example: $('.dropdown-toggle').dropdown();
+       });
+   </script>
 
     <!-- Modal for Complaint History -->
     <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">

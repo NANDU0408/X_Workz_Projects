@@ -225,7 +225,7 @@
                                 </td>
                                 <td>
                                     <input type="hidden" name="complaintId" value="${complaint.complaintId}">
-                                    <input type="submit" value="Submit" class="btn btn-primary">
+                                    <input type="submit" value="Update" class="btn btn-primary">
                                 </td>
                             </form>
                         </tr>
@@ -241,12 +241,39 @@
 
 <script>
     document.getElementById('downloadCSVBtn').addEventListener('click', function() {
+        // Function to escape CSV special characters
+        function escapeCsvValue(value) {
+            if (value == null) return '';
+            if (typeof value !== 'string') value = String(value);
+            if (value.includes('"') || value.includes(',') || value.includes('\n')) {
+                value = '"' + value.replace(/"/g, '""') + '"';
+            }
+            return value;
+        }
+
         // Prepare CSV content
         var csvContent = "Complaint ID,Complaint Type,Country,State,City,Address,Description,User ID,Created Date,Created By,Updated Date,Updated By,Department ID,Assign Employee,Status,Complaint Status\n";
 
         // Iterate over complaints data
         <c:forEach var="complaint" items="${adminComplaintLists}">
-            csvContent += "${complaint.complaintId},${complaint.complaintType},${complaint.country},${complaint.state},${complaint.city},${complaint.address},${complaint.description},${complaint.userId},${complaint.createdDate},${complaint.createdBy},${complaint.updatedDate},${complaint.updatedBy},${complaint.deptAssign},${complaint.assignEmployee},${complaint.status},${complaint.complaintStatus}\n";
+            csvContent += [
+                escapeCsvValue("${complaint.complaintId}"),
+                escapeCsvValue("${complaint.complaintType}"),
+                escapeCsvValue("${complaint.country}"),
+                escapeCsvValue("${complaint.state}"),
+                escapeCsvValue("${complaint.city}"),
+                escapeCsvValue("${complaint.address}"),
+                escapeCsvValue("${complaint.description}"),
+                escapeCsvValue("${complaint.userId}"),
+                escapeCsvValue("${complaint.createdDate}"),
+                escapeCsvValue("${complaint.createdBy}"),
+                escapeCsvValue("${complaint.updatedDate}"),
+                escapeCsvValue("${complaint.updatedBy}"),
+                escapeCsvValue("${complaint.deptAssign}"),
+                escapeCsvValue("${complaint.assignEmployee}"),
+                escapeCsvValue("${complaint.status}"),
+                escapeCsvValue("${complaint.complaintStatus}")
+            ].join(",") + "\n";
         </c:forEach>
 
         // Create a Blob object containing the CSV file

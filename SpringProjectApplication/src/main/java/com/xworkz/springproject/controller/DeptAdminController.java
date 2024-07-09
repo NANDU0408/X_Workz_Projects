@@ -6,12 +6,10 @@ import com.xworkz.springproject.dto.dept.*;
 import com.xworkz.springproject.dto.requestDto.HistoryDTO;
 import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.responseDto.DeptViewComplaintForEachCompliantDto;
-import com.xworkz.springproject.dto.user.ImageDownloadDTO;
-import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
-import com.xworkz.springproject.dto.user.SignInDTO;
-import com.xworkz.springproject.dto.user.SignUpDTO;
+import com.xworkz.springproject.dto.user.*;
 import com.xworkz.springproject.model.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,6 +37,9 @@ public class DeptAdminController {
     @Autowired
     private DeptAdminService deptAdminService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping("/deptAdmin")
     public String login(@Valid @ModelAttribute("loginForm") DeptAdminSignInDTO deptAdminSignInDTO, BindingResult bindingResult, Model model, HttpSession session) {
         if (bindingResult.hasErrors()) {
@@ -61,7 +62,7 @@ public class DeptAdminController {
 
 
     @PostMapping("empReg")
-    public String signUp(@Valid @ModelAttribute("dto") EmployeeRegisterDTO employeeRegisterDTO, BindingResult bindingResult, Model model) {
+    public String empSignUp(@Valid @ModelAttribute("dto") EmployeeRegisterDTO employeeRegisterDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "registration/AddEmployee.jsp";
@@ -77,10 +78,15 @@ public class DeptAdminController {
             return "registration/AddEmployee.jsp";
         }
 
+
+        // Encrypt the password before saving
+//        String encodedPassword = passwordEncoder.encode(employeeRegisterDTO.getPassword());
+//        employeeRegisterDTO.setPassword(encodedPassword);
+
         Optional<EmployeeRegisterDTO> savedEmpDto = deptService.saveEmp(employeeRegisterDTO);
         if (savedEmpDto.isPresent()) {
             model.addAttribute("successMessage", "Sign-Up successful! Your password is sent to your email address: " + savedEmpDto.get().getEmailAddress());
-            deptService.sendEmailEmp(savedEmpDto.get());
+//            deptService.sendEmailEmp(savedEmpDto.get());
         } else {
             model.addAttribute("failureMessage", "Sign-Up failed. Please try again.");
         }
@@ -93,16 +99,51 @@ public class DeptAdminController {
             return "registration/SignIn.jsp?role=deptemployee";
         }
 
-        Optional<EmployeeRegisterDTO> registerDTOOptional = deptService.validateSignInEmp(deptEmployeeSignInDTO.getEmailAddress(), deptEmployeeSignInDTO.getPassword());
-        if (registerDTOOptional.isPresent()) {
-            // Set adminData in the session
-            EmployeeRegisterDTO loggedInEmp = registerDTOOptional.get();
-            session.setAttribute("deptUserData", loggedInEmp);
-            model.addAttribute("deptUserData", loggedInEmp);
-            return "registration/DeptEmpHome.jsp"; // Redirect to admin home page
-        } else {
+        Optional<EmployeeRegisterDTO> employeeRegisterDTOOptional = deptService.findByEmpEmailAddress(deptEmployeeSignInDTO.getEmailAddress());
+        if (employeeRegisterDTOOptional.isPresent()){
+            EmployeeRegisterDTO employeeRegisterDTO = employeeRegisterDTOOptional.get();
+            if (employeeRegisterDTO.getCount() == 0){
+                return "registration/EmployeeResetPassword.jsp";
+            }else {
+
+                Optional<EmployeeRegisterDTO> registerDTOOptional = deptService.validateSignInEmp(deptEmployeeSignInDTO.getEmailAddress(), deptEmployeeSignInDTO.getPassword());
+                if (registerDTOOptional.isPresent()) {
+                    // Set adminData in the session
+                    EmployeeRegisterDTO loggedInEmp = registerDTOOptional.get();
+                    session.setAttribute("deptUserData", loggedInEmp);
+                    model.addAttribute("deptUserData", loggedInEmp);
+                    return "registration/DeptEmpHome.jsp"; // Redirect to admin home page
+                } else {
+                    model.addAttribute("errorMsg", "Invalid email or password");
+                    return "registration/SignIn.jsp?role=deptemployee"; // Redirect back to admin login page with error message
+                }
+            }
+
+        }else {
             model.addAttribute("errorMsg", "Invalid email or password");
-            return "registration/SignIn.jsp?role=deptemployee"; // Redirect back to admin login page with error message
+            return "registration/SignIn.jsp?role=deptemployee";
+        }
+    }
+
+    @PostMapping("/resetEmpPassword")
+    public String resetEmpPassword(@ModelAttribute("resetEmpPasswordForm") EmployeeResetPasswordDTO employeeResetPasswordDTO, Model model) {
+        if (!employeeResetPasswordDTO.getNewPassword().equals(employeeResetPasswordDTO.getConfirmNewPassword())) {
+            model.addAttribute("errorMessage", "New Password and Confirm Password do not match.");
+            return "registration/EmployeeResetPassword.jsp";
+        }
+
+        Optional<EmployeeRegisterDTO> employeeRegisterDTOOptional = deptService.findByEmpEmailAddress(employeeResetPasswordDTO.getEmailAddress());
+        if (employeeRegisterDTOOptional.isPresent()) {
+            EmployeeRegisterDTO employeeRegisterDTO = employeeRegisterDTOOptional.get();
+            employeeRegisterDTO.setPassword(employeeResetPasswordDTO.getNewPassword());
+            deptService.updateEmpPassword(employeeRegisterDTO); // Use updatePassword method to save the updated password
+
+            model.addAttribute("successMessage", "Password reset successful. Please log in with your new password.");
+            model.addAttribute("reset", true);
+            return "registration/SignIn.jsp?role=deptemployee";
+        } else {
+            model.addAttribute("errorMessage", "User not found. Please try again.");
+            return "registration/EmployeeResetPassword.jsp";
         }
     }
 
