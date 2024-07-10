@@ -6,6 +6,7 @@ import com.xworkz.springproject.dto.dept.WaterDeptDTO;
 import com.xworkz.springproject.dto.requestDto.HistoryDTO;
 import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
+import com.xworkz.springproject.dto.user.SignUpDTO;
 import com.xworkz.springproject.model.repository.DeptRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -121,6 +122,36 @@ public class DeptServiceImpl implements DeptService{
         sendEmailEmp(employeeRegisterDTO);
         employeeRegisterDTO.setPassword(passwordEncoder.encode(employeeRegisterDTO.getPassword()));
         deptRepo.updateEmpPassword(employeeRegisterDTO);
+    }
+
+    @Override
+    public boolean processForgetEmpPassword(String emailAddress) {
+        Optional<EmployeeRegisterDTO> employeeRegisterDTOOptional = deptRepo.findByEmpEmailAddress(emailAddress);
+        if (employeeRegisterDTOOptional.isPresent()) {
+            EmployeeRegisterDTO employeeRegisterDTO = employeeRegisterDTOOptional.get();
+            String newPassword = deptRepo.generateRandomPassword();
+
+            employeeRegisterDTO.setPassword(passwordEncoder.encode(newPassword)); // Update the password field directly
+            employeeRegisterDTO.setCount(0);
+            System.out.println("Running forgetPassword = " +newPassword);
+
+            Optional<EmployeeRegisterDTO> employeeRegisterDTOOptional1 =  deptRepo.mergeEmp(employeeRegisterDTO); // Save the changes
+            System.out.println(employeeRegisterDTOOptional1.get());
+            System.out.println("Running forgetPassword = " +newPassword);
+
+            sendEmailUpdateEmp(employeeRegisterDTO.getEmailAddress(), newPassword);
+            return true;
+        }
+        return false;
+    }
+
+    private void sendEmailUpdateEmp(String emailAddress, String newPassword) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(emailAddress);
+        message.setSubject("Your New Password");
+//        message.setText("Your new password is: " + newPassword);
+        message.setText("Your new password is: " + newPassword+"\n Now please login through this password and reset your password");
+        emailSender.send(message);
     }
 
     @Override

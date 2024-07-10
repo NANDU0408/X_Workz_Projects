@@ -1,6 +1,5 @@
 package com.xworkz.springproject.model.repository;
 
-import com.xworkz.springproject.dto.admin.AdminDTO;
 import com.xworkz.springproject.dto.dept.DeptAdminDTO;
 import com.xworkz.springproject.dto.dept.EmployeeRegisterDTO;
 import com.xworkz.springproject.dto.dept.WaterDeptDTO;
@@ -53,4 +52,9 @@ public interface DeptRepo {
     List<HistoryDTO> findComplaintHistoryByComplaintId(HistoryDTO historyDTO);
 
     List<WaterDeptDTO> getAllDepartments();
+
+    @Transactional
+    Optional<EmployeeRegisterDTO> mergeEmp(EmployeeRegisterDTO employeeRegisterDTO);
+
+    String generateRandomPassword();
 }

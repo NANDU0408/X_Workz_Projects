@@ -28,6 +28,8 @@ public interface DeptService {
 
     void updateEmpPassword(EmployeeRegisterDTO employeeRegisterDTO);
 
+    boolean processForgetEmpPassword(String emailAddress);
+
     Optional<EmployeeRegisterDTO> findByEmpEmailAddress(String emailAddress);
 
     Optional<List<EmployeeRegisterDTO>> findEmpoloyeeByDeptId(int deptId);

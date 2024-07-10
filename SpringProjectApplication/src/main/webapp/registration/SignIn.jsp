@@ -173,6 +173,9 @@
                                     <input type="submit" id="deptEmployeeSubmitButton" class="btn btn-primary" value="Login" name="submit"/>
                                     <button type="button" class="btn btn-secondary ms-2" onclick="refreshPage()">Refresh</button>
                                 </div>
+                                <div class="d-flex justify-content-center mt-2">
+                                    <a href="registration/EmployeeForgotPassword.jsp" class="btn btn-link">Forgot Password?</a>
+                                </div>
                             </form>
                         </div>
                     </div>

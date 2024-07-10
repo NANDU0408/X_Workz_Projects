@@ -153,6 +153,23 @@ public class DeptAdminController {
         }
     }
 
+    @PostMapping("/forgotEmpPassword")
+    public String forgotPassword(@Valid @ModelAttribute("dto") ForgetEmployeePasswordDTO forgetEmployeePasswordDTO, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "registration/ForgotPassword.jsp";
+        }
+
+        boolean isPasswordSent = deptService.processForgetEmpPassword(forgetEmployeePasswordDTO.getEmailAddress());
+        if (isPasswordSent) {
+            model.addAttribute("successMessage", "A new password has been successfully sent to your email address. Now please kindly go to SignIn page and login");
+        } else {
+            model.addAttribute("failureMessage", "The email address does not exist.");
+        }
+
+        return "registration/EmployeeForgotPassword.jsp";
+    }
+
     @GetMapping("/deptAdminViewComplaints")
     public String viewComplaints(Model model, HttpSession session) {
         DeptAdminDTO loggedInAdmin = (DeptAdminDTO) session.getAttribute("deptAdminData");

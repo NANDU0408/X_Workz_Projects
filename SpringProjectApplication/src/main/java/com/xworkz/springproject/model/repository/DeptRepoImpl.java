@@ -395,6 +395,34 @@ public class DeptRepoImpl implements DeptRepo{
 }
 }
 
+    @Override
+    @Transactional
+    public Optional<EmployeeRegisterDTO> mergeEmp(EmployeeRegisterDTO employeeRegisterDTO) {
+        System.out.println("merging the dto "+employeeRegisterDTO);
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+//            signUpDTO.setPassword(generateRandomPassword());
+            employeeRegisterDTO.setCreatedBy(employeeRegisterDTO.getFirstName() + " " + employeeRegisterDTO.getLastName());
+            employeeRegisterDTO.setCreatedDate(LocalDateTime.now());
+            employeeRegisterDTO.setUpdatedBy(employeeRegisterDTO.getFirstName() + " " + employeeRegisterDTO.getLastName());
+            employeeRegisterDTO.setUpdatedDate(LocalDateTime.now());
+            entityManager.merge(employeeRegisterDTO);
+            entityManager.getTransaction().commit();
+        } catch (PersistenceException e) {
+            entityManager.getTransaction().rollback();
+//            e.printStackTrace();
+            System.out.println("Exception while saving data: " + e.getMessage());
+            System.out.println(e.getCause());
+            e.printStackTrace();
+            return Optional.empty();
+        } finally {
+            entityManager.close();
+        }
+        return Optional.of(employeeRegisterDTO);
+    }
+
     public String generateRandomPassword() {
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
