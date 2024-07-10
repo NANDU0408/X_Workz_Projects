@@ -99,8 +99,15 @@ public class DeptServiceImpl implements DeptService{
         Optional<EmployeeRegisterDTO> employeeRegisterDTOOptional = deptRepo.findByEmpEmailAddress(emailAddress);
         if (employeeRegisterDTOOptional.isPresent()) {
             EmployeeRegisterDTO employeeRegisterDTO = employeeRegisterDTOOptional.get();
+//            System.out.println("emp stored pass "+employeeRegisterDTO.getPassword());
+//
+//            System.out.println("plaint password "+password);
+//            System.out.println("encoded plaint password "+passwordEncoder.encode(password));
+//
+//            System.out.println("password encoder to check is is matches or not "+passwordEncoder.matches(password,employeeRegisterDTO.getPassword()));
 
-            if (employeeRegisterDTO.getPassword().equals(passwordEncoder.encode(password))) {
+
+            if (passwordEncoder.matches(password,employeeRegisterDTO.getPassword())) {
 
                 return Optional.of(employeeRegisterDTO);
             }

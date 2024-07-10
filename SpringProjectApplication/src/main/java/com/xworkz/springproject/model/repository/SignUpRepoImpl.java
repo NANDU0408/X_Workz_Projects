@@ -50,10 +50,12 @@ public class SignUpRepoImpl implements SignUpRepo {
     @Override
     @Transactional
     public Optional<SignUpDTO> merge(SignUpDTO signUpDTO) {
+        System.out.println("merging the dto "+signUpDTO);
+
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             entityManager.getTransaction().begin();
-            signUpDTO.setPassword(generateRandomPassword());
+//            signUpDTO.setPassword(generateRandomPassword());
             signUpDTO.setCreatedBy(signUpDTO.getFirstName() + " " + signUpDTO.getLastName());
             signUpDTO.setCreatedDate(LocalDateTime.now());
             signUpDTO.setUpdatedBy(signUpDTO.getFirstName() + " " + signUpDTO.getLastName());
@@ -65,6 +67,7 @@ public class SignUpRepoImpl implements SignUpRepo {
 //            e.printStackTrace();
             System.out.println("Exception while saving data: " + e.getMessage());
             System.out.println(e.getCause());
+            e.printStackTrace();
             return Optional.empty();
         } finally {
             entityManager.close();
@@ -138,7 +141,7 @@ public class SignUpRepoImpl implements SignUpRepo {
         try {
             entityManager.getTransaction().begin();
             SignUpDTO signUpDTO1 = entityManager.find(SignUpDTO.class,signUpDTO.getId());
-            signUpDTO1.setUpdatedPassword(signUpDTO.getPassword());
+            signUpDTO1.setUpdatedPassword(signUpDTO.getUpdatedPassword());
             signUpDTO1.setUpdatedBy(signUpDTO.getFirstName()+" "+signUpDTO.getLastName());
             signUpDTO1.setUpdatedDate(LocalDateTime.now());
             signUpDTO1.setCount(signUpDTO.getCount()+1);
