@@ -12,7 +12,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="resources/css/bootstrap.css" rel="stylesheet">
     <base href="http://localhost:8080/SpringProjectApplication/">
 
     <!-- Font Awesome -->
@@ -134,9 +133,14 @@
                 </span>
 
                 <div class="mb-3">
-                     <label for="dept_id" class="form-label">Department ID</label>
-                     <input type="text" class="form-control" id="dept_id" name="dept_id" value="${dto.dept_id}" onblur="dept_idValidation()">
-                     <span id="dept_idError" class="error-message"></span>
+                    <label for="deptId" class="form-label">Department</label>
+                    <select class="form-control" id="deptId" name="dept_id" onblur="deptIdValidation()">
+                        <option value="">Select Department</option>
+                        <c:forEach var="department" items="${addDepartments}">
+                            <option value="${department.deptId}">${department.deptName}</option>
+                        </c:forEach>
+                    </select>
+                    <span id="deptIdError" class="error-message"></span>
                 </div>
 
                 <div class="mb-3">

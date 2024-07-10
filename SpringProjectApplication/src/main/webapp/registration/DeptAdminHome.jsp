@@ -98,7 +98,7 @@
                      <a class="nav-link" href="deptAdminViewComplaints">View User Complaints</a>
                 </li>
                 <li class="nav-item">
-                     <form action="registration/AddEmployee.jsp" method="get" style="display: inline;">
+                     <form action="/SpringProjectApplication/getDeptNames" method="get" style="display: inline;">
                            <button type="submit" class="btn btn-primary facebook-btn">Add Employee</button>
                 </form>
             </li>

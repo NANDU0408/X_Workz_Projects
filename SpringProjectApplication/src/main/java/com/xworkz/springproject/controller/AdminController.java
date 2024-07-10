@@ -10,6 +10,7 @@ import com.xworkz.springproject.dto.user.SignUpDTO;
 import com.xworkz.springproject.model.service.AdminService;
 import com.xworkz.springproject.model.service.ComplaintService;
 import com.xworkz.springproject.model.service.SignUpService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
+@Slf4j
 @SessionAttributes({"userData","userImageData","complaintData","adminData"})
 public class AdminController {
 
@@ -34,6 +36,10 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    private AdminController(){
+        log.info("Created Admin Controller");
+    }
 
     @PostMapping("/admin")
     public String login(@Valid @ModelAttribute("loginForm") AdminSignInDTO adminSignInDTO, BindingResult bindingResult, Model model, HttpSession session) {

@@ -2,10 +2,10 @@ package com.xworkz.springproject.model.repository;
 
 import com.xworkz.springproject.dto.dept.DeptAdminDTO;
 import com.xworkz.springproject.dto.dept.EmployeeRegisterDTO;
+import com.xworkz.springproject.dto.dept.WaterDeptDTO;
 import com.xworkz.springproject.dto.requestDto.HistoryDTO;
 import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
-import com.xworkz.springproject.dto.user.SignUpDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -383,6 +383,17 @@ public class DeptRepoImpl implements DeptRepo{
 
         return query.getResultList();
     }
+
+    @Override
+    public List<WaterDeptDTO> getAllDepartments() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            TypedQuery<WaterDeptDTO> query = entityManager.createQuery("SELECT d FROM WaterDeptDTO d", WaterDeptDTO.class);
+            return query.getResultList();
+        } finally {
+            entityManager.close();
+}
+}
 
     public String generateRandomPassword() {
         SecureRandom random = new SecureRandom();

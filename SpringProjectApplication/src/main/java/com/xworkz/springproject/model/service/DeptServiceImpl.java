@@ -2,6 +2,7 @@ package com.xworkz.springproject.model.service;
 
 import com.xworkz.springproject.dto.dept.DeptAdminDTO;
 import com.xworkz.springproject.dto.dept.EmployeeRegisterDTO;
+import com.xworkz.springproject.dto.dept.WaterDeptDTO;
 import com.xworkz.springproject.dto.requestDto.HistoryDTO;
 import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
@@ -9,7 +10,6 @@ import com.xworkz.springproject.model.repository.DeptRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -190,6 +190,11 @@ public class DeptServiceImpl implements DeptService{
         System.out.println("Running findCompaintHistoryByComplaintId in DeptServiceImpl");
         return deptRepo.findComplaintHistoryByComplaintId(historyDTO);
     }
+
+    @Override
+    public List<WaterDeptDTO> getAllDepartments() {
+        return deptRepo.getAllDepartments();
+}
 
     public String generateRandomPassword() {
         SecureRandom random = new SecureRandom();

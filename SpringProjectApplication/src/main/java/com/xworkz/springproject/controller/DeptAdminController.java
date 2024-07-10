@@ -1,13 +1,13 @@
 package com.xworkz.springproject.controller;
 
-import com.xworkz.springproject.dto.admin.AdminDTO;
-import com.xworkz.springproject.dto.admin.AdminSignInDTO;
 import com.xworkz.springproject.dto.dept.*;
 import com.xworkz.springproject.dto.requestDto.HistoryDTO;
 import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.responseDto.DeptViewComplaintForEachCompliantDto;
-import com.xworkz.springproject.dto.user.*;
-import com.xworkz.springproject.model.service.*;
+import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
+import com.xworkz.springproject.model.service.ComplaintService;
+import com.xworkz.springproject.model.service.DeptAdminService;
+import com.xworkz.springproject.model.service.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -61,8 +61,12 @@ public class DeptAdminController {
 
 
 
-    @PostMapping("empReg")
+    @PostMapping("/empReg")
     public String empSignUp(@Valid @ModelAttribute("dto") EmployeeRegisterDTO employeeRegisterDTO, BindingResult bindingResult, Model model) {
+
+        List<WaterDeptDTO> departments = deptService.getAllDepartments();
+        model.addAttribute("addDepartments", departments);
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "registration/AddEmployee.jsp";
@@ -84,12 +88,14 @@ public class DeptAdminController {
 //        employeeRegisterDTO.setPassword(encodedPassword);
 
         Optional<EmployeeRegisterDTO> savedEmpDto = deptService.saveEmp(employeeRegisterDTO);
+//        model.addAttribute("addDepartments",savedEmpDto);
         if (savedEmpDto.isPresent()) {
             model.addAttribute("successMessage", "Sign-Up successful! Your password is sent to your email address: " + savedEmpDto.get().getEmailAddress());
 //            deptService.sendEmailEmp(savedEmpDto.get());
         } else {
             model.addAttribute("failureMessage", "Sign-Up failed. Please try again.");
         }
+
         return "registration/AddEmployee.jsp";
     }
 

@@ -1,8 +1,10 @@
 package com.xworkz.springproject.controller;
 
 
+import com.xworkz.springproject.dto.dept.EmployeeRegisterDTO;
 import com.xworkz.springproject.dto.dept.WaterDeptDTO;
 import com.xworkz.springproject.model.service.ComplaintService;
+import com.xworkz.springproject.model.service.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,9 @@ public class DeptController {
     @Autowired
     private ComplaintService complaintService;
 
+    @Autowired
+    private DeptService deptService;
+
 
     @GetMapping("/adminReviewComplaints")
     public String adminViewComplaints(Model model) {
@@ -29,4 +34,12 @@ public class DeptController {
 
         return "registration/AdminUserComplaints.jsp";
     }
+
+    @GetMapping("/getDeptNames")
+    public String showAddEmployeeForm(Model model) {
+        List<WaterDeptDTO> departments = deptService.getAllDepartments();
+
+        model.addAttribute("addDepartments", departments);// Initialize form backing object
+        return "registration/AddEmployee.jsp"; // Return the for view
+}
 }

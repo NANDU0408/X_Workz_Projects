@@ -51,4 +51,6 @@ public interface DeptRepo {
     List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForDept(String complaintType, String city, String complaintStatus);
 
     List<HistoryDTO> findComplaintHistoryByComplaintId(HistoryDTO historyDTO);
+
+    List<WaterDeptDTO> getAllDepartments();
 }
