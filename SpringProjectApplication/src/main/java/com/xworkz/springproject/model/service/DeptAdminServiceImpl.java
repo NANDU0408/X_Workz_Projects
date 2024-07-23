@@ -109,6 +109,8 @@ public class DeptAdminServiceImpl implements DeptAdminService{
         sendEmailDeptAdmin(deptAdminDTO);
         System.out.println(deptAdminDTO);
         deptAdminDTO.setPassword(passwordEncoder.encode(deptAdminDTO.getPassword()));
+        deptAdminDTO.setFailedAttemptsCount(0);
+        deptAdminDTO.setFailedAttemptDateTime(null);
         deptAdminRepo.updateDeptAdminPassword(deptAdminDTO);
         }
         catch (Exception e){
