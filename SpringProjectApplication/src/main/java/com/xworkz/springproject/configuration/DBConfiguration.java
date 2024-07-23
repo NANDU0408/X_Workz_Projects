@@ -51,7 +51,7 @@ public class DBConfiguration {
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
 
         Properties properties = new Properties();
-        properties.setProperty("hibernate.show_sql","true");
+//        properties.setProperty("hibernate.show_sql","true");
 
         entityManagerFactoryBean.setJpaProperties(properties);
         return entityManagerFactoryBean;

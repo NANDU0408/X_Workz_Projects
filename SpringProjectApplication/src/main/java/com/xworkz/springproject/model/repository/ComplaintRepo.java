@@ -58,4 +58,5 @@ public interface ComplaintRepo  {
     Optional<RaiseComplaintDTO> saveHistory(HistoryDTO historyDTO,RaiseComplaintDTO raiseComplaintDTO, RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto);
 
 
+    List<HistoryDTO> findComplaintHistoryByComplaintId(HistoryDTO historyDTO);
 }

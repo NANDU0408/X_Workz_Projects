@@ -56,5 +56,10 @@ public interface DeptRepo {
     @Transactional
     Optional<EmployeeRegisterDTO> mergeEmp(EmployeeRegisterDTO employeeRegisterDTO);
 
+    @Transactional
+    Optional<DeptAdminDTO> mergeDeptAdmin(DeptAdminDTO deptAdminDTO);
+
+    public String findByDeptName(int departmentId);
+
     String generateRandomPassword();
 }

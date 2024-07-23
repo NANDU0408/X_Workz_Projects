@@ -15,7 +15,7 @@
             <tr>
                 <td>${history.id}</td>
                 <td>${history.complaintId}</td>
-                <td>${history.departmentId}</td>
+                <td>${history.departmentName}</td>
                 <td>${history.complaintStatus}</td>
             </tr>
         </c:forEach>

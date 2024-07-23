@@ -4,10 +4,12 @@ import com.xworkz.springproject.dto.dept.*;
 import com.xworkz.springproject.dto.requestDto.HistoryDTO;
 import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.responseDto.DeptViewComplaintForEachCompliantDto;
+import com.xworkz.springproject.dto.responseDto.ResponseHistoryDTO;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.model.service.ComplaintService;
 import com.xworkz.springproject.model.service.DeptAdminService;
 import com.xworkz.springproject.model.service.DeptService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @Controller
 @RequestMapping("/")
 @SessionAttributes({"userData","userImageData","complaintData","adminData","deptAdminData","deptUserData","deptAdminData"})
@@ -46,16 +49,48 @@ public class DeptAdminController {
             return "registration/SignIn.jsp?role=deptadmin";
         }
 
-        Optional<DeptAdminDTO> deptAdminDTOOptional = deptService.validateDeptAdminSignIn(deptAdminSignInDTO.getEmailAddress(), deptAdminSignInDTO.getPassword());
+        Optional<DeptAdminDTO> deptAdminDTOOptional = deptAdminService.findByDeptAdminEmailAddress(deptAdminSignInDTO.getEmailAddress());
         if (deptAdminDTOOptional.isPresent()) {
-            // Set adminData in the session
-            DeptAdminDTO loggedInAdmin = deptAdminDTOOptional.get();
-            session.setAttribute("deptAdminData", loggedInAdmin);
-            model.addAttribute("deptAdminData", loggedInAdmin);
-            return "registration/DeptAdminHome.jsp"; // Redirect to admin home page
+            // Get the admin data
+            DeptAdminDTO deptAdminDTO = deptAdminDTOOptional.get();
+            System.out.println(deptAdminDTO);
+
+            // Check if the admin needs to reset the password
+            if (deptAdminDTO.getCount() == 0) {
+                return "registration/DeptAdminResetPassword.jsp";
+            } else {
+                Optional<DeptAdminDTO> deptAdminDTOOptional1 = deptService.validateDeptAdminSignIn(deptAdminSignInDTO.getEmailAddress(), deptAdminSignInDTO.getPassword());
+                if (deptAdminDTOOptional1.isPresent()) {
+                    DeptAdminDTO loggedInDeptAdmin = deptAdminDTOOptional1.get();
+
+                    if (loggedInDeptAdmin.isAccountLocked()) {
+                        model.addAttribute("errorMessage", "Your account is locked. Please reset your password.");
+                        return "registration/DeptAdminResetPassword.jsp";
+                    } else {
+                        // Set adminData in the session and redirect to home page
+                        session.setAttribute("deptAdminData", loggedInDeptAdmin);
+                        model.addAttribute("deptAdminData", loggedInDeptAdmin);
+                        return "registration/DeptAdminHome.jsp";
+                    }
+                } else {
+                    System.out.println(" ------ ------- ");
+                    deptService.handleFailedDeptAdminLoginAttempt(deptAdminDTO); // Update failed login attempts
+                    if (deptAdminDTO.getFailedAttemptsCount() >= 3) {
+                        System.out.println("Validating attempts "+deptAdminDTO.getFailedAttemptsCount());
+                        deptService.lockDeptAdminAccount(deptAdminDTO); // Lock account if failed attempts reach 3
+                        model.addAttribute("errorMessage", "Your account is locked. Please reset your password.");
+                        deptAdminDTO.setCount(0);
+                        return "registration/DeptAdminResetPassword.jsp";
+                    } else {
+                        model.addAttribute("errorMessage", "Invalid email or password");
+                        model.addAttribute("attemptMessage", "Number of failed attempts: " + deptAdminDTO.getFailedAttemptsCount());
+                        return "registration/SignIn.jsp?role=deptadmin"; // Corrected redirect for login page with failed attempts message
+                    }
+                }
+            }
         } else {
             model.addAttribute("errorMsg", "Invalid email or password");
-            return "registration/SignIn.jsp?role=deptadmin"; // Redirect back to admin login page with error message
+            return "registration/SignIn.jsp?role=deptadmin";
         }
     }
 
@@ -157,7 +192,7 @@ public class DeptAdminController {
     public String forgotPassword(@Valid @ModelAttribute("dto") ForgetEmployeePasswordDTO forgetEmployeePasswordDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "registration/ForgotPassword.jsp";
+            return "registration/EmployeeForgotPassword.jsp";
         }
 
         boolean isPasswordSent = deptService.processForgetEmpPassword(forgetEmployeePasswordDTO.getEmailAddress());
@@ -168,6 +203,23 @@ public class DeptAdminController {
         }
 
         return "registration/EmployeeForgotPassword.jsp";
+    }
+
+    @PostMapping("/forgotDeptAdminPassword")
+    public String forgotDeptAdminPassword(@Valid @ModelAttribute("dto") ForgetDeptAdminPasswordDTO forgetDeptAdminPasswordDTO, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "registration/DeptAdminForgotPassword.jsp";
+        }
+
+        boolean isPasswordSent = deptService.processForgetDeptAdminPassword(forgetDeptAdminPasswordDTO.getEmailAddress());
+        if (isPasswordSent) {
+            model.addAttribute("successMessage", "A new password has been successfully sent to your email address. Now please kindly go to SignIn page and login");
+        } else {
+            model.addAttribute("failureMessage", "The email address does not exist.");
+        }
+
+        return "registration/DeptAdminForgotPassword.jsp";
     }
 
     @GetMapping("/deptAdminViewComplaints")
@@ -270,12 +322,15 @@ public class DeptAdminController {
     }
 
     @PostMapping("/history")
-    public String viewComplaintHistory(@RequestParam("complaintId") int complaintId, Model model) {
+    public String viewComplaintHistory(@RequestParam("complaintId") int complaintId, @RequestParam("departmentId") int departmentId, Model model) {
         // Fetch history based on complaintId
+        log.info("history c=" +complaintId+" d="+departmentId);
         HistoryDTO historyDTO = new HistoryDTO();
         historyDTO.setComplaintId(complaintId);
-        List<HistoryDTO> history = deptService.findCompaintHistoryByComplaintId(historyDTO);
-
+        WaterDeptDTO waterDeptDT= new WaterDeptDTO();
+        waterDeptDT.setDeptId(departmentId);
+        List<ResponseHistoryDTO> history = deptService.findComplaintHistoryByComplaintId(historyDTO,waterDeptDT);
+        log.info("history" +history);
         // Add history to the model
         model.addAttribute("historyTable", history);
 

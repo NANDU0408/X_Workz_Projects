@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,8 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Issue Management</title>
     <link rel="icon" href="resources/imageFiles/xworkz_logo.jpeg">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha384-Q5Pl1rC/oStfi2M1kCzKJwECcpOd+kdmPLWjszkcft5Sa+h7sc6LBN7sLk2kPvh5" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="resources/css/bootstrap.css" rel="stylesheet">
     <base href="http://localhost:8080/SpringProjectApplication/">
+
     <style>
         .error-message {
             color: red;
@@ -36,27 +42,7 @@
         .navbar-nav .nav-item {
             margin-left: 10px;
         }
-        /* Custom table style */
-        .custom-table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1px solid #ddd;
-        }
-        .custom-table th,
-        .custom-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        .custom-table th {
-            background-color: #f2f2f2;
-        }
-        .custom-table tbody tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha384-Q5Pl1rC/oStfi2M1kCzKJwECcpOd+kdmPLWjszkcft5Sa+h7sc6LBN7sLk2kPvh5" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function() {
             // Handle click event for all dropdown toggles
@@ -94,24 +80,40 @@
                 <li class="nav-item">
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
-                <li class="nav-item">
-                     <a class="nav-link" href="deptEmpViewComplaints">View User Complaints</a>
-                </li>
-            <li class="nav-item">
-            <form id="logoutAdminForm" action="<c:url value='/logoutDeptAdmin' />" method="post" class="dropdown-item">
-                  <button type="submit" class="btn btn-link">Logout</button>
-            </form>
-            </li>
             </ul>
         </div>
     </div>
-</nav>x``
+</nav>
 
-<script>
-    function refreshPage() {
-        window.location.reload();
-    }
-</script>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center mb-4 mt-4">Forgot Password</h2>
+            <c:if test="${successMessage.length()>0}">
+                <div class="alert alert-info">${successMessage}</div>
+            </c:if>
+            <c:if test="${failureMessage.length()>0}">
+                <div class="alert alert-info">${failureMessage}</div>
+            </c:if>
+            <form action="forgotDeptAdminPassword" method="POST">
+                <span style="color : red;">
+                    <c:forEach items="${errors}" var="objectError">
+                        ${objectError.defaultMessage}</br>
+                    </c:forEach>
+                </span>
+                <div class="mb-3">
+                    <label for="emailAddress" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="emailAddress" name="emailAddress" value="${dto.emailAddress}" onblur="emailAddressValidation()">
+                    <span id="emailAddressError" class="error-message"></span>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <input type="submit" id="submitButton" class="btn btn-primary me-2" value="Submit" name="submit"/>
+                    <button type="button" class="btn btn-secondary" onclick="refreshPage()">Refresh</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

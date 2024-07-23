@@ -5,6 +5,7 @@ import com.xworkz.springproject.dto.dept.EmployeeRegisterDTO;
 import com.xworkz.springproject.dto.dept.WaterDeptDTO;
 import com.xworkz.springproject.dto.requestDto.HistoryDTO;
 import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
+import com.xworkz.springproject.dto.responseDto.ResponseHistoryDTO;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 
 import javax.transaction.Transactional;
@@ -30,6 +31,14 @@ public interface DeptService {
 
     boolean processForgetEmpPassword(String emailAddress);
 
+    boolean processForgetDeptAdminPassword(String emailAddress);
+
+    @Transactional
+    void handleFailedDeptAdminLoginAttempt(DeptAdminDTO deptAdminDTO);
+
+    @Transactional
+    void lockDeptAdminAccount(DeptAdminDTO deptAdminDTO);
+
     Optional<EmployeeRegisterDTO> findByEmpEmailAddress(String emailAddress);
 
     Optional<List<EmployeeRegisterDTO>> findEmpoloyeeByDeptId(int deptId);
@@ -54,7 +63,7 @@ public interface DeptService {
 
     List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdminDept(String complaintType, String city, String complaintStatus);
 
-    List<HistoryDTO> findCompaintHistoryByComplaintId(HistoryDTO historyDTO);
+    public List<ResponseHistoryDTO> findComplaintHistoryByComplaintId(HistoryDTO historyDTO, WaterDeptDTO waterDeptDTO);
 
     List<WaterDeptDTO> getAllDepartments();
 }

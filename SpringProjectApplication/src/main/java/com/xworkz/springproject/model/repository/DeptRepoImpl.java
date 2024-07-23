@@ -423,6 +423,50 @@ public class DeptRepoImpl implements DeptRepo{
         return Optional.of(employeeRegisterDTO);
     }
 
+    @Override
+    @Transactional
+    public Optional<DeptAdminDTO> mergeDeptAdmin(DeptAdminDTO deptAdminDTO) {
+        System.out.println("merging the dto "+deptAdminDTO);
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+//            signUpDTO.setPassword(generateRandomPassword());
+            deptAdminDTO.setCreatedBy(deptAdminDTO.getFirstName() + " " + deptAdminDTO.getLastName());
+            deptAdminDTO.setCreatedDate(LocalDateTime.now());
+            deptAdminDTO.setUpdatedBy(deptAdminDTO.getFirstName() + " " + deptAdminDTO.getLastName());
+            deptAdminDTO.setUpdatedDate(LocalDateTime.now());
+            entityManager.merge(deptAdminDTO);
+            entityManager.getTransaction().commit();
+        } catch (PersistenceException e) {
+            entityManager.getTransaction().rollback();
+//            e.printStackTrace();
+            System.out.println("Exception while saving data: " + e.getMessage());
+            System.out.println(e.getCause());
+            e.printStackTrace();
+            return Optional.empty();
+        } finally {
+            entityManager.close();
+        }
+        return Optional.of(deptAdminDTO);
+    }
+
+    @Override
+    public String findByDeptName(int departmentId) {
+        System.out.println("find by name in dep repo");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try{
+            Query query = entityManager.createQuery(
+                    "SELECT d.deptName FROM WaterDeptDTO d WHERE d.deptId = :departmentId");
+            query.setParameter("departmentId", departmentId);
+            return (String) query.getSingleResult();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return "-";
+    }
+
     public String generateRandomPassword() {
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder(PASSWORD_LENGTH);

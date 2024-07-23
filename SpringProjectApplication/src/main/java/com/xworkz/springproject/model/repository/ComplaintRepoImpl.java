@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -428,5 +429,23 @@ public class ComplaintRepoImpl implements ComplaintRepo{
             entityManager.close();
         }
         return Optional.of(raiseComplaintDTO);
+    }
+
+
+    @Override
+    public List<HistoryDTO> findComplaintHistoryByComplaintId(HistoryDTO historyDTO) {
+        System.out.println("History  in repo "+historyDTO);
+        try{
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            TypedQuery<HistoryDTO> query = entityManager.createQuery(
+                    "SELECT r FROM HistoryDTO r WHERE r.complaintId = :complaintId", HistoryDTO.class);
+            query.setParameter("complaintId", historyDTO.getComplaintId());
+            return query.getResultList();
+        }catch (Exception e){
+            System.out.println(e);
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
     }
 }

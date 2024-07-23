@@ -5,8 +5,9 @@ import com.xworkz.springproject.dto.dept.EmployeeRegisterDTO;
 import com.xworkz.springproject.dto.dept.WaterDeptDTO;
 import com.xworkz.springproject.dto.requestDto.HistoryDTO;
 import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
+import com.xworkz.springproject.dto.responseDto.ResponseHistoryDTO;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
-import com.xworkz.springproject.dto.user.SignUpDTO;
+import com.xworkz.springproject.model.repository.ComplaintRepo;
 import com.xworkz.springproject.model.repository.DeptRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,9 @@ public class DeptServiceImpl implements DeptService{
 
     @Autowired
     private DeptRepo deptRepo;
+
+    @Autowired
+    private ComplaintRepo complaintRepo;
 
     @Autowired
     private JavaMailSender emailSender;
@@ -39,7 +45,12 @@ public class DeptServiceImpl implements DeptService{
         Optional<DeptAdminDTO> deptAdminDTOOptional = deptRepo.findByDeptAdminEmailAddress(emailAddress);
         if (deptAdminDTOOptional.isPresent()) {
             DeptAdminDTO deptAdminDTO = deptAdminDTOOptional.get();
-            if (deptAdminDTO.getPassword().equals(password)) {
+//            if (deptAdminDTO.getPassword().equals(password)) {
+            if (passwordEncoder.matches(password,deptAdminDTO.getPassword())) {
+                deptAdminDTO.setFailedAttemptsCount(0); // Reset failed attempts on successful login
+                deptAdminDTO.setFailedAttemptDateTime(null); // Reset failed attempt datetime
+                deptRepo.mergeDeptAdmin(deptAdminDTO);
+
                 // Additional checks or actions can be added here if needed
                 return Optional.of(deptAdminDTO);
             }
@@ -145,6 +156,66 @@ public class DeptServiceImpl implements DeptService{
         return false;
     }
 
+    @Override
+    public boolean processForgetDeptAdminPassword(String emailAddress) {
+        Optional<DeptAdminDTO> deptAdminDTOOptional = deptRepo.findByDeptAdminEmailAddress(emailAddress);
+        if (deptAdminDTOOptional.isPresent()) {
+            DeptAdminDTO deptAdminDTO = deptAdminDTOOptional.get();
+            String newPassword = deptRepo.generateRandomPassword();
+
+            deptAdminDTO.setPassword(passwordEncoder.encode(newPassword)); // Update the password field directly
+            deptAdminDTO.setFailedAttemptsCount(0);
+            deptAdminDTO.setCount(0);
+            deptAdminDTO.setFailedAttemptDateTime(null);
+            deptAdminDTO.setAccountLocked(false);
+            System.out.println("Running forgetPassword = " +newPassword);
+
+            Optional<DeptAdminDTO> deptAdminDTOOptional1 =  deptRepo.mergeDeptAdmin(deptAdminDTO); // Save the changes
+            System.out.println(deptAdminDTOOptional1.get());
+            System.out.println("Running forgetPassword = " +newPassword);
+
+            sendEmailUpdateEmp(deptAdminDTO.getEmailAddress(), newPassword);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public void handleFailedDeptAdminLoginAttempt(DeptAdminDTO deptAdminDTO) {
+        // Perform your logic to handle failed login attempt
+        if (deptAdminDTO.getFailedAttemptDateTime() == null ||
+                deptAdminDTO.getFailedAttemptDateTime().plusHours(1).isBefore(LocalDateTime.now())) {
+            deptAdminDTO.setFailedAttemptsCount(1);
+        } else {
+            deptAdminDTO.setFailedAttemptsCount(deptAdminDTO.getFailedAttemptsCount() + 1);
+        }
+
+        deptAdminDTO.setFailedAttemptDateTime(LocalDateTime.now());
+        if (deptAdminDTO.getFailedAttemptsCount() >= 3) {
+            deptAdminDTO.setAccountLocked(true);
+        }
+
+        // Save the managed entity
+        deptRepo.mergeDeptAdmin(deptAdminDTO);
+    }
+
+    @Override
+    @Transactional
+    public void lockDeptAdminAccount(DeptAdminDTO deptAdminDTO) {
+        System.out.println("locking "+deptAdminDTO);
+        deptAdminDTO.setAccountLocked(true);
+//        DeptAdminDTO deptAdminDTO = deptAdminDTOOptional.get();
+        String newPassword = deptRepo.generateRandomPassword();
+        deptAdminDTO.setPassword(passwordEncoder.encode(newPassword));
+        sendEmailUpdateEmp(deptAdminDTO.getEmailAddress(), newPassword);
+        System.out.println(newPassword);
+
+        deptAdminDTO.setCount(0);
+//        deptAdminDTO.setPassword(null);
+        deptRepo.mergeDeptAdmin(deptAdminDTO);
+    }
+
     private void sendEmailUpdateEmp(String emailAddress, String newPassword) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailAddress);
@@ -217,9 +288,29 @@ public class DeptServiceImpl implements DeptService{
     }
 
     @Override
-    public List<HistoryDTO> findCompaintHistoryByComplaintId(HistoryDTO historyDTO) {
-        System.out.println("Running findCompaintHistoryByComplaintId in DeptServiceImpl");
-        return deptRepo.findComplaintHistoryByComplaintId(historyDTO);
+    public List<ResponseHistoryDTO> findComplaintHistoryByComplaintId(HistoryDTO historyDTO, WaterDeptDTO waterDeptDTO) {
+        System.out.println("Fetching data for history: " + historyDTO);
+        System.out.println("dept " + waterDeptDTO);
+
+        List<HistoryDTO> historyList = complaintRepo.findComplaintHistoryByComplaintId(historyDTO);
+        List<ResponseHistoryDTO> responseHistoryDTOS = new ArrayList<>();
+
+        if (historyList != null && !historyList.isEmpty()) {
+            String deptName = deptRepo.findByDeptName(waterDeptDTO.getDeptId()); // Assuming waterDeptDTO has getDepartmentId() method
+            System.out.println("conversion started");
+
+            for (HistoryDTO history : historyList) {
+//                history.setDepartmentId(Integer.parseInt(deptName));
+
+
+                responseHistoryDTOS.add(new ResponseHistoryDTO(history.getId(), history.getComplaintId(), deptName, history.getComplaintStatus()));
+                // Assuming HistoryDTO has setDeptName(String deptName) method
+            }
+        }
+
+        System.out.println("service fetching is done");
+
+        return responseHistoryDTOS;
     }
 
     @Override

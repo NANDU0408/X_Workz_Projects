@@ -115,6 +115,15 @@
                                 <c:if test="${not empty errorMsg}">
                                     <div class="alert alert-danger">${errorMsg}</div>
                                 </c:if>
+                                <c:if test="${not empty errorMessage}">
+                                                                    <div class="alert alert-danger">${errorMessage}</div>
+                                                                </c:if>
+                                                                <c:if test="${not empty attemptMessage}">
+                                                                    <div class="alert alert-danger">${attemptMessage}</div>
+                                                                </c:if>
+                                                                <c:if test="${not empty successMessage}">
+                                                                    <div class="alert alert-success">${successMessage}</div>
+                                                                </c:if>
                                 <div class="mb-3">
                                     <label for="deptAdminEmail" class="form-label">Email ID</label>
                                     <input type="text" class="form-control" id="deptAdminEmail" name="emailAddress" value="${deptAdminLoginForm.emailAddress}" onblur="deptAdminEmailValidation()">
@@ -125,10 +134,28 @@
                                     <input type="password" class="form-control" id="deptAdminPassword" name="password" value="${deptAdminLoginForm.password}" onblur="deptAdminPasswordValidation()">
                                     <span id="deptAdminPasswordError" class="error-message"></span>
                                 </div>
+
+                                <div class="mb-3 captcha-container">
+                                                                   <label for="captcha-input" class="form-label">Enter Captcha</label>
+                                                                   <div id="captchaPreview" class="mb-2 bg-white p-2 text-center border"></div>
+                                                                   <div class="d-flex">
+                                                                       <input type="text" name="captcha" id="captcha" placeholder="Enter captcha text" class="form-control me-2">
+                                                                       <button type="button" class="btn btn-secondary captcha-btn" onclick="generateCaptcha()">
+                                                                           <i class="fas fa-sync-alt"></i>
+                                                                           &#8635;
+                                                                       </button>
+                                                                   </div>
+                                                                   <span id="captchaError" class="text-danger"></span>
+                                                               </div>
+
                                 <div class="d-flex justify-content-center">
                                     <input type="submit" id="deptAdminSubmitButton" class="btn btn-primary" value="Login" name="submit"/>
                                     <button type="button" class="btn btn-secondary ms-2" onclick="refreshPage()">Refresh</button>
                                 </div>
+
+                                 <div class="d-flex justify-content-center mt-2">
+                                     <a href="registration/DeptAdminForgotPassword.jsp" class="btn btn-link">Forgot Password?</a>
+                                 </div>
                             </form>
                         </div>
                     </div>

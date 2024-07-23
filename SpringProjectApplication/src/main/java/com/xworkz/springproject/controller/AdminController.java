@@ -2,16 +2,17 @@ package com.xworkz.springproject.controller;
 
 import com.xworkz.springproject.dto.admin.AdminDTO;
 import com.xworkz.springproject.dto.admin.AdminSignInDTO;
+import com.xworkz.springproject.dto.dept.DeptAdminDTO;
+import com.xworkz.springproject.dto.dept.DeptAdminResetPasswordDTO;
 import com.xworkz.springproject.dto.dept.WaterDeptDTO;
 import com.xworkz.springproject.dto.requestDto.HistoryDTO;
 import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.user.RaiseComplaintDTO;
 import com.xworkz.springproject.dto.user.SignUpDTO;
-import com.xworkz.springproject.model.service.AdminService;
-import com.xworkz.springproject.model.service.ComplaintService;
-import com.xworkz.springproject.model.service.SignUpService;
+import com.xworkz.springproject.model.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,7 +36,16 @@ public class AdminController {
     private ComplaintService complaintService;
 
     @Autowired
+    private DeptService deptService;
+
+    @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private DeptAdminService deptAdminService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private AdminController(){
         log.info("Created Admin Controller");
@@ -179,6 +189,77 @@ public class AdminController {
         }
 
         return viewComplaints(model,session);
+    }
+
+    @GetMapping("/getDeptENames")
+    public String showAddEmployeeForm(Model model) {
+        List<WaterDeptDTO> departments = deptService.getAllDepartments();
+
+        model.addAttribute("addAdminDepartments", departments);// Initialize form backing object
+        return "registration/AddDeptAdmin.jsp"; // Return the for view
+    }
+
+    @PostMapping("/deptAdminReg")
+    public String empSignUp(@Valid @ModelAttribute("dto") DeptAdminDTO deptAdminDTO, BindingResult bindingResult, Model model) {
+
+        List<WaterDeptDTO> departments = deptService.getAllDepartments();
+        model.addAttribute("addDepartments", departments);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "registration/AddDeptAdmin.jsp";
+        }
+
+        if (deptAdminService.checkDeptAdminEmailExists(deptAdminDTO.getEmailAddress())) {
+            model.addAttribute("failureMessage", "Email already exists. Please try a different one.");
+            return "registration/AddDeptAdmin.jsp";
+        }
+
+        if (deptAdminService.checkDeptAdminPhoneNumberExists(deptAdminDTO.getMobileNumber())) {
+            model.addAttribute("failureMessage", "Phone number already exists. Please try a different one.");
+            return "registration/AddDeptAdmin.jsp";
+        }
+
+        Optional<DeptAdminDTO> savedDeptAdminDTO = deptAdminService.saveDeptAdmin(deptAdminDTO);
+        if (savedDeptAdminDTO.isPresent()) {
+            model.addAttribute("successMessage", "Sign-Up successful! Your password is sent to your email address: " + savedDeptAdminDTO.get().getEmailAddress());
+        } else {
+            model.addAttribute("failureMessage", "Sign-Up failed. Please try again.");
+        }
+
+        return "registration/AddDeptAdmin.jsp";
+    }
+
+    @PostMapping("/resetDeptAdminPassword")
+    public String resetEmpPassword(@ModelAttribute("resetAdminPasswordForm") DeptAdminResetPasswordDTO deptAdminResetPasswordDTO, Model model) {
+        System.out.println(deptAdminResetPasswordDTO);
+
+        if (!deptAdminResetPasswordDTO.getNewPassword().equals(deptAdminResetPasswordDTO.getConfirmNewPassword())) {
+            model.addAttribute("errorMessage", "New Password and Confirm Password do not match.");
+            return "registration/DeptAdminResetPassword.jsp";
+        }
+
+        Optional<DeptAdminDTO> deptAdminDTOOptional = deptAdminService.findByDeptAdminEmailAddress(deptAdminResetPasswordDTO.getEmailAddress());
+        if (deptAdminDTOOptional.isPresent()) {
+            DeptAdminDTO deptAdminDTO = deptAdminDTOOptional.get();
+
+            if (!passwordEncoder.matches(deptAdminResetPasswordDTO.getPassword(), deptAdminDTO.getPassword())) {
+                model.addAttribute("errorMessage", "Current password is incorrect.");
+                return "registration/DeptAdminResetPassword.jsp";
+            }else {
+                deptAdminDTO.setPassword(deptAdminResetPasswordDTO.getNewPassword());
+                deptAdminService.updateDeptAdminPassword(deptAdminDTO); // Use updatePassword method to save the updated password
+                System.out.println("Plain password " + deptAdminResetPasswordDTO);
+                System.out.println("New Password " + deptAdminDTO);
+
+                model.addAttribute("successMessage", "Password reset successful. Please log in with your new password.");
+                model.addAttribute("reset", true);
+                return "registration/SignIn.jsp?role=deptadmin";
+            }
+        } else {
+            model.addAttribute("errorMessage", "User not found. Please try again.");
+            return "registration/DeptAdminResetPassword.jsp";
+        }
     }
 
 }

@@ -100,6 +100,11 @@
                 <li class="nav-item">
                      <a class="nav-link" href="adminViewComplaints">View User Complaints</a>
                 </li>
+                <li class="nav-item">
+                     <form action="/SpringProjectApplication/getDeptENames" method="get" style="display: inline;">
+                         <button type="submit" class="btn btn-primary facebook-btn">Add Department Admin</button>
+                     </form>
+                </li>
                 <form id="logoutAdminForm" action="<c:url value='/logoutAdmin' />" method="post" class="dropdown-item">
                     <button type="submit" class="btn btn-link">Logout</button>
                 </form>

@@ -101,7 +101,7 @@
                     <a class="nav-link" href="registration/DeptAdminHome.jsp">Department Admin Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="deptAdminViewComplaints">All Complaints</a>
+                    <a class="nav-link" href="deptEmpViewComplaints">All Complaint</a>
                 </li>
                  <li class="nav-item">
                     <button type="button" id="downloadCSVBtn" class="btn btn-primary">Download Complaints as CSV</button>
@@ -119,7 +119,7 @@
         <div class="d-flex justify-content-center mb-4 mt-3">
             <div class="card px-1 py-1 bg-light">
                 <div class="card-body">
-                    <form action="searchComplaintsDeptAdmin" method="get">
+                    <form action="deptEmpViewComplaints" method="get">
                         <div class="row g-3">
                             <div class="col-auto">
                                 <label for="type" class="form-label text-dark">Type</label>
@@ -184,9 +184,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="complaint" items="${assignedComplaints}">
+                    <c:forEach var="complaint" items="${assignedEmpComplaints}">
                         <tr>
-                            <form action="assignToDeptEmp" method="post">
+                            <form action="complaintEmpControl" method="post">
                                 <td>${complaint.raiseComplaintDTO.complaintId}</td>
                                 <td>${complaint.raiseComplaintDTO.complaintType}</td>
                                 <td>${complaint.raiseComplaintDTO.country}</td>

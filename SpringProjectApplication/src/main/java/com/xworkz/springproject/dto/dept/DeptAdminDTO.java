@@ -24,6 +24,9 @@ public class DeptAdminDTO {
     @Column(name = "id")
     private int id;
 
+    @Column(name = "dept_id")
+    private int dept_id;
+
     @NotNull(message = "First Name should not be null")
     @Size(min = 3, max = 30, message = "First Name must be between 3 and 30 characters")
     @Pattern(regexp = "^[a-zA-Z\\s-]+$", message = "First Name can only contain letters, spaces, and hyphens")
@@ -36,11 +39,26 @@ public class DeptAdminDTO {
     @Column(name = "lastName")
     private String lastName;
 
+    @NotNull(message = "Full Name should not be null")
+    @Size(min = 3, max = 30, message = "Full Name must be between 3 and 30 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s-]+$", message = "Full Name can only contain letters, spaces, and hyphens")
+    @Column(name = "designation")
+    private String designation;
+
     @NotNull(message = "Email Address should not be null")
     @Email(message = "Email should be valid")
     @Size(min = 3, max = 30, message = "Email must be between 3 and 30 characters")
     @Column(name = "emailAddress")
     private String emailAddress;
+
+    @NotNull(message = "Phone Number should not be null")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone Number must be 10 digits")
+    @Column(name = "phoneNumber")
+    private String mobileNumber;
+
+    @NotNull(message = "You must agree to the terms and conditions")
+    @Column(name = "agreeTerms")
+    private Boolean agreeTerms;
 
     @Column(name = "password")
     private String password;
@@ -56,6 +74,18 @@ public class DeptAdminDTO {
 
     @Column(name = "updatedDate")
     private LocalDateTime updatedDate;
+
+    @Column(name = "count")
+    private int count;
+
+    @Column(name = "failed_attempts_count")
+    private int failedAttemptsCount;
+
+    @Column(name = "failed_attempt_dateTime")
+    private LocalDateTime failedAttemptDateTime;
+
+    @Transient
+    private boolean accountLocked;
 
     @Transient
     @Column(name = "role") // New field for user role (admin or user)
