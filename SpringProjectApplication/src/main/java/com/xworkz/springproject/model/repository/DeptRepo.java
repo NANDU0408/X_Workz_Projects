@@ -30,7 +30,7 @@ public interface DeptRepo {
 
     List<EmployeeRegisterDTO> getdeptIdAnddeptNameForDept();
 
-    List<RaiseComplaintDTO> findAllComplaintsForDeptAdmin();
+    List<RaiseComplaintDTO> findAllComplaintsForDeptAdmin(String deptAssign);
 
     boolean savedeptIdAnddeptNameForDeptAdmin(int complaintId, int deptId, String complaintStatus,String assignEmployee);
 
@@ -48,6 +48,16 @@ public interface DeptRepo {
     List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityForAdmin(String complaintType, String city);
 
     List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForDept(String complaintType, String city, String complaintStatus);
+
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForEmp(String complaintType, String city, String complaintStatus);
+
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndComplaintStatusForEmp(String complaintType, String complaintStatus);
+
+    List<RaiseComplaintDTO> searchComplaintsCityAndComplaintStatusForEmp(String city, String complaintStatus);
+
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityForEmp(String complaintType, String city);
+
+    List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForDeptEmp(String complaintType, String city, String complaintStatus);
 
     List<HistoryDTO> findComplaintHistoryByComplaintId(HistoryDTO historyDTO);
 

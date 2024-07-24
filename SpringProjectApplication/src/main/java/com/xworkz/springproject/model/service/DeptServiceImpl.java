@@ -242,9 +242,9 @@ public class DeptServiceImpl implements DeptService{
     }
 
     @Override
-    public List<RaiseComplaintDTO> findAllComplaintsForDeptAdmin() {
+    public List<RaiseComplaintDTO> findAllComplaintsForDeptAdmin(String deptAssign) {
         System.out.println("Running findAllComplaintsForAdmin in DeptServiceImpl");
-        return deptRepo.findAllComplaintsForDeptAdmin();
+        return deptRepo.findAllComplaintsForDeptAdmin(deptAssign);
     }
 
     @Override
@@ -285,6 +285,35 @@ public class DeptServiceImpl implements DeptService{
     public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForAdminDept(String complaintType, String city, String complaintStatus) {
         System.out.println("Running searchComplaintsBycomplaintTypeOrcityForAdmin in DeptServiceImpl");
         return deptRepo.searchComplaintsBycomplaintTypeOrcityForDept(complaintType,city,complaintStatus);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForEmp(String complaintType, String city, String complaintStatus) {
+        System.out.println("1");
+        return deptRepo.searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForEmp(complaintType, city,complaintStatus);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndComplaintStatusForEmp(String complaintType, String complaintStatus){
+        System.out.println("2");
+        return deptRepo.searchComplaintsBycomplaintTypeAndComplaintStatusForEmp(complaintType,complaintStatus);
+    }
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsCityAndComplaintStatusForEmp(String city, String complaintStatus){
+        System.out.println("3");
+        return deptRepo.searchComplaintsCityAndComplaintStatusForEmp(city,complaintStatus);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityForEmp(String complaintType, String city){
+        System.out.println("4");
+        return deptRepo.searchComplaintsBycomplaintTypeAndCityForEmp(complaintType, city);
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForEmpDept(String complaintType, String city, String complaintStatus) {
+        System.out.println("Running searchComplaintsBycomplaintTypeOrcityForAdmin in DeptServiceImpl for emp");
+        return deptRepo.searchComplaintsBycomplaintTypeOrcityForDeptEmp(complaintType,city,complaintStatus);
     }
 
     @Override

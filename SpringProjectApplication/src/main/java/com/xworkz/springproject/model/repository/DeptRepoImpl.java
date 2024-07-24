@@ -188,12 +188,12 @@ public class DeptRepoImpl implements DeptRepo{
     }
 
     @Override
-    public List<RaiseComplaintDTO> findAllComplaintsForDeptAdmin() {
+    public List<RaiseComplaintDTO> findAllComplaintsForDeptAdmin(String deptAssign) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             System.out.println("Running findAllComplaints in ComplaintRepoImpl");
-            Query query = entityManager.createQuery("SELECT r FROM RaiseComplaintDTO r ORDER BY r.updatedDate DESC");
-//            query.setParameter("userId",userId);
+            Query query = entityManager.createQuery("SELECT r FROM RaiseComplaintDTO r WHERE r.deptAssign = :deptAssign ORDER BY r.updatedDate DESC");
+            query.setParameter("deptAssign",deptAssign);
             System.out.println(query);
             List<RaiseComplaintDTO> raiseComplaintDTOS = query.getResultList();
             System.out.println(raiseComplaintDTOS);
@@ -368,6 +368,83 @@ public class DeptRepoImpl implements DeptRepo{
         query.setParameter("complaintStatus", complaintStatus);
         List<RaiseComplaintDTO> list = query.getResultList();
 
+        System.out.println(list);
+
+        return list;
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForEmp(String complaintType, String city, String complaintStatus) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        String queryStr = "SELECT r FROM RaiseComplaintDTO r " +
+                "WHERE r.complaintType = :complaintType AND r.city = :city AND r.complaintStatus = :complaintStatus";
+
+        TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(queryStr, RaiseComplaintDTO.class);
+        query.setParameter("complaintType", complaintType);
+        query.setParameter("city", city);
+        query.setParameter("complaintStatus", complaintStatus);
+
+        System.out.println(query);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndComplaintStatusForEmp(String complaintType, String complaintStatus) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        String queryStr = "SELECT r FROM RaiseComplaintDTO r " +
+                "WHERE r.complaintType = :complaintType AND r.complaintStatus = :complaintStatus";
+
+        TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(queryStr, RaiseComplaintDTO.class);
+        query.setParameter("complaintType", complaintType);
+        query.setParameter("complaintStatus", complaintStatus);
+
+        System.out.println(query);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsCityAndComplaintStatusForEmp(String city, String complaintStatus) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        String queryStr = "SELECT r FROM RaiseComplaintDTO r " +
+                "WHERE r.city = :city AND r.complaintStatus = :complaintStatus";
+
+        TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(queryStr, RaiseComplaintDTO.class);
+        query.setParameter("city", city);
+        query.setParameter("complaintStatus", complaintStatus);
+
+        System.out.println(query);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeAndCityForEmp(String complaintType, String city) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        String queryStr = "SELECT r FROM RaiseComplaintDTO r " +
+                "WHERE r.complaintType = :complaintType AND r.city = :city";
+
+        TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(queryStr, RaiseComplaintDTO.class);
+        query.setParameter("complaintType", complaintType);
+        query.setParameter("city", city);
+
+        System.out.println(query);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<RaiseComplaintDTO> searchComplaintsBycomplaintTypeOrcityForDeptEmp(String complaintType, String city, String complaintStatus) {
+        System.out.println("or complaint");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        String queryStr = "SELECT r FROM RaiseComplaintDTO r " +
+                "WHERE r.complaintType = :complaintType OR r.city = :city OR r.complaintStatus = :complaintStatus";
+
+        TypedQuery<RaiseComplaintDTO> query = entityManager.createQuery(queryStr, RaiseComplaintDTO.class);
+        System.out.println("Running searchComplaintsBycomplaintTypeOrcityForAdmin in ComplaintRepoImpl" +query);
+        query.setParameter("complaintType", complaintType);
+        query.setParameter("city", city);
+        query.setParameter("complaintStatus", complaintStatus);
+        List<RaiseComplaintDTO> list = query.getResultList();
+
+        System.out.println(query);
         System.out.println(list);
 
         return list;

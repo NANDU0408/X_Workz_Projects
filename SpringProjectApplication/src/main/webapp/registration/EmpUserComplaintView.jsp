@@ -63,6 +63,9 @@
         }
     </style>
 
+    <!-- Font Awesome -->
+        <script src="https://kit.fontawesome.com/de5723d334.js" crossorigin="anonymous"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -98,13 +101,15 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="registration/DeptAdminHome.jsp">Department Admin Home</a>
+                    <a class="nav-link" href="registration/DeptEmpHome.jsp">Department Employee Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="deptEmpViewComplaints">All Complaint</a>
                 </li>
                  <li class="nav-item">
-                    <button type="button" id="downloadCSVBtn" class="btn btn-primary">Download Complaints as CSV</button>
+                     <button type="button" id="downloadCSVBtn" class="btn btn-primary">
+                         <i class="fas fa-file-csv"></i> Download CSV
+                     </button>
                  </li>
             </ul>
         </div>
@@ -114,48 +119,48 @@
 <div class="container mt-4">
     <h2>Raise Complaint Details</h2>
 
-    <!-- Search Bar -->
-    <div class="col-md-6">
-        <div class="d-flex justify-content-center mb-4 mt-3">
-            <div class="card px-1 py-1 bg-light">
-                <div class="card-body">
-                    <form action="deptEmpViewComplaints" method="get">
-                        <div class="row g-3">
-                            <div class="col-auto">
-                                <label for="type" class="form-label text-dark">Type</label>
-                                <select class="form-select" id="type" name="type">
-                                    <option value="" ${selectedType == null ? 'selected' : ''}>Choose...</option>
-                                    <option value="Noise" ${selectedType == 'Noise Problem' ? 'selected' : ''}>Noise</option>
-                                    <option value="Pollution" ${selectedType == 'Pollution' ? 'selected' : ''}>Pollution</option>
-                                    <option value="Drainage Problem" ${selectedType == 'Drainage Problem' ? 'selected' : ''}>Drainage Problem</option>
-                                    <option value="Electric Problem" ${selectedType == 'Electric Problem' ? 'selected' : ''}>Electric Problem</option>
-                                    <option value="Water Leakage" ${selectedType == 'Water Leakage' ? 'selected' : ''}>Water Leakage</option>
-                                    <option value="Wastage Problem" ${selectedType == 'Wastage Problem' ? 'selected' : ''}>Wastage Problem</option>
-                                    <option value="Water Problem" ${selectedType == 'Water Problem' ? 'selected' : ''}>Water Problem</option>
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                               <label for="type" class="form-label text-dark">Status</label>
-                               <select class="form-select" id="status" name="status">
-                                    <option value="" ${selectedType == null ? 'selected' : ''}>Choose...</option>
-                                    <option value="Pending" ${selectedType == 'Pending' ? 'selected' : ''}>Pending</option>
-                                    <option value="InAction" ${selectedType == 'InAction' ? 'selected' : ''}>InAction</option>
-                                    <option value="Resolved" ${selectedType == 'Resolved' ? 'selected' : ''}>Resolved</option>
-                               </select>
-                            </div>
-                            <div class="col-auto">
-                                <label for="area" class="form-label text-dark">Area</label>
-                                <input type="text" class="form-control" id="area" name="area" value="${selectedArea}">
-                            </div>
-                            <div class="col-auto align-self-end">
-                                <input type="submit" value="Search" name="search" id="search" class="btn btn-primary">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+       <!-- Search Bar -->
+       <div class="col-md-6">
+           <div class="d-flex justify-content-center mb-4 mt-3">
+               <div class="card px-1 py-1 bg-light">
+                   <div class="card-body">
+                       <form action="searchComplaintsDeptEmp" method="get">
+                           <div class="row g-3">
+                               <div class="col-auto">
+                                   <label for="type" class="form-label text-dark">Type</label>
+                                   <select class="form-select" id="type" name="type">
+                                       <option value="" ${selectedType == null ? 'selected' : ''}>Choose...</option>
+                                       <option value="Noise" ${selectedType == 'Noise' ? 'selected' : ''}>Noise</option>
+                                       <option value="Pollution" ${selectedType == 'Pollution' ? 'selected' : ''}>Pollution</option>
+                                       <option value="Drainage Problem" ${selectedType == 'Drainage Problem' ? 'selected' : ''}>Drainage Problem</option>
+                                       <option value="Electric Problem" ${selectedType == 'Electric Problem' ? 'selected' : ''}>Electric Problem</option>
+                                       <option value="Water Leakage" ${selectedType == 'Water Leakage' ? 'selected' : ''}>Water Leakage</option>
+                                       <option value="Wastage Problem" ${selectedType == 'Wastage Problem' ? 'selected' : ''}>Wastage Problem</option>
+                                       <option value="Water Problem" ${selectedType == 'Water Problem' ? 'selected' : ''}>Water Problem</option>
+                                   </select>
+                               </div>
+                               <div class="col-auto">
+                                   <label for="status" class="form-label text-dark">Status</label>
+                                   <select class="form-select" id="status" name="status">
+                                       <option value="" ${selectedStatus == null ? 'selected' : ''}>Choose...</option>
+                                       <option value="Pending" ${selectedStatus == 'Pending' ? 'selected' : ''}>Pending</option>
+                                       <option value="InAction" ${selectedStatus == 'InAction' ? 'selected' : ''}>InAction</option>
+                                       <option value="Resolved" ${selectedStatus == 'Resolved' ? 'selected' : ''}>Resolved</option>
+                                   </select>
+                               </div>
+                               <div class="col-auto">
+                                   <label for="area" class="form-label text-dark">Area</label>
+                                   <input type="text" class="form-control" id="area" name="area" value="${selectedArea}">
+                               </div>
+                               <div class="col-auto align-self-end">
+                                   <input type="submit" value="Search" name="search" id="search" class="btn btn-primary">
+                               </div>
+                           </div>
+                       </form>
+                   </div>
+               </div>
+           </div>
+       </div>
 
     <!-- Complaints Table -->
     <c:choose>
@@ -163,20 +168,11 @@
             <table class="custom-table">
                 <thead>
                     <tr>
-                        <th>Complaint ID</th>
-                        <th>Complaint Type</th>
                         <th>Country</th>
                         <th>State</th>
                         <th>City</th>
                         <th>Address</th>
                         <th>Description</th>
-                        <th>User ID</th>
-                        <th>Created Date</th>
-                        <th>Created By</th>
-                        <th>Updated Date</th>
-                        <th>Updated By</th>
-                        <th>Department ID</th>
-                        <th>Assign Employee</th>
                         <th>Status</th>
                         <th>Complaint Status:</th>
                         <th>Actions</th>
@@ -187,41 +183,24 @@
                     <c:forEach var="complaint" items="${assignedEmpComplaints}">
                         <tr>
                             <form action="complaintEmpControl" method="post">
-                                <td>${complaint.raiseComplaintDTO.complaintId}</td>
-                                <td>${complaint.raiseComplaintDTO.complaintType}</td>
                                 <td>${complaint.raiseComplaintDTO.country}</td>
                                 <td>${complaint.raiseComplaintDTO.state}</td>
                                 <td>${complaint.raiseComplaintDTO.city}</td>
                                 <td>${complaint.raiseComplaintDTO.address}</td>
                                 <td>${complaint.raiseComplaintDTO.description}</td>
-                                <td>${complaint.raiseComplaintDTO.userId}</td>
-                                <td>${complaint.raiseComplaintDTO.createdDate}</td>
-                                <td>${complaint.raiseComplaintDTO.createdBy}</td>
-                                <td>${complaint.raiseComplaintDTO.updatedDate}</td>
-                                <td>${complaint.raiseComplaintDTO.updatedBy}</td>
-                                <td name="departmentId">${complaint.raiseComplaintDTO.deptAssign}</td>
-                                <td>
-                                        <label for="dept-${complaint.raiseComplaintDTO.complaintId}">Assign Employee:</label>
-                                        <select name="empId" id="dept-${complaint.raiseComplaintDTO.complaintId}" class="form-select">
-                                            <option value="" disabled selected>Choose...</option>
-                                            <c:forEach var="department" items="${complaint.employeeRegisterDTOList}">
-                                                <option value="${department.id}">${department.firstName}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </td>
                                     <td>${complaint.raiseComplaintDTO.complaintStatus}</td>
                                     <td>
                                         <label for="status-${complaint.raiseComplaintDTO.complaintId}">Change Status:</label>
                                         <select name="complaintStatus" id="status-${complaint.raiseComplaintDTO.complaintId}" class="form-select">
-                                            <option value="" disabled selected>Choose...</option>
+                                            <option value="" disabled selected>Status</option>
                                             <option value="Resolved">Resolved</option>
+                                            <option value="NotResolved">Not Resolved</option>
                                             <option value="Pending">Pending</option>
-                                            <option value="InAction">InAction</option>
                                         </select>
                                     </td>
                                     <td>
                                         <input type="hidden" name="complaintId" value="${complaint.raiseComplaintDTO.complaintId}">
-                                        <input type="hidden" name="deptAssign" value="${complaint.raiseComplaintDTO.deptAssign}">
+                                        <input type="hidden" name="assignEmployee" value="${complaint.raiseComplaintDTO.assignEmployee}">
                                         <input type="submit" value="Update" class="btn btn-primary">
                                     </td>
                             </form>
@@ -279,7 +258,7 @@
            var csvContent = "Complaint ID,Complaint Type,Country,State,City,Address,Description,User ID,Created Date,Created By,Updated Date,Updated By,Department ID,Assign Employee,Status,Complaint Status\n";
 
            // Iterate over complaints data
-           <c:forEach var="complaint" items="${assignedComplaints}">
+           <c:forEach var="complaint" items="${assignedEmpComplaints}">
                csvContent += [
                    escapeCsvValue("${complaint.raiseComplaintDTO.complaintId}"),
                    escapeCsvValue("${complaint.raiseComplaintDTO.complaintType}"),

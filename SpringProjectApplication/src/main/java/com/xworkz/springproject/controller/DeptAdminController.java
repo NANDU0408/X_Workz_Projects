@@ -144,7 +144,12 @@ public class DeptAdminController {
         if (employeeRegisterDTOOptional.isPresent()){
             EmployeeRegisterDTO employeeRegisterDTO = employeeRegisterDTOOptional.get();
             if (employeeRegisterDTO.getCount() == 0){
-                return "registration/EmployeeResetPassword.jsp";
+                if (!passwordEncoder.matches(deptEmployeeSignInDTO.getPassword(), employeeRegisterDTO.getPassword())){
+                    model.addAttribute("errorMsg", "Invalid email or password.");
+                    return "registration/SignIn.jsp?role=deptemployee";
+                }else {
+                    return "registration/EmployeeResetPassword.jsp";
+                }
             }else {
 
                 Optional<EmployeeRegisterDTO> registerDTOOptional = deptService.validateSignInEmp(deptEmployeeSignInDTO.getEmailAddress(), deptEmployeeSignInDTO.getPassword());
@@ -176,12 +181,19 @@ public class DeptAdminController {
         Optional<EmployeeRegisterDTO> employeeRegisterDTOOptional = deptService.findByEmpEmailAddress(employeeResetPasswordDTO.getEmailAddress());
         if (employeeRegisterDTOOptional.isPresent()) {
             EmployeeRegisterDTO employeeRegisterDTO = employeeRegisterDTOOptional.get();
-            employeeRegisterDTO.setPassword(employeeResetPasswordDTO.getNewPassword());
-            deptService.updateEmpPassword(employeeRegisterDTO); // Use updatePassword method to save the updated password
+            if (!passwordEncoder.matches(employeeResetPasswordDTO.getPassword(), employeeRegisterDTO.getPassword())) {
+                model.addAttribute("errorMessage", "Current password is incorrect.");
+                return "registration/EmployeeResetPassword.jsp";
+            }else {
+                employeeRegisterDTO.setPassword(employeeResetPasswordDTO.getNewPassword());
+                deptService.updateEmpPassword(employeeRegisterDTO); // Use updatePassword method to save the updated password
+                System.out.println("Plain password " + employeeResetPasswordDTO);
+                System.out.println("New Password " + employeeRegisterDTO);
 
-            model.addAttribute("successMessage", "Password reset successful. Please log in with your new password.");
-            model.addAttribute("reset", true);
-            return "registration/SignIn.jsp?role=deptemployee";
+                model.addAttribute("successMessage", "Password reset successful. Please log in with your new password.");
+                model.addAttribute("reset", true);
+                return "registration/SignIn.jsp?role=deptemployee";
+            }
         } else {
             model.addAttribute("errorMessage", "User not found. Please try again.");
             return "registration/EmployeeResetPassword.jsp";
@@ -235,7 +247,7 @@ public class DeptAdminController {
             return "registration/SignIn.jsp?role=deptadmin"; // Redirect to the admin login page
         }
 
-        List<RaiseComplaintDTO> complaintList = deptService.findAllComplaintsForDeptAdmin();
+        List<RaiseComplaintDTO> complaintList = deptService.findAllComplaintsForDeptAdmin(String.valueOf(loggedInAdmin.getDept_id()));
         // Filter complaints where Department ID is not null
         List<RaiseComplaintDTO> filteredComplaintList = complaintList.stream()
                 .filter(complaint -> complaint.getDeptAssign() != null)

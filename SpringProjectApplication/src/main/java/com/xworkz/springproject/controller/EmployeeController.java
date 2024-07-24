@@ -53,14 +53,14 @@ public class EmployeeController {
             model.addAttribute("departmentEmpLists",deptDTOList);
 
             if (loggedInEmp == null) {
-                model.addAttribute("errorMsg", "Admin is not logged in or session has expired");
-                return "registration/SignIn.jsp?role=deptemployee"; // Redirect to the admin login page
+                model.addAttribute("errorMsg", "User is not logged in or session has expired");
+                return "registration/SignIn.jsp?role=deptemployee"; // Redirect to the user login page
             }
 
-            List<RaiseComplaintDTO> complaintList = deptService.findAllComplaintsForDeptAdmin();
+            List<RaiseComplaintDTO> complaintList = deptService.findAllComplaintsForDeptAdmin(String.valueOf(loggedInEmp.getDept_id()));
             // Filter complaints where Department ID is not null
             List<RaiseComplaintDTO> filteredComplaintList = complaintList.stream()
-                    .filter(complaint -> complaint.getDeptAssign() != null)
+                    .filter(complaint -> complaint.getAssignEmployee() != null)
                     .collect(Collectors.toList());
 
             List<DeptViewComplaintForEachCompliantDto> deptViewComplaintForEachCompliantDtoList = new ArrayList<>();
@@ -109,16 +109,20 @@ public class EmployeeController {
             if (complaintType != null && !complaintType.isEmpty() && city != null && !city.isEmpty() && complaintStatus != null && !complaintStatus.isEmpty()) {
                 // Search by both type and city
                 System.out.println("check for both type and city");
-                complaints = deptService.searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForAdmin(complaintType, city,complaintStatus);
+                complaints = deptService.searchComplaintsBycomplaintTypeAndCityAndComplaintStatusForEmp(complaintType, city,complaintStatus);
+                System.out.println(complaints);
             } else if (complaintType != null && !complaintType.isEmpty() && complaintStatus != null && !complaintStatus.isEmpty()) {
-                complaints = deptService.searchComplaintsBycomplaintTypeAndComplaintStatusForAdmin(complaintType,complaintStatus);
+                complaints = deptService.searchComplaintsBycomplaintTypeAndComplaintStatusForEmp(complaintType,complaintStatus);
+                System.out.println(complaints);
             } else if (city != null &&!city.isEmpty() && complaintStatus != null && !complaintStatus.isEmpty()) {
-                complaints = deptService.searchComplaintsCityAndComplaintStatusForAdmin(city,complaintStatus);
+                complaints = deptService.searchComplaintsCityAndComplaintStatusForEmp(city,complaintStatus);
+                System.out.println(complaints);
             } else if (complaintType != null && !complaintType.isEmpty() && city != null && !city.isEmpty()) {
-                complaints = deptService.searchComplaintsBycomplaintTypeAndCityForAdmin(complaintType,city);
+                complaints = deptService.searchComplaintsBycomplaintTypeAndCityForEmp(complaintType,city);
+                System.out.println(complaints);
             } else if (complaintType != null && !complaintType.isEmpty() || city != null && !city.isEmpty() || complaintStatus != null && !complaintStatus.isEmpty()) {
                 // Search by type or city
-                complaints = deptService.searchComplaintsBycomplaintTypeOrcityForAdminDept(complaintType,city,complaintStatus);
+                complaints = deptService.searchComplaintsBycomplaintTypeOrcityForEmpDept(complaintType,city,complaintStatus);
                 System.out.println("Running searchComplaints in AdminController for any of complaint type or city" +complaints);
             } else {
                 // Fetch all complaints
@@ -139,8 +143,10 @@ public class EmployeeController {
             });
 
 
-            model.addAttribute("assignedComplaints", deptViewComplaintForEachCompliantDtoList);
-            return "registration/DeptUserComplaints.jsp";
+
+
+            model.addAttribute("assignedEmpComplaints", deptViewComplaintForEachCompliantDtoList);
+            return "registration/EmpUserComplaintView.jsp";
         }
 
         @PostMapping("/historyEmp")
