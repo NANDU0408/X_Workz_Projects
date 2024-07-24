@@ -39,6 +39,14 @@ public class DeptAdminServiceImpl implements DeptAdminService{
     }
 
     @Override
+    public boolean assignDeptAndStatusForDeptEmp(RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto) {
+        System.out.println("working on assigning status to complaint"+ requestToDeptAndStatusOfComplaintDto);
+        deptService.savedeptIdAnddeptNameForDeptEmp(requestToDeptAndStatusOfComplaintDto.getComplaintId(),requestToDeptAndStatusOfComplaintDto.getDepartmentId(),requestToDeptAndStatusOfComplaintDto.getComplaintStatus());
+
+        return true;
+    }
+
+    @Override
     public boolean assignDeptAndStatusForDeptHistory(RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto) {
         System.out.println("working on assigning department and status to complaint"+ requestToDeptAndStatusOfComplaintDto);
         deptService.savedeptIdAnddeptNameForDeptHistory(requestToDeptAndStatusOfComplaintDto.getComplaintId(),requestToDeptAndStatusOfComplaintDto.getDepartmentId(),requestToDeptAndStatusOfComplaintDto.getComplaintStatus(), requestToDeptAndStatusOfComplaintDto.getEmpId());

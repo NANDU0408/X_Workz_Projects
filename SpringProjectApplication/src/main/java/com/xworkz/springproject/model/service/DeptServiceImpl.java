@@ -253,6 +253,11 @@ public class DeptServiceImpl implements DeptService{
     }
 
     @Override
+    public boolean savedeptIdAnddeptNameForDeptEmp(int complaintId, int deptId, String complaintStatus) {
+        return deptRepo.savedeptIdAnddeptNameForDeptEmp(complaintId,deptId,complaintStatus);
+    }
+
+    @Override
     public boolean savedeptIdAnddeptNameForDeptHistory(int complaintId, int deptId, String complaintStatus, String assignEmployee) {
         return deptRepo.savedeptIdAnddeptNameForDeptHistory(complaintId,deptId,complaintStatus,assignEmployee);
     }

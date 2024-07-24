@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface DeptAdminService {
     boolean assignDeptAndStatusForDeptAdmin(RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto);
 
+    boolean assignDeptAndStatusForDeptEmp(RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto);
+
     boolean assignDeptAndStatusForDeptHistory(RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto);
 
     Optional<DeptAdminDTO> saveDeptAdmin(DeptAdminDTO deptAdminDTO);

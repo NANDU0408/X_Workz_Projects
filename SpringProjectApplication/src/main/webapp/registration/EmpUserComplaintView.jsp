@@ -182,7 +182,7 @@
                 <tbody>
                     <c:forEach var="complaint" items="${assignedEmpComplaints}">
                         <tr>
-                            <form action="complaintEmpControl" method="post">
+                            <form action="assignedEmpComplaints" method="post">
                                 <td>${complaint.raiseComplaintDTO.country}</td>
                                 <td>${complaint.raiseComplaintDTO.state}</td>
                                 <td>${complaint.raiseComplaintDTO.city}</td>
@@ -200,7 +200,7 @@
                                     </td>
                                     <td>
                                         <input type="hidden" name="complaintId" value="${complaint.raiseComplaintDTO.complaintId}">
-                                        <input type="hidden" name="assignEmployee" value="${complaint.raiseComplaintDTO.assignEmployee}">
+                                        <input type="hidden" name="deptAssign" value="${complaint.raiseComplaintDTO.deptAssign}">
                                         <input type="submit" value="Update" class="btn btn-primary">
                                     </td>
                             </form>
@@ -321,6 +321,100 @@
         </div>
     </div>
 </div>
+
+
+
+ <c:choose>
+
+                <c:when test="${complaintId.equalsIgnoreCase('Resolved')}">
+
+                </c:when>
+
+                <c:otherwise>
+
+
+                    <div class="modal fade" id="otherModel" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+
+                                <div class="modal-body">
+                                    <div id="resolverOtherModelAlert">
+
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <textarea class="form-control" rows="5" id="otherTextArea"
+                                            placeholder="Leave a comment here"></textarea>
+                                        <span class="text-danger" id="otherTextAreaError"></span>
+
+                                        <!-- <label for="floatingTextarea">Comments</label> -->
+                                    </div>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-between">
+                                    <button type="button" class="btn btn-secondary"
+                                        onclick="dismisOtherResolveModel(otherModel)">Close</button>
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="setModelDataOtherStatus(otherModel)">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="resolveModel1" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+
+                                <div class="modal-body">
+                                    <div id="resolverModelAlert">
+
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea> -->
+                                        <textarea class="form-control" id="resolveTextArea1" rows="5"
+                                            placeholder="Leave a comment here"></textarea>
+                                        <span class="text-danger" id="textareaError"></span>
+
+                                        <!-- <label for="floatingTextarea">Comments</label> -->
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text " id="basic-addon1">OTP : </span>
+                                        <input type="number" class="form-control numberCenterOtp" id="otp" max="6"
+                                            placeholder="6 digit OTP" aria-label="Username"
+                                            aria-describedby="basic-addon1">
+                                        <button type="button" class=" btn btn-primary input-group-text"
+                                            onclick="resendOTP()">Resend</button>
+                                        <%-- <span class="" id="basic-addon2"><a href="">Resend</a></span> --%>
+                                    </div>
+                                    <span class="text-danger" id="optError"></span>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-between">
+                                    <button type="button" class="btn btn-secondary"
+                                        onclick="dismisResolveModel(resolveModel1)">Close</button>
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="setModelDataForResolve(resolveModel1)">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="spinner" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class=" modal-body p-5 bg-transparent text-white d-flex justify-content-center ">
+                                <div class="d-flex justify-content-center">
+                                    <div class="spinner-border text-light"></div>
+                                    <h3 class="ms-3">Loading</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </c:otherwise>
+            </c:choose>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

@@ -80,10 +80,10 @@ public class EmployeeController {
                                        Model model, HttpSession session){
             System.out.println("admin assigning department process is initiated : "+requestToDeptAndStatusOfComplaintDto);
 
-            deptAdminService.assignDeptAndStatusForDeptAdmin(requestToDeptAndStatusOfComplaintDto);
+            deptAdminService.assignDeptAndStatusForDeptEmp(requestToDeptAndStatusOfComplaintDto);
             System.out.println(requestToDeptAndStatusOfComplaintDto);
 
-            requestToDeptAndStatusOfComplaintDto.setDepartmentId(Integer.parseInt(raiseComplaintDTO.getDeptAssign()));
+//            requestToDeptAndStatusOfComplaintDto.setDepartmentId(Integer.parseInt(raiseComplaintDTO.getDeptAssign()));
 
             Optional<RaiseComplaintDTO> updatedComplaint = deptService.saveHistoryForDept(historyDTO, raiseComplaintDTO, requestToDeptAndStatusOfComplaintDto);
             if (updatedComplaint.isPresent()) {

@@ -34,6 +34,8 @@ public interface DeptRepo {
 
     boolean savedeptIdAnddeptNameForDeptAdmin(int complaintId, int deptId, String complaintStatus,String assignEmployee);
 
+    boolean savedeptIdAnddeptNameForDeptEmp(int complaintId, int deptId, String complaintStatus);
+
     boolean savedeptIdAnddeptNameForDeptHistory(int complaintId, int deptId, String complaintStatus, String assignEmployee);
 
     @Transactional

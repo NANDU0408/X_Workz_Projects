@@ -242,6 +242,39 @@ public class DeptRepoImpl implements DeptRepo{
     }
 
     @Override
+    public boolean savedeptIdAnddeptNameForDeptEmp(int complaintId, int deptId, String complaintStatus) {
+        System.out.println("Dept Id and Dept Name");
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+
+        try {
+            entityManager.getTransaction().begin();
+            String queryStr = "UPDATE RaiseComplaintDTO r SET r.complaintStatus = :complaintStatus WHERE r.complaintId = :complaintId";
+            System.out.println(queryStr);
+            Query query = entityManager.createQuery(queryStr);
+            query.setParameter("complaintStatus",complaintStatus);
+            query.setParameter("complaintId",complaintId);
+            query.executeUpdate();
+
+            entityManager.getTransaction().commit();
+            return true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            entityManager.getTransaction();
+        }
+        finally {
+            entityManager.close();
+        }
+
+        return false;
+    }
+
+
+
+
+    @Override
     public boolean savedeptIdAnddeptNameForDeptHistory(int complaintId, int deptId, String complaintStatus, String assignEmployee) {
         System.out.println("Dept Id and Dept Name");
 
