@@ -1,6 +1,7 @@
 package com.xworkz.springproject.controller;
 
-import com.xworkz.springproject.dto.dept.*;
+import com.xworkz.springproject.dto.dept.EmployeeRegisterDTO;
+import com.xworkz.springproject.dto.dept.WaterDeptDTO;
 import com.xworkz.springproject.dto.requestDto.HistoryDTO;
 import com.xworkz.springproject.dto.requestDto.RequestToDeptAndStatusOfComplaintDto;
 import com.xworkz.springproject.dto.responseDto.DeptViewComplaintForEachCompliantDto;
@@ -11,6 +12,7 @@ import com.xworkz.springproject.model.service.DeptAdminService;
 import com.xworkz.springproject.model.service.DeptService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -75,25 +76,36 @@ public class EmployeeController {
             return "registration/EmpUserComplaintView.jsp";
         }
 
-        @PostMapping("/assignedEmpComplaints")
-        public String updatedComplaint(RaiseComplaintDTO raiseComplaintDTO, HistoryDTO historyDTO, RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto,
-                                       Model model, HttpSession session){
-            System.out.println("admin assigning department process is initiated : "+requestToDeptAndStatusOfComplaintDto);
+    @PostMapping("/assignedEmpComplaints")
+    public ResponseEntity<String> updatedComplaint(@RequestBody RequestToDeptAndStatusOfComplaintDto requestToDeptAndStatusOfComplaintDto,
+                                                   BindingResult bindingResult, HttpSession session) {
+        System.out.println(" --- admin assigning department process is initiated : " + requestToDeptAndStatusOfComplaintDto);
 
+        if(bindingResult.hasErrors()){
+            throw new IllegalArgumentException("Argument should not empty");
+        }
+
+        try {
             deptAdminService.assignDeptAndStatusForDeptEmp(requestToDeptAndStatusOfComplaintDto);
             System.out.println(requestToDeptAndStatusOfComplaintDto);
 
-//            requestToDeptAndStatusOfComplaintDto.setDepartmentId(Integer.parseInt(raiseComplaintDTO.getDeptAssign()));
+            HistoryDTO historyDTO = new HistoryDTO();
+            RaiseComplaintDTO raiseComplaintDTO = new RaiseComplaintDTO();
+            // Ensure to populate historyDTO and raiseComplaintDTO with appropriate values
 
             Optional<RaiseComplaintDTO> updatedComplaint = deptService.saveHistoryForDept(historyDTO, raiseComplaintDTO, requestToDeptAndStatusOfComplaintDto);
             if (updatedComplaint.isPresent()) {
                 System.out.println("History saved successfully: " + updatedComplaint.get());
+                return ResponseEntity.ok("Complaint status updated successfully.");
             } else {
                 System.out.println("Failed to save history.");
+                return ResponseEntity.status(500).body("Failed to save history.");
             }
-
-            return viewComplaints(model,session);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
         }
+    }
 
         @GetMapping("/searchComplaintsDeptEmp")
         public String searchComplaints(

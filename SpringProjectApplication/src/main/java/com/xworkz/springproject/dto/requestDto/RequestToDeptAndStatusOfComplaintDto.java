@@ -15,12 +15,12 @@ public class RequestToDeptAndStatusOfComplaintDto {
     @NotNull(message = "Complaint id should not be null")
     private int complaintId;
 
-    @NotNull(message = "Department id should not be null")
+//    @NotNull(message = "Department id should not be null")
     private int departmentId;
 
     @NotNull(message = "complaint status should not be null")
     private String complaintStatus;
 
-    @NotNull(message = "emp Id should not be null")
+//    @NotNull(message = "emp Id should not be null")
     private String empId;
 }
